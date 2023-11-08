@@ -36,8 +36,8 @@ TEST_SUITE( "Nimble IDE Test Suite" )
         {
             ScreenInfo screenInfo;
             screenInfo.RetrieveConsoleInfo();
-            CHECK( screenInfo.getWidth() != 0 );
-            CHECK( screenInfo.getHeight() != 0 );
+            CHECK( screenInfo.GetWidth() != 0 );
+            CHECK( screenInfo.GetHeight() != 0 );
         }
     }
     //-----------------------------------------------------------------------------
