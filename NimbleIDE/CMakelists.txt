@@ -16,6 +16,13 @@ file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h
 # tells cmake that it will be creating an executable 
 add_executable(NimbleIDE ${SOURCE_FILES})
 
+# link libraries
+target_link_libraries(NimbleIDE PRIVATE NimbleLIB)
+
+# include path for libraries
+target_include_directories(NimbleIDE PUBLIC NimbleLIB)
+
+
 # check if Doxygen is installed
 find_package(Doxygen)
 if (DOXYGEN_FOUND)

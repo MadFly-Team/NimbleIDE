@@ -21,7 +21,8 @@ Version:
 // doctest unit testing framework setup
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../../../doctest/doctest/doctest.h"
-#include "../../inc/Modules/Screen/ScreenInfo.h"
+#include "../../../NimbleLIB/inc/Modules/Screen/ScreenInfo.h"
+
 //-----------------------------------------------------------------------------
 // Unit Tests
 //-----------------------------------------------------------------------------
