@@ -1,3 +1,18 @@
+/**----------------------------------------------------------------------------
+
+    @file       unitTests.cpp
+    @defgroup   NimbleIDE Nimble IDE
+    @brief      Unit Tests for the Nimble IDE
+
+    @copyright  Neil Beresford 2023
+
+Notes:
+
+Version:
+
+        0.0.1.0   First Release, development phase. Draft copy
+
+-----------------------------------------------------------------------------*/
 
 //-----------------------------------------------------------------------------
 // Includes
@@ -6,19 +21,24 @@
 // doctest unit testing framework setup
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../../../doctest/doctest/doctest.h"
-
+#include "../../inc/Modules/Screen/ScreenInfo.h"
 //-----------------------------------------------------------------------------
 // Unit Tests
 //-----------------------------------------------------------------------------
 
-TEST_SUITE("Nimble IDE Test Suite")
+TEST_SUITE( "Nimble IDE Test Suite" )
 {
     //-----------------------------------------------------------------------------
-    TEST_CASE("Test 1")
+    TEST_CASE( "Testing ScreenInfo" )
     //-----------------------------------------------------------------------------
     {
-        CHECK(4 != 5);
-        CHECK(1 == 1);
+        SUBCASE( "Testing getWidth() and getHeight()" )
+        {
+            ScreenInfo screenInfo;
+            screenInfo.RetrieveConsoleInfo();
+            CHECK( screenInfo.getWidth() != 0 );
+            CHECK( screenInfo.getHeight() != 0 );
+        }
     }
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
