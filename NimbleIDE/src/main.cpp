@@ -22,7 +22,18 @@ Version:
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
-#include "../../NimbleLIB/inc/Modules/Screen/ScreenInfo.h"
+#include "../../NimbleLIB/inc/NimbleLib.h"
+
+//-----------------------------------------------------------------------------
+// Namespace access
+//-----------------------------------------------------------------------------
+
+using namespace Nimble;
+using namespace Nimble::Screen;
+
+//-----------------------------------------------------------------------------
+// Defines
+//-----------------------------------------------------------------------------
 
 #define COLOUR_TEXT( colour, bgcolour, text ) ( "\033[38;5;" #colour "m\033[48;5;" #bgcolour "m" text )
 #define COLOUR_RESET                          ( "\033[0m" )
@@ -34,6 +45,7 @@ Version:
 #define CHAR_INVERSE                          ( "\033[7m" )
 #define CHAR_RESET                            ( "\033[0m" )
 #define CHAR_BOLD                             ( "\033[1m" )
+#define CHAR_STRIKETHROUGH                    ( "\033[9m" )
 #define SCREEN_BOTTOM_LEFT                    ( "\033[999;999H" )
 #define COLOUR_WHITE                          ( "\033[38;5;15m" )
 #define COLOUR_BLACK                          ( "\033[38;5;0m" )
@@ -51,7 +63,6 @@ Version:
 #define COLOUR_BRIGHT_BLUE                    ( "\033[38;5;12m" )
 #define COLOUR_BRIGHT_MAGENTA                 ( "\033[38;5;13m" )
 #define COLOUR_BRIGHT_CYAN                    ( "\033[38;5;14m" )
-#define COLOUR_BRIGHT_WHITE                   ( "\033[38;5;15m" )
 #define COLOUR_BG_WHITE                       ( "\033[38;5;15m" )
 #define COLOUR_BG_BLACK                       ( "\033[38;5;0m" )
 #define COLOUR_BG_RED                         ( "\033[38;5;1m" )
@@ -68,7 +79,6 @@ Version:
 #define COLOUR_BG_BRIGHT_BLUE                 ( "\033[38;5;12m" )
 #define COLOUR_BG_BRIGHT_MAGENTA              ( "\033[38;5;13m" )
 #define COLOUR_BG_BRIGHT_CYAN                 ( "\033[38;5;14m" )
-#define COLOUR_BG_BRIGHT_WHITE                ( "\033[38;5;15m" )
 
 //-----------------------------------------------------------------------------
 // External Functionality
@@ -88,6 +98,12 @@ int main( int argc, char* argv[] )
     uint32_t   yPos = 5;
 
     screenInfo.SetupConsole();
+
+    // switch off the cursor
+    std::cout << "\033[?25l";
+
+    // change the background colour of the screen
+    std::cout << "\033[48;5;100m";
 
     // Print out the welcome message
     std::cout << SCREEN_CLEAR << SCREEN_HOME << ScreenPosition( 5, 10 );
@@ -110,6 +126,9 @@ int main( int argc, char* argv[] )
 
     std::cout << ScreenPosition( xPos, yPos ) << CHAR_FLASH << "This is flashing text" << CHAR_RESET << std::endl;
     std::cout << SCREEN_BOTTOM_LEFT << std::endl;
+
+    // wait for a key press
+    std::cin.get();
 
     // Return success
     return EXIT_SUCCESS;

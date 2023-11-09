@@ -1,8 +1,8 @@
 /**----------------------------------------------------------------------------
 
     @file       ScreenInfo.h
-    @defgroup   NimbleIDEScreen Nimble IDE Screen Module
-    @brief      Screen information class for the Nimble IDE
+    @defgroup   NimbleLIBScreen Nimble Library Screen Module
+    @brief      Screen information class for the Nimble Library
 
     @copyright  Neil Beresford 2023
 
@@ -14,6 +14,8 @@ Version:
 
 -----------------------------------------------------------------------------*/
 
+#pragma once
+
 //-----------------------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------------------
@@ -21,12 +23,21 @@ Version:
 #include <stdint.h>
 
 //-----------------------------------------------------------------------------
+// Namespace access
+//-----------------------------------------------------------------------------
+
+namespace Nimble
+{
+namespace Screen
+{
+
+//-----------------------------------------------------------------------------
 // Class Definition
 //-----------------------------------------------------------------------------
 
 /**---------------------------------------------------------------------------
-    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
-    @brief      Screen information class for the Nimble IDE
+    @ingroup    NimbleLIBScreen Nimble Library Screen Module
+    @brief      Screen information class for the Nimble LIB
   --------------------------------------------------------------------------*/
 class ScreenInfo
 {
@@ -42,14 +53,14 @@ class ScreenInfo
     // constructors etc --------------------------------------------------------
 
     /**-------------------------------------------------------------------------
-        @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
         @brief      Default constructor
     --------------------------------------------------------------------------*/
     ScreenInfo()
     {
     }
     /**---------------------------------------------------------------------------
-        @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
         @brief      Default destructor
     --------------------------------------------------------------------------*/
     ~ScreenInfo()
@@ -59,7 +70,7 @@ class ScreenInfo
     // Getters & Setters -------------------------------------------------------
 
     /**--------------------------------------------------------------------------
-        @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
         @brief      Returns the character width of the console
         @return     uint32_t - The width of the console
     --------------------------------------------------------------------------*/
@@ -68,7 +79,7 @@ class ScreenInfo
         return width;
     };
     /**--------------------------------------------------------------------------
-        @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
         @brief      Returns the character height of the console
         @return     uint32_t - The height of the console
     --------------------------------------------------------------------------*/
@@ -84,6 +95,11 @@ class ScreenInfo
 
     //--------------------------------------------------------------------------
 };
+
+//-----------------------------------------------------------------------------
+
+} // namespace Screen
+} // namespace Nimble
 
 //-----------------------------------------------------------------------------
 // End of file: ScreenInfo.h
