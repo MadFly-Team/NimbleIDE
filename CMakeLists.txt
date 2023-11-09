@@ -8,7 +8,6 @@ project(NimbleIDESuite VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 20)
 
 include(ExternalProject)
-include(FetchContent)
 
 find_package(Git REQUIRED)
 
