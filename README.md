@@ -47,7 +47,7 @@ Please follow the instructions below to install the application.
 Retrieve the source code from GitHub:
 
 ```bash
-    git clone https://github.com/MadFly-Team/NimbleIDE.git
+    git clone https://github.com/MadFly-Team/NimbleIDE.git NimbleIDE
 ```
 
 ## Building the applications
