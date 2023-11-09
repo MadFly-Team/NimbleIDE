@@ -103,7 +103,7 @@ int main( int argc, char* argv[] )
     std::cout << "\033[?25l";
 
     // change the background colour of the screen
-    std::cout << "\033[48;5;100m";
+    // std::cout << "\033[48;5;0m";
 
     // Print out the welcome message
     std::cout << SCREEN_CLEAR << SCREEN_HOME << ScreenPosition( 5, 10 );

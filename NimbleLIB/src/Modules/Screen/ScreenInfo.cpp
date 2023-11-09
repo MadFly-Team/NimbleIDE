@@ -18,7 +18,14 @@ Version:
 // Headers
 //-----------------------------------------------------------------------------
 
+#if defined( WIN32 ) || defined( _WIN32 )
 #include <windows.h>
+#else
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 #include "../../../inc/Modules/Screen/ScreenInfo.h"
@@ -41,6 +48,7 @@ namespace Screen
   --------------------------------------------------------------------------*/
 void ScreenInfo::RetrieveConsoleInfo()
 {
+#if defined( WIN32 ) || defined( _WIN32 )
     CONSOLE_SCREEN_BUFFER_INFO csbi; //!< Local: Console screen buffer information
 
     // Retrieve the console information
@@ -49,6 +57,21 @@ void ScreenInfo::RetrieveConsoleInfo()
     // Set the width and height
     width  = csbi.srWindow.Right - csbi.srWindow.Left + 1;
     height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+#else
+
+#ifdef TIOCGSIZE
+    struct ttysize ts;
+    ioctl( STDIN_FILENO, TIOCGSIZE, &ts );
+    width  = ts.ts_cols;
+    height = ts.ts_lines;
+#elif defined( TIOCGWINSZ )
+    struct winsize ts;
+    ioctl( STDIN_FILENO, TIOCGWINSZ, &ts );
+    width  = ts.ws_col;
+    height = ts.ws_row;
+#endif /* TIOCGSIZE */
+
+#endif
 
     // Report the console information
     std::cout << "Console Width: " << width << " columns\n";
@@ -61,6 +84,7 @@ void ScreenInfo::RetrieveConsoleInfo()
     --------------------------------------------------------------------------*/
 void ScreenInfo::SetupConsole()
 {
+#if defined( WIN32 ) || defined( _WIN32 )
     SetConsoleOutputCP( CP_UTF8 );
     SetConsoleCP( CP_UTF8 );
 
@@ -77,6 +101,7 @@ void ScreenInfo::SetupConsole()
     out_mode |= disable_newline_auto_return;
 
     SetConsoleMode( stdout_handle, out_mode );
+#endif
 }
 
 //-----------------------------------------------------------------------------
