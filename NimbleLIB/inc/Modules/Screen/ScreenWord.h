@@ -169,6 +169,60 @@ class ScreenWord
     {
         effect.value = e;
     }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the word string
+        @return     std::string Word string
+      --------------------------------------------------------------------------*/
+    std::string GetWord() const
+    {
+        return word;
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the X position of the word
+        @return     uint32_t X position of the word
+      --------------------------------------------------------------------------*/
+    uint32_t GetXPos() const
+    {
+        return xPos;
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the Y position of the word
+        @return     uint32_t Y position of the word
+      --------------------------------------------------------------------------*/
+    uint32_t GetYPos() const
+    {
+        return yPos;
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the foreground colour of the word
+        @return     uint32_t Foreground colour of the word
+      --------------------------------------------------------------------------*/
+    uint32_t GetFGColour() const
+    {
+        return fgColour;
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the background colour of the word
+        @return     uint32_t Background colour of the word
+      --------------------------------------------------------------------------*/
+    uint32_t GetBGColour() const
+    {
+        return bgColour;
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Returns the effect of the word
+        @return     WORD_EFFECT Effect of the word
+      --------------------------------------------------------------------------*/
+    WORD_EFFECT GetEffect() const
+    {
+        return effect;
+    }
 };
 
 //-----------------------------------------------------------------------------
