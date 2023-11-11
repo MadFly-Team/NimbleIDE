@@ -122,36 +122,12 @@ class ScreenPrint
         @brief      Destructor
      ------------------------------------------------------------------------*/
     ~ScreenPrint();
-    /**---------------------------------------------------------------------------
-        @ingroup    NimbleIDEScreen Nimble IDE Screen Module
-        @brief      Adds a ScreenWord to the string stream
-      --------------------------------------------------------------------------*/
-    void Add( const ScreenWord& word )
-    {
-        WORD_EFFECT effect = word.GetEffect();
 
-        // send the position to the string stream
-        if ( word.GetXPos() != 0 )
-            m_ss << "\033[" << word.GetYPos() << ";" << word.GetXPos() << "H";
-
-        // send the formatted colour and effecr to the string stream
-        m_ss << COLOUR_BG_START << word.GetBGColour() << COLOUR_END << COLOUR_START << word.GetFGColour() << COLOUR_END;
-        if ( effect.Reverse == eState::On )
-            m_ss << CHAR_INVERSE;
-        if ( effect.Italic == eState::On )
-            m_ss << CHAR_ITALIC;
-        if ( effect.Bold == eState::On )
-            m_ss << CHAR_BOLD;
-        if ( effect.Underline == eState::On )
-            m_ss << CHAR_UNDERLINE;
-        if ( effect.Strike == eState::On )
-            m_ss << CHAR_STRIKETHROUGH;
-        if ( effect.Blink == eState::On )
-            m_ss << CHAR_FLASH;
-
-        // send the word to the string stream
-        m_ss << word.GetWord() << CHAR_RESET;
-    }
+    // Print functions
+    void Add( const ScreenWord& word );
+    void Add( const std::string& inText );
+    void Display();
+    void DisplayWord( const ScreenWord& word );
 };
 
 //-----------------------------------------------------------------------------
