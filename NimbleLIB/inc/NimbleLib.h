@@ -22,6 +22,9 @@ Version:
 //-----------------------------------------------------------------------------
 
 #include "Modules/Screen/ScreenInfo.h"            // ScreenInfo class
+#include "Modules/Screen/ScreenWord.h"            // ScreenWord class
+#include "Modules/Screen/ScreenPrint.h"           // ScreenPrint class
+#include "Modules/Screen/ScreenBox.h"             // ScreenBox class
 #include "Modules/Framework/CFrameworkObject.hpp" // Hardware FrameworkObject class
 
 //-----------------------------------------------------------------------------

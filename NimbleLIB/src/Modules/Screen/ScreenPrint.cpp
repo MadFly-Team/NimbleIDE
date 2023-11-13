@@ -97,6 +97,22 @@ void ScreenPrint::Add( const std::string& inText )
 
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Adds the text to the string stream, no formatting.
+    @param      x - x position to add the text
+    @param      y - y position to add the text
+    @param      inText - string to add to the string stream
+  --------------------------------------------------------------------------*/
+void ScreenPrint::Add( uint32_t x, uint32_t y, const std::string& inText )
+{
+    // send the position to the string stream
+    m_ss << "\033[" << y << ";" << x << "H";
+
+    // just pipe the text to the string stream
+    m_ss << inText;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Displays the string stream to the screen
     @param      inText - string to add to the string stream
   --------------------------------------------------------------------------*/

@@ -29,6 +29,7 @@ Version:
 #include <iostream>
 
 #include "../../../inc/Modules/Screen/ScreenInfo.h"
+#include "../../../inc/Modules/Global/Globals.h"
 
 //-----------------------------------------------------------------------------
 // Namespace access
@@ -73,9 +74,9 @@ void ScreenInfo::RetrieveConsoleInfo()
 
 #endif
 
-    // Report the console information
-    std::cout << "Console Width: " << width << " columns\n";
-    std::cout << "Console Height: " << height << " rows\n";
+    // Store the new values globally
+    Globals::getInstance().setScreenWidth( width );
+    Globals::getInstance().setScreenHeight( height );
 }
 
 /**---------------------------------------------------------------------------
@@ -112,3 +113,4 @@ void ScreenInfo::SetupConsole()
 //-----------------------------------------------------------------------------
 // End of file: ScreenInfo.cpp
 //-----------------------------------------------------------------------------
+//

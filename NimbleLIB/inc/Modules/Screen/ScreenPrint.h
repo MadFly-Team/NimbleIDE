@@ -126,6 +126,8 @@ class ScreenPrint
     // Print functions
     void Add( const ScreenWord& word );
     void Add( const std::string& inText );
+    void Add( uint32_t x, uint32_t y, const std::string& inText );
+
     void Display();
     void DisplayWord( const ScreenWord& word );
 };
