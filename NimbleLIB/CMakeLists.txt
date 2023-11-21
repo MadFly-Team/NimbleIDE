@@ -1,11 +1,10 @@
-# make sure the minimum cmake version is compatible with your compiler
-cmake_minimum_required(VERSION 3.9.1)
+cmake_minimum_required(VERSION 3.27.0)
 
 # set a project name
 project(NimbleLIB)
 
-# set C Make to use the C17 Language version
-set(CMAKE_C_STANDARD 17)
+# set C Make to use the C20 Language version
+set(CMAKE_C_STANDARD 20)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "inc/*.h" "src/*.c" "src/*.cpp" )
 

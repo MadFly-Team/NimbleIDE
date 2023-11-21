@@ -1,27 +1,19 @@
 {
   "configurations": {
-    "C# Debug": {
-      "adapter": "netcoredbg",
+    "Launch": {
+      "adapter": "CodeLLDB",
       "configuration": {
+        "name": "Launch",
+        "type": "lldb",
         "request": "launch",
-        "program": "${workspaceFolder}/bin/Debug/net7.0/imageM33CRCGenerator.dll",
-        "args": ["./Ibberton.bin", "0x10000"],
-        "cwd": "${workspaceFolder}/bin/Debug/net7.0/",
-        "stopOnEntry": true,
-        "externalConsole": true,
-        "name": "Launch .NET Core Console App",
-        "pipeTransport": {
-          "pipeCwd": "${workspaceFolder}",
-          "pipeProgram": "lldb",
-          "pipeArgs": [
-            "-o",
-            "br set -f Program.cs -l 10",
-            "-o",
-            "run --project ${workspaceFolder}/imageM33CRCGenerator.csproj"
-          ],
-          "debuggerPath": "c:/Program Files/LLVM/bin"
-        }
+        "program": "${workspaceFolder}/build/NimbleIDE/Debug/NimbleIDE.exe",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}/build/NimbleIDE/Debug/",
+        "environment": [],
+        "externalConsole": true
       }
     }
-  }
+  },
+  "default_configuration": "Launch"
 }

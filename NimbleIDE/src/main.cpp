@@ -19,6 +19,7 @@ Version:
 // Headers
 //-----------------------------------------------------------------------------
 
+// #include <windows.h>
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
@@ -26,7 +27,12 @@ Version:
 #include <vector>
 #include <string>
 #include <format>
-#include <conio.h>
+// #include <conio.h>
+
+extern "C"
+{
+#include "../../ExternalLibraries/PDCurses/curses.h"
+}
 
 #include "../../NimbleLIB/inc/NimbleLib.h"
 
@@ -41,194 +47,266 @@ using namespace Nimble::Screen;
 // Defines
 //-----------------------------------------------------------------------------
 
-#if 0
-#define COLOUR_TEXT( colour, bgcolour, text ) ( "\033[38;5;" #colour "m\033[48;5;" #bgcolour "m" text )
-#define COLOUR_RESET                          ( "\033[0m" )
-#define SCREEN_CLEAR                          ( "\033[2J" )
-#define SCREEN_HOME                           ( "\033[H" )
-#define CHAR_FLASH                            ( "\033[5m" )
-#define CHAR_UNDERLINE                        ( "\033[4m" )
-#define CHAR_ITALIC                           ( "\033[3m" )
-#define CHAR_INVERSE                          ( "\033[7m" )
-#define CHAR_RESET                            ( "\033[0m" )
-#define CHAR_BOLD                             ( "\033[1m" )
-#define CHAR_STRIKETHROUGH                    ( "\033[9m" )
-#define SCREEN_BOTTOM_LEFT                    ( "\033[999;999H" )
-#define COLOUR_WHITE                          ( "\033[38;5;15m" )
-#define COLOUR_BLACK                          ( "\033[38;5;0m" )
-#define COLOUR_RED                            ( "\033[38;5;1m" )
-#define COLOUR_GREEN                          ( "\033[38;5;2m" )
-#define COLOUR_YELLOW                         ( "\033[38;5;3m" )
-#define COLOUR_BLUE                           ( "\033[38;5;4m" )
-#define COLOUR_MAGENTA                        ( "\033[38;5;5m" )
-#define COLOUR_CYAN                           ( "\033[38;5;6m" )
-#define COLOUR_BRIGHT_WHITE                   ( "\033[38;5;7m" )
-#define COLOUR_BRIGHT_BLACK                   ( "\033[38;5;8m" )
-#define COLOUR_BRIGHT_RED                     ( "\033[38;5;9m" )
-#define COLOUR_BRIGHT_GREEN                   ( "\033[38;5;10m" )
-#define COLOUR_BRIGHT_YELLOW                  ( "\033[38;5;11m" )
-#define COLOUR_BRIGHT_BLUE                    ( "\033[38;5;12m" )
-#define COLOUR_BRIGHT_MAGENTA                 ( "\033[38;5;13m" )
-#define COLOUR_BRIGHT_CYAN                    ( "\033[38;5;14m" )
-#define COLOUR_BG_WHITE                       ( "\033[38;5;15m" )
-#define COLOUR_BG_BLACK                       ( "\033[38;5;0m" )
-#define COLOUR_BG_RED                         ( "\033[38;5;1m" )
-#define COLOUR_BG_GREEN                       ( "\033[38;5;2m" )
-#define COLOUR_BG_YELLOW                      ( "\033[38;5;3m" )
-#define COLOUR_BG_BLUE                        ( "\033[38;5;4m" )
-#define COLOUR_BG_MAGENTA                     ( "\033[38;5;5m" )
-#define COLOUR_BG_CYAN                        ( "\033[38;5;6m" )
-#define COLOUR_BG_BRIGHT_WHITE                ( "\033[38;5;7m" )
-#define COLOUR_BG_BRIGHT_BLACK                ( "\033[38;5;8m" )
-#define COLOUR_BG_BRIGHT_RED                  ( "\033[38;5;9m" )
-#define COLOUR_BG_BRIGHT_GREEN                ( "\033[38;5;10m" )
-#define COLOUR_BG_BRIGHT_YELLOW               ( "\033[38;5;11m" )
-#define COLOUR_BG_BRIGHT_BLUE                 ( "\033[38;5;12m" )
-#define COLOUR_BG_BRIGHT_MAGENTA              ( "\033[38;5;13m" )
-#define COLOUR_BG_BRIGHT_CYAN                 ( "\033[38;5;14m" )
-#endif
+#define DELAYSIZE        20
+#define MAX_OPTIONS      7
+#define TITLECOLOR       1 /* color pair indices */
+#define MAINMENUCOLOR    ( 2 | A_BOLD )
+#define MAINMENUREVCOLOR ( 3 | A_BOLD | A_REVERSE )
+#define SUBMENUCOLOR     ( 4 | A_BOLD )
+#define SUBMENUREVCOLOR  ( 5 | A_BOLD | A_REVERSE )
+#define BODYCOLOR        6
+#define STATUSCOLOR      ( 5 )
+#define INPUTBOXCOLOR    8
+#define EDITBOXCOLOR     ( 9 | A_BOLD | A_REVERSE )
+#define A_ATTR           ( A_ATTRIBUTES ^ A_COLOR ) /* A_BLINK, A_REVERSE, A_BOLD */
+
+//-----------------------------------------------------------------------------
+// Typedefs, enums and structs
+//-----------------------------------------------------------------------------
+
+typedef void ( *FN_COMMAND )();
+
+typedef struct
+{
+    std::string text;
+    FN_COMMAND  function;
+
+} MENUCOMMAND, *PMENUCOMMAND;
+
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
+
+void display_menu( int old_option, int new_option );
+void colorbox( WINDOW* win, chtype color, int hasbox );
+
+// menu functions
+void TerminateProgram();
+void LoadProgramAndDisplay();
+
+//-----------------------------------------------------------------------------
+// Variables
+//-----------------------------------------------------------------------------
+
+MENUCOMMAND menuItems[ MAX_OPTIONS ] = {
+    {"New Project",      LoadProgramAndDisplay},
+    { "Open Project",    nullptr              },
+    { "Save Project",    nullptr              },
+    { "Save Project As", nullptr              },
+    { "Build Project",   nullptr              },
+    { "Run Project",     nullptr              },
+    { "Exit",            TerminateProgram     }
+};
+
+WINDOW* winTitle;
+WINDOW* winMenu;
+WINDOW* winStatus;
+WINDOW* winBody;
 
 //-----------------------------------------------------------------------------
 // External Functionality
 //-----------------------------------------------------------------------------
 
-std::string ScreenPosition( uint32_t x, uint32_t y )
-{
-    std::stringstream ss;
-    ss << "\033[" << y << ";" << x << "H";
-    return ss.str();
-}
-
 int main( int argc, char* argv[] )
 {
-    ScreenInfo screenInfo;
-    ScreenBox  screenBox;
+    int old_option = -1, new_option = 0, ch;
 
-    uint32_t   xPos = 1;
-    uint32_t   yPos = 5;
+    setlocale( LC_ALL, "" );
+    initscr();
 
-    screenInfo.SetupConsole();
-    screenInfo.RetrieveConsoleInfo();
+    keypad( stdscr, TRUE );
+    nodelay( stdscr, TRUE );
+    noecho();
 
-    screenBox.PrintBox( 1, 1, screenInfo.GetWidth(), screenInfo.GetHeight() );
-    screenBox.AddVertLine( 8, 3, screenInfo.GetHeight() - 2 );
-    screenBox.PrintBoxDouble( 20, 20, 50, 30 );
-    std::cout << ScreenPosition( 1, 1 );
+    start_color();
 
-    for ( uint32_t i = 0; i < screenInfo.GetHeight() - 4; i++ )
+    init_pair( TITLECOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
+    init_pair( MAINMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
+    init_pair( MAINMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
+    init_pair( SUBMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
+    init_pair( SUBMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
+    init_pair( BODYCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLUE );
+    init_pair( STATUSCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_WHITE );
+    init_pair( INPUTBOXCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_CYAN );
+    init_pair( EDITBOXCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
+
+    winTitle  = subwin( stdscr, 1, COLS, 0, 0 );
+    winStatus = subwin( stdscr, 1, COLS, LINES - 1, 0 );
+
+    colorbox( winTitle, TITLECOLOR, 0 );
+    mvwaddstr( winTitle, 0, 2, "Nimble IDE : Version 0.0.1" );
+    colorbox( winStatus, STATUSCOLOR, 0 );
+    mvwaddstr( winStatus, 0, 2, "Status Bar : " );
+
+    display_menu( old_option, new_option );
+
+    while ( true )
     {
-        std::cout << ScreenPosition( 3, i + 4 ) << std::format( "{0:04}", i + 1 ) << std::endl;
+        ch = wgetch( stdscr );
+
+        if ( ch != ERR )
+        {
+            if ( ch == 'q' || ch == 'Q' )
+                break;
+
+            if ( ch == KEY_UP )
+            {
+                old_option = new_option;
+                new_option = ( new_option == 0 ) ? MAX_OPTIONS - 1 : new_option - 1;
+                display_menu( old_option, new_option );
+            }
+            else if ( ch == KEY_DOWN )
+            {
+                old_option = new_option;
+                new_option = ( new_option == MAX_OPTIONS - 1 ) ? 0 : new_option + 1;
+                display_menu( old_option, new_option );
+            }
+            else if ( ch == 0xA /* KEY_ENTER */ )
+            {
+                if ( menuItems[ new_option ].function != nullptr )
+                {
+                    menuItems[ new_option ].function();
+                    clear();
+                    display_menu( old_option, new_option );
+                }
+            }
+        }
+
+        napms( DELAYSIZE );
+        refresh();
     }
 
-    // switch off the cursor
-    // std::cout << "\033[?25l";
+    endwin();
 
-    // change the background colour of the screen
-    // std::cout << "\033[48;5;0m";
+    // Return success
+    return EXIT_SUCCESS;
+}
 
-    // Print out the welcome message
-    std::cout << ScreenPosition( 5, 2 );
-    std::cout << "Welcome to the " << CHAR_FLASH << CHAR_BOLD << CHAR_ITALIC << "Nimble" << CHAR_RESET << " IDE" << std::endl;
-    std::cout << ScreenPosition( 1, 4 );
+//-----------------------------------------------------------------------------
+// Internal Functionality
+//-----------------------------------------------------------------------------
+void setcolor( WINDOW* win, chtype color )
+{
+    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
 
-    std::cout << ScreenPosition( 13, 15 );
-    std::cout << "This is "
-              << "\033[38;5;226m"
-              << "\033[48;5;100m"
-              << " YELLOW "
-              << "\033[0m"
-              << " text" << std::endl;
+    attr &= ~A_REVERSE; /* ignore reverse, use colors instead! */
+    wattrset( win, COLOR_PAIR( color & A_CHARTEXT ) | attr );
+}
 
-    std::cout << ScreenPosition( 13, 16 ) << "This is again " << COLOUR_TEXT( 226, 72, " YELLOW " ) << COLOUR_RESET << " text" << std::endl;
+void colorbox( WINDOW* win, chtype color, int hasbox )
+{
+    int    maxy;
+    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
 
-    xPos = ( screenInfo.GetWidth() / 2 ) - 9;
-    yPos = ( screenInfo.GetHeight() / 2 );
+    setcolor( win, color );
 
-    std::cout << ScreenPosition( 24, 21 ) << CHAR_FLASH << "This is flashing text" << CHAR_RESET << std::endl;
-    // std::cout << SCREEN_BOTTOM_LEFT << std::endl;
+    wbkgd( win, COLOR_PAIR( color & A_CHARTEXT ) | ( attr & ~A_REVERSE ) );
 
-    // wait for a key press
-    std::cin.get();
+    werase( win );
 
-    std::string filepath = "Content/story.txt";
+    maxy = getmaxy( win );
+    if ( hasbox && ( maxy > 2 ) )
+        box( win, 0, 0 );
 
-    // Open the file
-    std::ifstream file( filepath );
+    touchwin( win );
+    wrefresh( win );
+}
 
-    // Check if the file is open
-    if ( !file.is_open() )
+void display_menu( int old_option, int new_option )
+{
+    int lmarg = ( COLS - 14 ) / 2, tmarg = ( LINES - ( MAX_OPTIONS + 2 ) ) / 2;
+
+    if ( old_option == -1 )
     {
-        std::cerr << "Error opening the file." << std::endl;
-        return 1;
+        int i;
+
+        attrset( A_BOLD );
+        mvaddstr( tmarg - 3, lmarg - 5, "PDCurses Test Program" );
+        attrset( A_NORMAL );
+
+        for ( i = 0; i < MAX_OPTIONS; i++ ) mvaddstr( tmarg + i, lmarg, menuItems[ i ].text.c_str() );
+    }
+    else
+        mvaddstr( tmarg + old_option, lmarg, menuItems[ old_option ].text.c_str() );
+
+    attrset( A_REVERSE );
+    mvaddstr( tmarg + new_option, lmarg, menuItems[ new_option ].text.c_str() );
+    attrset( A_NORMAL );
+    attrset( COLOR_PAIR( 3 ) );
+    mvaddstr( tmarg + MAX_OPTIONS + 2, lmarg - 23, "Use Up and Down Arrows to select - Enter to run - Q to quit" );
+    attrset( COLOR_PAIR( 1 ) );
+    refresh();
+}
+
+//-----------------------------------------------------------------------------
+// Menu Functions
+//-----------------------------------------------------------------------------
+
+void TerminateProgram()
+{
+    endwin();
+    exit( EXIT_SUCCESS );
+}
+
+void LoadProgramAndDisplay()
+{
+    // Open a file for reading
+    std::ifstream inputFile( "example.txt" );
+
+    // Check if the file is opened successfully
+    if ( !inputFile.is_open() )
+    {
+        std::cerr << "Unable to open the file." << std::endl;
+        return;
     }
 
-    // Vector to store lines from the file
+    // Read the contents of the file into a vector of strings
     std::vector<std::string> lines;
-
-    // Read the file line by line
-    std::string line;
-    while ( std::getline( file, line ) )
+    std::string              line;
+    while ( std::getline( inputFile, line ) )
     {
         lines.push_back( line );
     }
 
     // Close the file
-    file.close();
+    inputFile.close();
 
-    uint8_t  key      = 0;
-    uint32_t fileLine = 0;
-    char     ch;
+    // display a full screen of the example text
+    int nFileLine = 0;
+    int nLine     = 0;
 
     while ( true )
     {
-        screenBox.PrintBox( 1, 1, screenInfo.GetWidth(), screenInfo.GetHeight() );
-        screenBox.AddVertLine( 8, 3, screenInfo.GetHeight() - 2 );
-        std::cout << ScreenPosition( 4, 2 ) << "The Story Text File" << std::endl;
+        int ch = wgetch( stdscr );
 
-        for ( uint32_t i = 0; i < screenInfo.GetHeight() - 4; i++ )
+        if ( ch != ERR )
         {
-            std::cout << ScreenPosition( 3, i + 4 ) << std::format( "{0:04}", i + 1 ) << std::endl;
-        }
 
-        yPos = 4;
-
-        // Display the content of the string array
-        for ( int32_t i = 0; i < screenInfo.GetHeight() - 5; i++ )
-        {
-            std::cout << ScreenPosition( 11, yPos++ ) << lines[ i + fileLine ] << std::endl;
-            if ( yPos == screenInfo.GetHeight() )
-                break;
-        }
-
-        ch = _getch(); // Get a character without waiting for Enter
-
-        if ( ch == 0xE0 )
-        {                  // Check for arrow keys (extended code)
-            ch = _getch(); // Get the extended code
-
-            switch ( ch )
+            if ( ch == 'q' || ch == 'Q' )
             {
-                case 72:
-                    if ( fileLine != 0 )
-                        fileLine--;
-                    break;
-                case 80:
-                    if ( fileLine != lines.size() )
-                        fileLine++;
-                    break;
+                return;
+            }
+
+            if ( ch == KEY_UP )
+            {
+                nFileLine = ( nFileLine == 0 ) ? 0 : nFileLine - 1;
+            }
+            else if ( ch == KEY_DOWN )
+            {
+                nFileLine = ( nFileLine == lines.size() - 1 ) ? lines.size() - 1 : nFileLine + 1;
+            }
+
+            clear();
+            nLine = 0;
+            while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
+            {
+                mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
+                nLine++;
             }
         }
-        else if ( ch == 27 ) // Escape
-        {
-            break;
-        }
+        // napms( DELAYSIZE );
+        refresh();
     }
-
-    std::cin.get();
-    std::cin.get();
-
-    // Return success
-    return EXIT_SUCCESS;
 }
 
 //-----------------------------------------------------------------------------

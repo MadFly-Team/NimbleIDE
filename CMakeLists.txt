@@ -23,7 +23,10 @@ ExternalProject_Add(
     LOG_DOWNLOAD ON
 )
 
+#-----------------------------------------------------------------------------
 # add the subdirectories for the library, IDE and testing framework being used
+#-----------------------------------------------------------------------------
+
 add_subdirectory(NimbleLIB)
 add_subdirectory(NimbleIDE)
 add_subdirectory(NimbleIDE/TestNimbleIDE)
