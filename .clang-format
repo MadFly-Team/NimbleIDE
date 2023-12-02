@@ -1,0 +1,87 @@
+# -----------------------------------------------------------------------------
+# Blackstar Digital Code Style
+# Settings for clang-format
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# THE BASICS
+# -----------------------------------------------------------------------------
+# BasedOnStyle: Microsoft
+Language: Cpp
+SortIncludes: Never
+IncludeBlocks: Preserve
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 200
+# -----------------------------------------------------------------------------
+# FUNCTIONS / SCOPES
+# -----------------------------------------------------------------------------
+# InsertBraces: true
+BreakBeforeBraces: Allman
+# BraceWrapping:
+#     AfterClass: true
+#     AfterCaseLabel: true
+#     AfterControlStatement: Always
+#     AfterEnum: true
+#     AfterFunction: true
+#     AfterNamespace: true
+#     AfterStruct: true
+#     AfterUnion: true
+#     BeforeElse: true
+#     BeforeWhile: false
+#     IndentBraces: false
+#     SplitEmptyFunction: true
+#     SplitEmptyRecord: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeTernaryOperators: true
+AlwaysBreakAfterReturnType: None
+AllowShortLoopsOnASingleLine: true
+AllowShortLambdasOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+# -----------------------------------------------------------------------------
+# STRUCTS / ENUMS / UNIONS
+# -----------------------------------------------------------------------------
+BitFieldColonSpacing: Both
+# -----------------------------------------------------------------------------
+# ALIGNMENT RULES
+# -----------------------------------------------------------------------------
+PointerAlignment: Left
+ReferenceAlignment: Pointer
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+AlignConsecutiveDeclarations: AcrossEmptyLines
+AlignConsecutiveAssignments: AcrossEmptyLines
+AlignConsecutiveBitFields: AcrossEmptyLinesAndComments
+AlignArrayOfStructures: Left
+AlignAfterOpenBracket: Align
+# -----------------------------------------------------------------------------
+# SPACING RULES
+# -----------------------------------------------------------------------------
+# No spaces between identifiers & brackets
+# One space between control statements & brackets
+SpaceBeforeParens: ControlStatements
+SpaceBeforeSquareBrackets: false
+# Spaces inside brackets
+SpacesInParentheses: true
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: true
+SpacesInSquareBrackets: true
+SpacesInContainerLiterals: true
+# Comments
+SpacesInLineCommentPrefix:
+    Minimum: 1
+    Maximum: -1
+AlignTrailingComments: true
+# -----------------------------------------------------------------------------
+# SWITCH STATEMENT RULES
+# -----------------------------------------------------------------------------
+IndentCaseLabels: true
+IndentCaseBlocks: false
+# -----------------------------------------------------------------------------
+# MISC RULES
+# -----------------------------------------------------------------------------
+MaxEmptyLinesToKeep: 1
