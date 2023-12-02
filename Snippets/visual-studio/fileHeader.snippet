@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>File Header with FileName, Group, and Brief (C++)</Title>
+      <Shortcut>fileheadercpp</Shortcut>
+      <Description>Inserts a C++ file header with the file name, group, and brief</Description>
+      <Author>Your Name</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>FileName</ID>
+          <ToolTip>Enter the file name</ToolTip>
+          <Default>USBHIDMessage.cpp</Default>
+        </Literal>
+        <Literal>
+          <ID>Group</ID>
+          <ToolTip>Enter the group name</ToolTip>
+          <Default>USBHIDConsoleLibrary</Default>
+        </Literal>
+        <Literal>
+          <ID>Brief</ID>
+          <ToolTip>Enter a brief description</ToolTip>
+          <Default>Nimble Message definitions for the USB tool.</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="cpp" Kind="method body"><![CDATA[
+/**----------------------------------------------------------------------------
+
+    @file       $FileName$
+    @defgroup   $Group$ $Brief$
+    @brief      $Brief$
+
+    @copyright  Neil Bereford 2023
+
+Notes:
+
+Version:
+
+        0.0.1.0     First Release, development phase. Draft copy
+
+-----------------------------------------------------------------------------*/
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

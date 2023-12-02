@@ -79,6 +79,7 @@ typedef struct
 
 void display_menu( int old_option, int new_option );
 void colorbox( WINDOW* win, chtype color, int hasbox );
+void setcolor( WINDOW* win, chtype color );
 
 // menu functions
 void TerminateProgram();
@@ -120,16 +121,15 @@ int main( int argc, char* argv[] )
 
     start_color();
 
-    init_pair( TITLECOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
-    init_pair( MAINMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
+    init_pair( TITLECOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLUE );
+    init_pair( MAINMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
     init_pair( MAINMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
     init_pair( SUBMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
     init_pair( SUBMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-    init_pair( BODYCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLUE );
+    init_pair( BODYCOLOR & ~A_ATTR, COLOR_GREEN, COLOR_BLACK );
     init_pair( STATUSCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_WHITE );
     init_pair( INPUTBOXCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_CYAN );
     init_pair( EDITBOXCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-
     winTitle  = subwin( stdscr, 1, COLS, 0, 0 );
     winStatus = subwin( stdscr, 1, COLS, LINES - 1, 0 );
 
@@ -139,6 +139,7 @@ int main( int argc, char* argv[] )
     mvwaddstr( winStatus, 0, 2, "Status Bar : " );
 
     display_menu( old_option, new_option );
+    attrset( COLOR_PAIR( 2 ) );
 
     while ( true )
     {
@@ -234,7 +235,7 @@ void display_menu( int old_option, int new_option )
     attrset( A_NORMAL );
     attrset( COLOR_PAIR( 3 ) );
     mvaddstr( tmarg + MAX_OPTIONS + 2, lmarg - 23, "Use Up and Down Arrows to select - Enter to run - Q to quit" );
-    attrset( COLOR_PAIR( 1 ) );
+    attrset( COLOR_PAIR( 2 ) );
     refresh();
 }
 
@@ -251,7 +252,7 @@ void TerminateProgram()
 void LoadProgramAndDisplay()
 {
     // Open a file for reading
-    std::ifstream inputFile( "example.txt" );
+    std::ifstream inputFile( "story.txt" );
 
     // Check if the file is opened successfully
     if ( !inputFile.is_open() )
@@ -274,6 +275,8 @@ void LoadProgramAndDisplay()
     // display a full screen of the example text
     int nFileLine = 0;
     int nLine     = 0;
+
+    attrset( COLOR_PAIR( 6 ) );
 
     while ( true )
     {
@@ -307,6 +310,12 @@ void LoadProgramAndDisplay()
         // napms( DELAYSIZE );
         refresh();
     }
+
+    colorbox( winTitle, TITLECOLOR, 0 );
+    mvwaddstr( winTitle, 0, 2, "Nimble IDE : Version 0.0.1" );
+    colorbox( winStatus, STATUSCOLOR, 0 );
+    mvwaddstr( winStatus, 0, 2, "Status Bar : " );
+    attrset( COLOR_PAIR( 2 ) );
 }
 
 //-----------------------------------------------------------------------------

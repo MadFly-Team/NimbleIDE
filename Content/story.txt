@@ -5,7 +5,7 @@
     @defgroup   CABRIG Cabrig Library
     @brief      Core types for the Cabrig Library
 
-    @copyright  Blackstar Amplification 2023
+    @copyright  Neil Bereford 2023
 
 Notes:
 

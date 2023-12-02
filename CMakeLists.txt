@@ -1,11 +1,12 @@
 # make sure the minimum cmake version is compatible with your compiler
-cmake_minimum_required(VERSION 3.9.1)
+cmake_minimum_required(VERSION 3.27.0)
 
 # set a project name and version number
 project(NimbleIDESuite VERSION 0.0.1)
 
-# set C Make to use the C++20 Language version
+# set C Make to use the C++17 Language version
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 20)
 
 include(ExternalProject)
 

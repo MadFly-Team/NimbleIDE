@@ -1,11 +1,5 @@
-# make sure the minimum cmake version is compatible with your compiler
-cmake_minimum_required(VERSION 3.9.1)
-
 # set a project name and version number
 project(TestNimbleIDE VERSION 0.0.1)
-
-# set C Make to use the C++20 Language version
-set(CMAKE_CXX_STANDARD 20)
 
 include(ExternalProject)
 find_package(Git REQUIRED)

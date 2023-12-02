@@ -1,6 +1,9 @@
 #build directories
 build/
 doctest/
+.vs/
+.vscode/
+out/
 
 # Prerequisites
 *.d

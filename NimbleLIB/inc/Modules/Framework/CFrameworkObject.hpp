@@ -4,7 +4,7 @@
     @defgroup   HardwareEmulationFramwork Hardware Emulation Framework
     @brief      Main Framework object
 
-    @copyright	Blackstar Amplification 2023
+    @copyright	Neil Bereford 2023
 
 Notes:
 
