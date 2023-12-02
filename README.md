@@ -1,5 +1,14 @@
 # Nimble IDE Suite
 
+## IMPORTANT NOTE
+
+This is in initial development, the project has only just started.
+
+* develop branch will always have a buildable project.
+* development is via issues and created branchs from develop.
+* releases will go to the main branch, as and when
+ 
+
 ## Application list
 
 - [NimbleLIB](#nimblelib)
