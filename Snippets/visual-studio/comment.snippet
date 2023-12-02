@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Custom Comment Block (C++)</Title>
+      <Shortcut>customcomment</Shortcut>
+      <Description>Inserts a custom comment block in C++</Description>
+      <Author>Your Name</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Kind="method body"><![CDATA[
+//-----------------------------------------------------------------------------
+// $Comment$
+//-----------------------------------------------------------------------------
+]]></Code>
+      <Declarations>
+        <Literal>
+          <ID>Comment</ID>
+          <ToolTip>Enter the comment</ToolTip>
+          <Default>Custom comment here</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

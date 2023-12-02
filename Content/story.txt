@@ -1,0 +1,167 @@
+/**----------------------------------------------------------------------------
+
+    @file       CABRIGLIB_Types.h
+
+    @defgroup   CABRIG Cabrig Library
+    @brief      Core types for the Cabrig Library
+
+    @copyright  Neil Bereford 2023
+
+Notes:
+
+Version:
+
+        0.0.1.0  First Release, development phase. Draft copy
+
+
+-----------------------------------------------------------------------------*/
+
+#ifndef _CABRIGLIB_TYPES_H_
+#define _CABRIGLIB_TYPES_H_
+
+//-----------------------------------------------------------------------------
+// Includes for the Controls
+//-----------------------------------------------------------------------------
+
+#include "Config/CABRIG_ConfigCtrl.h"
+#include "Message/CABRIG_MessageCtrl.h"
+
+//-----------------------------------------------------------------------------
+// Defines
+//-----------------------------------------------------------------------------
+
+#define SIZEOF_CABRIG_ID ( 4 )         //!< Size of CABRIGID structure
+#define LINK_TERMINATOR  ( (void*)-1 ) //!< END terminator for the link list
+
+//-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/// Link list struct.
+typedef struct
+{
+    void* Data;       //!< Pointer to the Data attached to the linkList
+    void* Prev;       //!< pointer - Prev chunk or LINK_TERMINATOR
+    void* Next;       //!< pointer - Next chunk or LINK_TERMINATOR
+
+} TS_LINK, *PTS_LINK; //!< Dbuble Link List
+
+//------------------------------------------------------------------------------
+
+/// Date structure.
+typedef union
+{
+    struct
+    {
+        uint8_t Year;  //!< Year 00-99
+        uint8_t Month; //!< Month 1-11
+        uint8_t Day;   //!< Day 1-31
+        uint8_t _Pad;  //!< Pad
+    };
+
+    uint32_t Data;                //!< Single entry for handling all data
+
+} TS_CABRIGDATE, *PTS_CABRIGDATE; //!< Date structure
+
+/// Version structure.
+typedef union
+{
+    struct
+    {
+        uint8_t Phase; //!< Phase of development 0-255
+        uint8_t Major; //!< Major section of development 0-255
+        uint8_t Minor; //!< Minor secton of development 0-255
+        uint8_t _Pad;  //!< Pad
+    };
+
+    uint32_t Data;                      //!< Single entry for handling all data
+
+} TS_CABRIGVERSION, *PTS_CABRIGVERSION; //!< Version structure
+
+/// Cabrig Pointer (containing size and CRC)
+typedef struct
+{
+    void*    Ptr;               //!< Pointer to Data
+    uint32_t Size;              //!< Size of Data
+    uint16_t CRC;               //!< CRC of Data
+
+} TS_CABRIGPTR, *PTS_CABRIGPTR; //!< Cabrig Pointer
+
+/// Cabrig ID structure.
+typedef struct
+{
+    union
+    {
+        uint8_t  Bytes[ SIZEOF_CABRIG_ID ]; //!< Bytes reference the ID
+        uint32_t Data;                      //!< Single entry containing all bytes
+    };
+
+} TS_CABRIGID, *PTS_CABRIGID; //!< Cabrig ID
+
+/// Cabrig Control flags.
+typedef union
+{
+    struct
+    {
+        uint8_t Initialialised : 1; //!< System initialised if 1
+        uint8_t Configured     : 1; //!< System Data handling configured if 1
+        uint8_t Running        : 1; //!< System running if 1
+    };
+
+    uint8_t Data;                   //!< Single entry for handling all data
+
+} TS_CABRIGFLAGS, *PTS_CABRIGFLAGS; //!< Cabrig control flags
+
+/// Cabrig Control Status structure.
+typedef union
+{
+    struct
+    {
+        TS_CABRIGFLAGS Flags;                //!< Cabrig Control flags
+        uint8_t        NumberActiveMessages; //!< Number of active messages
+        uint8_t        CurrentMessage;       //!< Cur message being processed
+    };
+
+    uint32_t Data;                    //!< Single entry for handling all data
+
+} TS_CABRIGSTATUS, *PTS_CABRIGSTATUS; //!< Cabrig control status
+
+/// Cabrig Control Header structure.
+typedef struct
+{
+    TS_CABRIGID      ID;              //!< Cabrig ID
+    TS_CABRIGDATE    Date;            //!< Date of Cabrig file
+    TS_CABRIGVERSION Version;         //!< Version of Cabrig file
+    uint16_t         Platform;        //!< Platform identifier
+
+} TS_CABRIGHEADER, *PTS_CABRIGHEADER; //!< Cabrig control header
+
+//------------------------------------------------------------------------------
+
+/// Cabrig control structure.
+/// this structure contains all the data that will be used within Cabrig,
+/// making it able to run more than one copy.
+typedef struct
+{
+    TS_CABRIGHEADER Header;        //!< Cabrig control header
+    TS_CABRIGSTATUS Status;        //!< Cabrig Status
+    TS_CABRIGPTR    Data;          //!< Cabrig ptr to cabrig data
+    TS_CABRIGPTR    Restore;       //!< Cabrig ptr to cabrig restore
+    TS_CABRIGPTR    Config;        //!< Cabrig ptr to Cabrig Config
+    uint32_t        TotalBlocks;   //!< Cabrig config blocks
+    TS_CABRIGPTR    MessageBuffer; //!< Cabrig ptr to Cabrig Message buffer
+    uint32_t        TotalMessages; //!< Cabrig total messages to be handled.
+
+    // internal use...
+    TS_INTCONFIGCTRL  InternalConfigCtrl;  //!< Internal use, config control.
+    TS_INTMESSAGECTRL InternalMessageCtrl; //!< Internal use, config control.
+
+} TS_CABRIGCONTROL, *PTS_CABRIGCONTROL;    //!< Cabrig Control
+
+//-----------------------------------------------------------------------------
+
+#endif // _CABRIGLIB_TYPES_H_
+
+//-----------------------------------------------------------------------------
+// End of file: CABRIGLIB_Types.h
+//-----------------------------------------------------------------------------

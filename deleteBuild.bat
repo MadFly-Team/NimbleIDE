@@ -1,3 +1,4 @@
 cd build
 rd /s /q .
-cd ..
+cmake ..
+cmake --build .
