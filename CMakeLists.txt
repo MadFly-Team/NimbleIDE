@@ -30,7 +30,8 @@ ExternalProject_Add(
 
 add_subdirectory(NimbleLIB)
 add_subdirectory(NimbleIDE)
-add_subdirectory(NimbleIDE/TestNimbleIDE)
+add_subdirectory(TestNimbleIDE)
+add_subdirectory(TestNimbleLIB)
 
 # install the files needed for test
 #file( COPY "Tools/UnitTests/Content" DESTINATION "Tools/UnitTests/Debug" )
