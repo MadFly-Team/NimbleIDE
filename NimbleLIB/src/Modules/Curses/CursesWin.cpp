@@ -78,6 +78,56 @@ CursesWin::~CursesWin()
 {
 }
 
+// Control ---------------------------------------------------------------------
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Initialises the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError Init()
+{
+    LibraryError error = LibraryError::No_Error;
+
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Draws the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError Draw()
+{
+    LibraryError error = LibraryError::No_Error;
+
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Clears the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError Clear()
+{
+    LibraryError error = LibraryError::No_Error;
+
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Refreshes the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError Refresh()
+{
+    LibraryError error = LibraryError::No_Error;
+
+    return error;
+}
+
 // Getters ---------------------------------------------------------------------
 
 /**---------------------------------------------------------------------------

@@ -60,6 +60,22 @@ enum class LibraryError
     // Logger Errors
     Logger_base_error = LIBRARY_ERROR_BASE, //!< 0x10001000 Base error for the Logger
     Logger_InitializeNotCalled,             //!< 0x10001001 Failed to initialise the Logger
+
+    // Curses Errors
+    Curses_base_error = Logger_base_error + MODULE_OFFSET, //!< 0x10002000 Base error for the Curses module
+    CursesColour_AlreadyInitialised,                       //!< 0x10002001 Curses Colour class already initialised
+
+    // File Handling Errors
+    FileHandlding_base_error = Curses_base_error + MODULE_OFFSET, //!< 0x10003000 Base error for the File Handling module
+
+    // ErrorHandling Errors
+    ErrorHandler_base_error = FileHandlding_base_error + MODULE_OFFSET, //!< 0x10004000 Base error for the Error Handling module
+
+    // Screen Errors
+    Screen_base_error = FileHandlding_base_error + MODULE_OFFSET, //!< 0x10005000 Base error for the Screen module
+
+    // Utllities Errors
+    Utilities_base_error = Screen_base_error + MODULE_OFFSET, //!< 0x10006000 Base error for the Utilities module
 };
 
 // ----------------------------------------------------------------------------
