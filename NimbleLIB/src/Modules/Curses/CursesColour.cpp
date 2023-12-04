@@ -98,7 +98,7 @@ CursesColour::~CursesColour()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Initialises the colours for the curses colour class
   --------------------------------------------------------------------------*/
-LibraryError CursesColour::Init()
+LibraryError CursesColour::init()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -108,6 +108,11 @@ LibraryError CursesColour::Init()
     }
     else
     {
+        if ( start_color() == ERR )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesColour_CannotStartColour, "Failed to start curses colours for the terminal" );
+        }
+
         // Create the colour pairs
         colourPairs.clear();
         for ( uint32_t i = 0; i < MAX_COLOURS; i++ )
@@ -140,7 +145,7 @@ LibraryError CursesColour::Init()
     @param      bg      The background colour
     @return     LibraryError    Error code
   --------------------------------------------------------------------------*/
-LibraryError CursesColour::SetColorPair( uint32_t pair, uint32_t fg, uint32_t bg )
+LibraryError CursesColour::setColorPair( uint32_t pair, uint32_t fg, uint32_t bg )
 {
     LibraryError error = LibraryError::No_Error;
     if ( pair > MAX_COLOURS )
@@ -165,7 +170,7 @@ LibraryError CursesColour::SetColorPair( uint32_t pair, uint32_t fg, uint32_t bg
     @param      fg      The foreground colour
     @return     LibraryError    Error code
   --------------------------------------------------------------------------*/
-LibraryError CursesColour::SetInkColourPair( uint32_t pair, uint32_t ink )
+LibraryError CursesColour::setInkColourPair( uint32_t pair, uint32_t ink )
 {
     LibraryError error = LibraryError::No_Error;
     if ( pair > MAX_COLOURS )
@@ -189,7 +194,7 @@ LibraryError CursesColour::SetInkColourPair( uint32_t pair, uint32_t ink )
     @param      bg      The background colour
     @return     LibraryError    Error code
   --------------------------------------------------------------------------*/
-LibraryError CursesColour::SetPaperColourPair( uint32_t pair, uint32_t paper )
+LibraryError CursesColour::setPaperColourPair( uint32_t pair, uint32_t paper )
 {
     LibraryError error = LibraryError::No_Error;
     if ( pair > MAX_COLOURS )
@@ -207,6 +212,20 @@ LibraryError CursesColour::SetPaperColourPair( uint32_t pair, uint32_t paper )
 }
 
 //-----------------------------------------------------------------------------
+
+LibraryError CursesColour::setColour( std::unique_ptr<CursesWin> win, uint32_t pair )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( pair > MAX_COLOURS )
+    {
+        error = LibraryError::CursesColour_InvalidColourPair;
+    }
+    else
+    {
+        win->setColour( pair );
+    }
+    return error;
+}
 
 } // namespace Nimble
 

@@ -30,8 +30,9 @@ extern "C"
 #include "../../../../ExternalLibraries/PDCurses/curses.h"
 }
 
-#include "../ErrorHandling/Errors.h"
+#include "../ErrorHandling/ErrorHandler.h"
 #include "../Utilities/StatusCtrl.h"
+#include "CursesWin.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -69,10 +70,11 @@ class CursesColour : public StatusCtrl
         return instance;
     }
     // Member functions ---------------------------------------------------------
-    LibraryError Init();
-    LibraryError SetColorPair( uint32_t pair, uint32_t fg, uint32_t bg );
-    LibraryError SetInkColourPair( uint32_t pair, uint32_t ink );
-    LibraryError SetPaperColourPair( uint32_t pair, uint32_t paper );
+    LibraryError init();
+    LibraryError setColorPair( uint32_t pair, uint32_t fg, uint32_t bg );
+    LibraryError setInkColourPair( uint32_t pair, uint32_t ink );
+    LibraryError setPaperColourPair( uint32_t pair, uint32_t paper );
+    LibraryError setColour( std::unique_ptr<CursesWin> win, uint32_t pair );
 
   private:
     // Singleton constructor and destructor ------------------------------------

@@ -32,6 +32,12 @@ extern "C"
 #include "../ErrorHandling/ErrorHandler.h"
 
 //-----------------------------------------------------------------------------
+// Define constants
+// ----------------------------------------------------------------------------
+
+#define A_ATTR ( A_ATTRIBUTES ^ A_COLOR ) /* A_BLINK, A_REVERSE, A_BOLD */
+
+//-----------------------------------------------------------------------------
 // Namespace
 // ----------------------------------------------------------------------------
 
@@ -65,6 +71,7 @@ class CursesWin
     void setY( uint32_t y );
     void setInkColour( uint32_t inkColour );
     void setPaperColour( uint32_t paperColour );
+    void setColour( uint32_t colour );
     // Control ------------------------------------------------------------------
     LibraryError init();
     LibraryError draw();
@@ -72,10 +79,13 @@ class CursesWin
     LibraryError refresh();
 
     // display functions --------------------------------------------------------
-    LibraryError print( uint32_t x, uint32_t y, const char* text );
-    LibraryError colourWindow( uint32_t inkColour, uint32_t paperColour );
+    LibraryError print( uint32_t x, uint32_t y, const std::string& text );
+    LibraryError colourWindow( uint32_t colour, bool hasBox );
 
   private:
+    // Constants ----------------------------------------------------------------
+    const uint32_t MIN_WIN_SIZE = 2; //!< Minimum size of the window
+
     // Member variables ---------------------------------------------------------
     uint32_t winWidth;       //!< Width of the window
     uint32_t winHeight;      //!< Height of the window
@@ -86,6 +96,7 @@ class CursesWin
     WINDOW*  win;            //!< The curses window
 
     // Member functions ---------------------------------------------------------
+    bool colourBox( uint32_t colour, bool hasBox );
 };
 
 //-----------------------------------------------------------------------------

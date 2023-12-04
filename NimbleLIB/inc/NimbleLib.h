@@ -26,6 +26,8 @@ Version:
 #include "Modules/Screen/ScreenPrint.h"           // ScreenPrint class
 #include "Modules/Screen/ScreenBox.h"             // ScreenBox class
 #include "Modules/Framework/CFrameworkObject.hpp" // Hardware FrameworkObject class
+#include "Modules/Curses/CursesColour.h"          // CursesColour class
+#include "Modules/Curses/CursesWin.h"             // CursesWin class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

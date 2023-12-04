@@ -8,7 +8,32 @@
 
 Notes:
 
-        please see CursesWin.cpp for full details.
+        Curses window class for the Nimble Library. This class provides a curses
+        window for the Nimble Library. The curses window is a sub-window of the
+        curses screen. The curses window is created using the curses subwin()
+        function. The curses window is used to display text and graphics. The
+        curses window is used by the curses text and graphics classes.
+
+        The following have getters and setters
+           winWidth    - width of window
+           winheight   - height if window
+           winX        - left screen positiom of window
+           winY        - Top position for the window
+           inkColour   - ink colour of the window
+           paperColour - paper colour of the window
+
+        The ColourWindow() function is used to set the colour of the window. The
+        colour of the window is set using the curses wattron() function.
+        The print() function is used to print text to the window.
+
+        Example of usage:
+
+            std::unique_ptr<CursesWin> winTitle;
+
+            winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_BLUE );
+            winTitle->colourWindow( TITLECOLOR, false );
+            winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
+
 
 Version:
 
@@ -86,6 +111,49 @@ CursesWin::~CursesWin()
 {
 }
 
+// display ---------------------------------------------------------------------
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Prints text to the curses window
+    @param      x       The x position of the text
+    @param      y       The y position of the text
+    @param      text    The text to print
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::print( uint32_t x, uint32_t y, const std::string& text )
+{
+    LibraryError error = LibraryError::No_Error;
+
+    if ( mvwaddstr( win, y, x, text.c_str() ) == ERR )
+    {
+        error = LibraryError::CursesWin_FailedToPrintToWindow;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to print to the curses window" );
+    }
+
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Prints text to the curses window
+    @param      colour   The collour of the window
+    @param      hasBox   Does the window have a box
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::colourWindow( uint32_t colour, bool hasBox )
+{
+    LibraryError error = LibraryError::No_Error;
+
+    if ( colourBox( colour, hasBox ) == false )
+    {
+        error = LibraryError::CursesWin_FailedToColourWindow;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to colour the curses window" );
+    }
+
+    return error;
+}
+
 // Control ---------------------------------------------------------------------
 
 /**---------------------------------------------------------------------------
@@ -93,7 +161,7 @@ CursesWin::~CursesWin()
     @brief      Initialises the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError init()
+LibraryError CursesWin::init()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -105,9 +173,12 @@ LibraryError init()
     @brief      Draws the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError draw()
+LibraryError CursesWin::draw()
 {
     LibraryError error = LibraryError::No_Error;
+
+    touchwin( win );
+    wrefresh( win );
 
     return error;
 }
@@ -117,7 +188,7 @@ LibraryError draw()
     @brief      Clears the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError clear()
+LibraryError CursesWin::clear()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -129,7 +200,7 @@ LibraryError clear()
     @brief      Refreshes the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError refresh()
+LibraryError CursesWin::refresh()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -261,6 +332,58 @@ void CursesWin::setPaperColour( uint32_t paperColour )
 }
 
 // Other Functions ------------------------------------------------------------
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Colours the window, adding box around the window if needed
+    @param      colour  The colour of the box
+    @param      hasBox  Whether the box should be drawn
+    @return     bool    true if the box was drawn, false otherwise
+  --------------------------------------------------------------------------*/
+bool CursesWin::colourBox( uint32_t colour, bool hasBox )
+{
+    bool     drawn = false;
+    uint32_t maxY;
+    chtype   attr = colour & A_ATTR;
+
+    // set the colour of the window
+    setColour( colour );
+    if ( wbkgd( win, COLOR_PAIR( colour & A_CHARTEXT ) | ( attr & ~A_REVERSE ) ) == ERR )
+    {
+        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesWin_FailedToColourBackground, "Failed to colour the background of the window" );
+        return drawn;
+    }
+
+    if ( werase( win ) == ERR )
+    {
+        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesWin_FailedToClearWindow, "Failed to clear the window" );
+        return drawn;
+    }
+
+    // draw the box if needed
+    maxY = getmaxy( win );
+    if ( hasBox && ( maxY > MIN_WIN_SIZE ) )
+    {
+        box( win, 0, 0 );
+    }
+
+    // update the window
+    touchwin( win );
+    wrefresh( win );
+
+    drawn = true;
+    return ( drawn );
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Sets the colour of the window
+    @param      colour   The colour of the window
+  --------------------------------------------------------------------------*/
+void CursesWin::setColour( uint32_t colour )
+{
+    wattrset( win, COLOR_PAIR( colour & A_CHARTEXT ) | ( colour & A_ATTRIBUTES ) );
+}
 
 //-----------------------------------------------------------------------------
 
