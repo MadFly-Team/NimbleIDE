@@ -119,11 +119,90 @@ LibraryError CursesColour::Init()
             newColourPair.paper = i / NUUM_BASE_COLORS;
             // Add the colour pair to the list
             colourPairs.push_back( newColourPair );
+
+            // Set the colour pair in the curses library
+            init_pair( newColourPair.index, newColourPair.ink, newColourPair.paper );
         }
         // Set the initialized flag
         setInitialized();
     }
 
+    return error;
+}
+
+// Setters --------------------------------------------------------------------
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Sets the curses colour pair
+    @param      pair    The colour pair to set
+    @param      fg      The foreground colour
+    @param      bg      The background colour
+    @return     LibraryError    Error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesColour::SetColorPair( uint32_t pair, uint32_t fg, uint32_t bg )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( pair > MAX_COLOURS )
+    {
+        error = LibraryError::CursesColour_InvalidColourPair;
+    }
+    else
+    {
+        // Set the internal store
+        colourPairs[ pair ].ink   = fg;
+        colourPairs[ pair ].paper = bg;
+        // Set the cursees colour pair
+        init_pair( pair, fg, bg );
+    }
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Sets the curses colour pair
+    @param      pair    The colour pair to set
+    @param      fg      The foreground colour
+    @return     LibraryError    Error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesColour::SetInkColourPair( uint32_t pair, uint32_t ink )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( pair > MAX_COLOURS )
+    {
+        error = LibraryError::CursesColour_InvalidColourPair;
+    }
+    else
+    {
+        // Set the internal store
+        colourPairs[ pair ].ink = ink;
+        // Set the cursees colour pair
+        init_pair( pair, ink, colourPairs[ pair ].paper );
+    }
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Sets the curses colour pair
+    @param      pair    The colour pair to set
+    @param      bg      The background colour
+    @return     LibraryError    Error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesColour::SetPaperColourPair( uint32_t pair, uint32_t paper )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( pair > MAX_COLOURS )
+    {
+        error = LibraryError::CursesColour_InvalidColourPair;
+    }
+    else
+    {
+        // Set the internal store
+        colourPairs[ pair ].paper = paper;
+        // Set the cursees colour pair
+        init_pair( pair, colourPairs[ pair ].ink, paper );
+    }
     return error;
 }
 

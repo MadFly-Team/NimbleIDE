@@ -29,7 +29,7 @@ extern "C"
 #include "../../../../ExternalLibraries/PDCurses/curses.h"
 }
 
-#include "../ErrorHandling/Errors.h"
+#include "../ErrorHandling/ErrorHandler.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -52,24 +52,28 @@ class CursesWin
 
     // Member functions ---------------------------------------------------------
     // Getters ------------------------------------------------------------------
-    uint32_t GetWidth() const noexcept;
-    uint32_t GetHeight() const noexcept;
-    uint32_t GetX() const noexcept;
-    uint32_t GetY() const noexcept;
-    uint32_t GetInkColour() const noexcept;
-    uint32_t GetPaperColour() const noexcept;
+    uint32_t getWidth() const noexcept;
+    uint32_t getHeight() const noexcept;
+    uint32_t getX() const noexcept;
+    uint32_t getY() const noexcept;
+    uint32_t getInkColour() const noexcept;
+    uint32_t getPaperColour() const noexcept;
     // Setters ------------------------------------------------------------------
-    void SetWidth( uint32_t width );
-    void SetHeight( uint32_t height );
-    void SetX( uint32_t x );
-    void SetY( uint32_t y );
-    void SetInkColour( uint32_t inkColour );
-    void SetPaperColour( uint32_t paperColour );
+    void setWidth( uint32_t width );
+    void setHeight( uint32_t height );
+    void setX( uint32_t x );
+    void setY( uint32_t y );
+    void setInkColour( uint32_t inkColour );
+    void setPaperColour( uint32_t paperColour );
     // Control ------------------------------------------------------------------
-    LibraryError Init();
-    LibraryError Draw();
-    LibraryError Clear();
-    LibraryError Refresh();
+    LibraryError init();
+    LibraryError draw();
+    LibraryError clear();
+    LibraryError refresh();
+
+    // display functions --------------------------------------------------------
+    LibraryError print( uint32_t x, uint32_t y, const char* text );
+    LibraryError colourWindow( uint32_t inkColour, uint32_t paperColour );
 
   private:
     // Member variables ---------------------------------------------------------

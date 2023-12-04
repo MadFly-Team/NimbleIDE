@@ -64,6 +64,8 @@ enum class LibraryError
     // Curses Errors
     Curses_base_error = Logger_base_error + MODULE_OFFSET, //!< 0x10002000 Base error for the Curses module
     CursesColour_AlreadyInitialised,                       //!< 0x10002001 Curses Colour class already initialised
+    CursesColour_InvalidColourPair,                        //!< 0x10002002 Curses Colour class invalid colour pair
+    CursesWin_FailedToCreateWindow,                        //!< 0x10002003 Curses Window class failed to create window
 
     // File Handling Errors
     FileHandlding_base_error = Curses_base_error + MODULE_OFFSET, //!< 0x10003000 Base error for the File Handling module

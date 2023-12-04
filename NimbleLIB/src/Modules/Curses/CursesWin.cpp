@@ -62,12 +62,20 @@ CursesWin::CursesWin()
   --------------------------------------------------------------------------*/
 CursesWin::CursesWin( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour )
 {
+    // initialise variables
     winWidth       = width;
     winHeight      = height;
     winX           = x;
     winY           = y;
     winInkColour   = inkColour;
     winPaperColour = paperColour;
+
+    // create the window
+    win = subwin( stdscr, winHeight, winWidth, winY, winX );
+    if ( win == nullptr )
+    {
+        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesWin_FailedToCreateWindow, "Failed to create the curses window" );
+    }
 }
 
 /**---------------------------------------------------------------------------
@@ -85,7 +93,7 @@ CursesWin::~CursesWin()
     @brief      Initialises the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError Init()
+LibraryError init()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -97,7 +105,7 @@ LibraryError Init()
     @brief      Draws the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError Draw()
+LibraryError draw()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -109,7 +117,7 @@ LibraryError Draw()
     @brief      Clears the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError Clear()
+LibraryError clear()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -121,7 +129,7 @@ LibraryError Clear()
     @brief      Refreshes the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
-LibraryError Refresh()
+LibraryError refresh()
 {
     LibraryError error = LibraryError::No_Error;
 
@@ -135,7 +143,7 @@ LibraryError Refresh()
     @brief      Gets the width of the window
     @return     The width of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetWidth() const noexcept
+uint32_t CursesWin::getWidth() const noexcept
 {
     return winWidth;
 }
@@ -145,7 +153,7 @@ uint32_t CursesWin::GetWidth() const noexcept
     @brief      Gets the height of the window
     @return     The height of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetHeight() const noexcept
+uint32_t CursesWin::getHeight() const noexcept
 {
     return winHeight;
 }
@@ -155,7 +163,7 @@ uint32_t CursesWin::GetHeight() const noexcept
     @brief      Gets the x position of the window
     @return     The x position of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetX() const noexcept
+uint32_t CursesWin::getX() const noexcept
 {
     return winX;
 }
@@ -165,7 +173,7 @@ uint32_t CursesWin::GetX() const noexcept
     @brief      Gets the y position of the window
     @return     The y position of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetY() const noexcept
+uint32_t CursesWin::getY() const noexcept
 {
     return winY;
 }
@@ -175,7 +183,7 @@ uint32_t CursesWin::GetY() const noexcept
     @brief      Gets the ink colour of the window
     @return     The ink colour of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetInkColour() const noexcept
+uint32_t CursesWin::getInkColour() const noexcept
 {
     return winInkColour;
 }
@@ -185,7 +193,7 @@ uint32_t CursesWin::GetInkColour() const noexcept
     @brief      Gets the paper colour of the window
     @return     The paper colour of the window
   --------------------------------------------------------------------------*/
-uint32_t CursesWin::GetPaperColour() const noexcept
+uint32_t CursesWin::getPaperColour() const noexcept
 {
     return winPaperColour;
 }
@@ -197,7 +205,7 @@ uint32_t CursesWin::GetPaperColour() const noexcept
     @brief      Sets the width of the window
     @param      width   The width of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetWidth( uint32_t width )
+void CursesWin::setWidth( uint32_t width )
 {
     winWidth = width;
 }
@@ -207,7 +215,7 @@ void CursesWin::SetWidth( uint32_t width )
     @brief      Sets the height of the window
     @param      height  The height of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetHeight( uint32_t height )
+void CursesWin::setHeight( uint32_t height )
 {
     winHeight = height;
 }
@@ -217,7 +225,7 @@ void CursesWin::SetHeight( uint32_t height )
     @brief      Sets the x position of the window
     @param      x       The x position of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetX( uint32_t x )
+void CursesWin::setX( uint32_t x )
 {
     winX = x;
 }
@@ -227,7 +235,7 @@ void CursesWin::SetX( uint32_t x )
     @brief      Sets the y position of the window
     @param      y       The y position of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetY( uint32_t y )
+void CursesWin::setY( uint32_t y )
 {
     winY = y;
 }
@@ -237,7 +245,7 @@ void CursesWin::SetY( uint32_t y )
     @brief      Sets the ink colour of the window
     @param      inkColour   The ink colour of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetInkColour( uint32_t inkColour )
+void CursesWin::setInkColour( uint32_t inkColour )
 {
     winInkColour = inkColour;
 }
@@ -247,7 +255,7 @@ void CursesWin::SetInkColour( uint32_t inkColour )
     @brief      Sets the paper colour of the window
     @param      paperColour The paper colour of the window
   --------------------------------------------------------------------------*/
-void CursesWin::SetPaperColour( uint32_t paperColour )
+void CursesWin::setPaperColour( uint32_t paperColour )
 {
     winPaperColour = paperColour;
 }
