@@ -28,6 +28,7 @@ Version:
 #include "Modules/Framework/CFrameworkObject.hpp" // Hardware FrameworkObject class
 #include "Modules/Curses/CursesColour.h"          // CursesColour class
 #include "Modules/Curses/CursesWin.h"             // CursesWin class
+#include "Modules/Curses/CursesMenu.h"            // CursesMenu class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

@@ -20,6 +20,8 @@ Version:
 //-----------------------------------------------------------------------------
 
 // #include <windows.h>
+#include <cstddef>
+#include <functional>
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
@@ -49,13 +51,13 @@ using namespace Nimble::Screen;
 
 #define DELAYSIZE        20
 #define MAX_OPTIONS      7
-#define TITLECOLOR       1 /* color pair indices */
+#define TITLECOLOR       57 /* color pair indices */
 #define MAINMENUCOLOR    ( 2 | A_BOLD )
 #define MAINMENUREVCOLOR ( 3 | A_BOLD | A_REVERSE )
 #define SUBMENUCOLOR     ( 4 | A_BOLD )
 #define SUBMENUREVCOLOR  ( 5 | A_BOLD | A_REVERSE )
 #define BODYCOLOR        6
-#define STATUSCOLOR      ( 5 )
+#define STATUSCOLOR      ( 58 )
 #define INPUTBOXCOLOR    8
 #define EDITBOXCOLOR     ( 9 | A_BOLD | A_REVERSE )
 #define A_ATTR           ( A_ATTRIBUTES ^ A_COLOR ) /* A_BLINK, A_REVERSE, A_BOLD */
@@ -125,50 +127,43 @@ int main( int argc, char* argv[] )
 
     winStatus = std::make_unique<CursesWin>( COLS, 1, 0, LINES - 1, COLOR_BLACK, COLOR_WHITE );
     winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_BLUE );
-    winTitle->colourWindow( TITLECOLOR, false );
+    winTitle->colourWindow( TITLECOLOR, 0 );
     winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
     winStatus->colourWindow( STATUSCOLOR, 0 );
     winStatus->print( 2, 0, "Status Bar : " );
 
-    display_menu( old_option, new_option );
+    CursesMenu menu;
 
-    attrset( COLOR_PAIR( 8 ) );
+    // setup the menu text...
+    std::string menuTitle    = "Nimble IDE : Version 0.0.1";
+    std::string menuFooter   = "Navigation: Arrow Keys, Enter to Select, Q to Quit";
+    std::string menuSubTitle = "Main Menu";
+    menu.setMenuTitle( menuTitle );
+    menu.setMenuFooter( menuFooter );
+    menu.setMenuSubTitle( menuSubTitle );
 
-    while ( true )
+    // setup  and run the menu options...
+    std::vector<std::string> meniItems = { "New Project", "Open Project", "Save Project", "Save Project As", "Build Project", "Run Project", "Exit" };
+    menu.setMenuOptions( meniItems );
+
+    // check that menu only quits on Exit
+    int32_t optionSelected = menu.processMenu();
+    switch ( optionSelected )
     {
-        ch = wgetch( stdscr );
-
-        if ( ch != ERR )
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
         {
-            if ( ch == 'q' || ch == 'Q' )
-                break;
-
-            if ( ch == KEY_UP )
-            {
-                old_option = new_option;
-                new_option = ( new_option == 0 ) ? MAX_OPTIONS - 1 : new_option - 1;
-                display_menu( old_option, new_option );
-            }
-            else if ( ch == KEY_DOWN )
-            {
-                old_option = new_option;
-                new_option = ( new_option == MAX_OPTIONS - 1 ) ? 0 : new_option + 1;
-                display_menu( old_option, new_option );
-            }
-            else if ( ch == 0xA /* KEY_ENTER */ )
-            {
-                if ( menuItems[ new_option ].function != nullptr )
-                {
-                    menuItems[ new_option ].function();
-                }
-            }
+            std::stringstream message;
+            message << "User selected Exit from the menu with " << optionSelected + 1;
+            ErrorHandler::getInstance().LogMessage( message.str() );
+            break;
         }
-
-        napms( DELAYSIZE );
-        refresh();
     }
-
-    endwin();
 
     // Return success
     return EXIT_SUCCESS;

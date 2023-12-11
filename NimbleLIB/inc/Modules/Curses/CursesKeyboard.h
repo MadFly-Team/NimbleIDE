@@ -24,6 +24,7 @@ Version:
 
 #include <cinttypes>
 #include <cstdint>
+#include <functional>
 
 extern "C"
 {
@@ -44,7 +45,7 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-typedef void ( *pKeyFunction )( int32_t key ); //!< Keymap Function pointer type
+using pKeyFunction = std::function<void( uint32_t )>; //!< Keymap Function pointer type
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
@@ -77,6 +78,7 @@ class CursesKeyboard
     // Setters ------------------------------------------------------------------
     // Other --------------------------------------------------------------------
     void addKeyMap( const std::string& name, const std::vector<uint32_t>& keys, pKeyFunction function );
+    void addKeyMapArray( const std::vector<KeyMap>& keyMapArray );
     void clearKeyMaps();
     void processKeyMaps();
     //---------------------------------------------------------------------------

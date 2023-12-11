@@ -1,13 +1,13 @@
 let SessionLoad = 1
 let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
 let v:this_session=expand("<sfile>:p")
+let VM_check_mappings =  1 
 let VM_mouse_mappings =  0 
 let VM_default_mappings =  1 
 let VM_persistent_registers =  0 
+let NetrwTopLvlMenu = "Netrw."
 let VM_highlight_matches = "underline"
 let NetrwMenuPriority =  80 
-let VM_check_mappings =  1 
-let NetrwTopLvlMenu = "Netrw."
 silent only
 silent tabonly
 cd D:/NewProjects/Utilities/NimbleIDE/Trunk
@@ -20,19 +20,24 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +69 NimbleLIB/inc/Modules/Curses/CursesWin.h
-badd +93 NimbleLIB/src/Modules/Curses/CursesWin.cpp
-badd +76 NimbleIDE/src/main.cpp
+badd +109 NimbleLIB/inc/Modules/Curses/CursesMenu.h
+badd +161 NimbleLIB/src/Modules/Curses/CursesMenu.cpp
+badd +1 D:/NewProjects/Utilities/NimbleIDE/Trunk
+badd +218 NimbleIDE/src/main.cpp
 argglobal
 %argdel
-$argadd .
-edit NimbleLIB/src/Modules/Curses/CursesWin.cpp
+$argadd D:/NewProjects/Utilities/NimbleIDE/Trunk
+edit NimbleLIB/src/Modules/Curses/CursesMenu.cpp
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -45,7 +50,7 @@ set winminwidth=0
 set winwidth=1
 wincmd =
 argglobal
-balt NimbleLIB/inc/Modules/Curses/CursesWin.h
+balt NimbleIDE/src/main.cpp
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -54,20 +59,52 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 93 - ((36 * winheight(0) + 53) / 106)
+118
+normal! zo
+131
+normal! zo
+182
+normal! zo
+let s:l = 161 - ((38 * winheight(0) + 53) / 106)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 93
+keepjumps 161
+normal! 05|
+lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
+wincmd w
+argglobal
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h | endif
+if &buftype ==# 'terminal'
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h
+endif
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/Curses/CursesMenu.cpp
+setlocal fdm=indent
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=99
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+57
+normal! zo
+91
+normal! zo
+let s:l = 96 - ((11 * winheight(0) + 26) / 53)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 96
 normal! 0
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
 argglobal
-if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesWin.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesWin.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesWin.h | endif
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp | endif
 if &buftype ==# 'terminal'
-  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesWin.h
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp
 endif
-balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -76,11 +113,15 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 76 - ((75 * winheight(0) + 53) / 106)
+119
+normal! zo
+153
+normal! zo
+let s:l = 218 - ((22 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 76
+keepjumps 218
 normal! 0
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
