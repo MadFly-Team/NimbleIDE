@@ -20,6 +20,8 @@ Version:
 //-----------------------------------------------------------------------------
 
 // #include <windows.h>
+#include <cstddef>
+#include <functional>
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
@@ -49,13 +51,13 @@ using namespace Nimble::Screen;
 
 #define DELAYSIZE        20
 #define MAX_OPTIONS      7
-#define TITLECOLOR       1 /* color pair indices */
+#define TITLECOLOR       57 /* color pair indices */
 #define MAINMENUCOLOR    ( 2 | A_BOLD )
 #define MAINMENUREVCOLOR ( 3 | A_BOLD | A_REVERSE )
 #define SUBMENUCOLOR     ( 4 | A_BOLD )
 #define SUBMENUREVCOLOR  ( 5 | A_BOLD | A_REVERSE )
 #define BODYCOLOR        6
-#define STATUSCOLOR      ( 5 )
+#define STATUSCOLOR      ( 58 )
 #define INPUTBOXCOLOR    8
 #define EDITBOXCOLOR     ( 9 | A_BOLD | A_REVERSE )
 #define A_ATTR           ( A_ATTRIBUTES ^ A_COLOR ) /* A_BLINK, A_REVERSE, A_BOLD */
@@ -84,6 +86,7 @@ void setcolor( WINDOW* win, chtype color );
 // menu functions
 void TerminateProgram();
 void LoadProgramAndDisplay();
+void ResetScreenToMenu();
 
 //-----------------------------------------------------------------------------
 // Variables
@@ -99,10 +102,13 @@ MENUCOMMAND menuItems[ MAX_OPTIONS ] = {
     { "Exit",            TerminateProgram     }
 };
 
-WINDOW* winTitle;
-WINDOW* winMenu;
-WINDOW* winStatus;
-WINDOW* winBody;
+std::unique_ptr<CursesWin> winTitle;
+std::unique_ptr<CursesWin> winStatus;
+
+WINDOW*                    winMenu;
+WINDOW*                    winBody;
+
+int                        old_option = -1, new_option = 0, ch;
 
 //-----------------------------------------------------------------------------
 // External Functionality
@@ -110,8 +116,6 @@ WINDOW* winBody;
 
 int main( int argc, char* argv[] )
 {
-    int old_option = -1, new_option = 0, ch;
-
     setlocale( LC_ALL, "" );
     initscr();
 
@@ -119,65 +123,47 @@ int main( int argc, char* argv[] )
     nodelay( stdscr, TRUE );
     noecho();
 
-    start_color();
+    CursesColour::getInstance().init();
 
-    init_pair( TITLECOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLUE );
-    init_pair( MAINMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-    init_pair( MAINMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-    init_pair( SUBMENUCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_CYAN );
-    init_pair( SUBMENUREVCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-    init_pair( BODYCOLOR & ~A_ATTR, COLOR_GREEN, COLOR_BLACK );
-    init_pair( STATUSCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_WHITE );
-    init_pair( INPUTBOXCOLOR & ~A_ATTR, COLOR_BLACK, COLOR_CYAN );
-    init_pair( EDITBOXCOLOR & ~A_ATTR, COLOR_WHITE, COLOR_BLACK );
-    winTitle  = subwin( stdscr, 1, COLS, 0, 0 );
-    winStatus = subwin( stdscr, 1, COLS, LINES - 1, 0 );
+    winStatus = std::make_unique<CursesWin>( COLS, 1, 0, LINES - 1, COLOR_BLACK, COLOR_WHITE );
+    winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_BLUE );
+    winTitle->colourWindow( TITLECOLOR, 0 );
+    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
+    winStatus->colourWindow( STATUSCOLOR, 0 );
+    winStatus->print( 2, 0, "Status Bar : " );
 
-    colorbox( winTitle, TITLECOLOR, 0 );
-    mvwaddstr( winTitle, 0, 2, "Nimble IDE : Version 0.0.1" );
-    colorbox( winStatus, STATUSCOLOR, 0 );
-    mvwaddstr( winStatus, 0, 2, "Status Bar : " );
+    CursesMenu menu;
 
-    display_menu( old_option, new_option );
-    attrset( COLOR_PAIR( 2 ) );
+    // setup the menu text...
+    std::string menuTitle    = "Nimble IDE : Version 0.0.1";
+    std::string menuFooter   = "Navigation: Arrow Keys, Enter to Select, Q to Quit";
+    std::string menuSubTitle = "Main Menu";
+    menu.setMenuTitle( menuTitle );
+    menu.setMenuFooter( menuFooter );
+    menu.setMenuSubTitle( menuSubTitle );
 
-    while ( true )
+    // setup  and run the menu options...
+    std::vector<std::string> meniItems = { "New Project", "Open Project", "Save Project", "Save Project As", "Build Project", "Run Project", "Exit" };
+    menu.setMenuOptions( meniItems );
+
+    // check that menu only quits on Exit
+    int32_t optionSelected = menu.processMenu();
+    switch ( optionSelected )
     {
-        ch = wgetch( stdscr );
-
-        if ( ch != ERR )
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
         {
-            if ( ch == 'q' || ch == 'Q' )
-                break;
-
-            if ( ch == KEY_UP )
-            {
-                old_option = new_option;
-                new_option = ( new_option == 0 ) ? MAX_OPTIONS - 1 : new_option - 1;
-                display_menu( old_option, new_option );
-            }
-            else if ( ch == KEY_DOWN )
-            {
-                old_option = new_option;
-                new_option = ( new_option == MAX_OPTIONS - 1 ) ? 0 : new_option + 1;
-                display_menu( old_option, new_option );
-            }
-            else if ( ch == 0xA /* KEY_ENTER */ )
-            {
-                if ( menuItems[ new_option ].function != nullptr )
-                {
-                    menuItems[ new_option ].function();
-                    clear();
-                    display_menu( old_option, new_option );
-                }
-            }
+            std::stringstream message;
+            message << "User selected Exit from the menu with " << optionSelected + 1;
+            ErrorHandler::getInstance().LogMessage( message.str() );
+            break;
         }
-
-        napms( DELAYSIZE );
-        refresh();
     }
-
-    endwin();
 
     // Return success
     return EXIT_SUCCESS;
@@ -222,8 +208,10 @@ void display_menu( int old_option, int new_option )
         int i;
 
         attrset( A_BOLD );
+        attrset( COLOR_PAIR( 6 ) );
         mvaddstr( tmarg - 3, lmarg - 5, "PDCurses Test Program" );
         attrset( A_NORMAL );
+        attrset( COLOR_PAIR( 8 ) );
 
         for ( i = 0; i < MAX_OPTIONS; i++ ) mvaddstr( tmarg + i, lmarg, menuItems[ i ].text.c_str() );
     }
@@ -233,9 +221,9 @@ void display_menu( int old_option, int new_option )
     attrset( A_REVERSE );
     mvaddstr( tmarg + new_option, lmarg, menuItems[ new_option ].text.c_str() );
     attrset( A_NORMAL );
-    attrset( COLOR_PAIR( 3 ) );
+    attrset( COLOR_PAIR( 7 ) );
     mvaddstr( tmarg + MAX_OPTIONS + 2, lmarg - 23, "Use Up and Down Arrows to select - Enter to run - Q to quit" );
-    attrset( COLOR_PAIR( 2 ) );
+    attrset( COLOR_PAIR( 8 ) );
     refresh();
 }
 
@@ -276,7 +264,14 @@ void LoadProgramAndDisplay()
     int nFileLine = 0;
     int nLine     = 0;
 
-    attrset( COLOR_PAIR( 6 ) );
+    attrset( COLOR_PAIR( 7 ) );
+    clear();
+    nLine = 0;
+    while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
+    {
+        mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
+        nLine++;
+    }
 
     while ( true )
     {
@@ -287,7 +282,7 @@ void LoadProgramAndDisplay()
 
             if ( ch == 'q' || ch == 'Q' )
             {
-                return;
+                break;
             }
 
             if ( ch == KEY_UP )
@@ -311,11 +306,22 @@ void LoadProgramAndDisplay()
         refresh();
     }
 
-    colorbox( winTitle, TITLECOLOR, 0 );
-    mvwaddstr( winTitle, 0, 2, "Nimble IDE : Version 0.0.1" );
-    colorbox( winStatus, STATUSCOLOR, 0 );
-    mvwaddstr( winStatus, 0, 2, "Status Bar : " );
-    attrset( COLOR_PAIR( 2 ) );
+    ResetScreenToMenu();
+}
+
+void ResetScreenToMenu()
+{
+    clear();
+    old_option = -1;
+    new_option = 0;
+    winTitle->colourWindow( TITLECOLOR, false );
+    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
+    winStatus->colourWindow( STATUSCOLOR, 0 );
+    winStatus->print( 2, 0, "Status Bar : " );
+    display_menu( old_option, new_option );
+    refresh();
+
+    attrset( COLOR_PAIR( 8 ) );
 }
 
 //-----------------------------------------------------------------------------

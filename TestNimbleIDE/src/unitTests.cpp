@@ -20,8 +20,8 @@ Version:
 
 // doctest unit testing framework setup
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../../../doctest/doctest/doctest.h"
-#include "../../../NimbleLIB/inc/NimbleLib.h"
+#include "../../doctest/doctest/doctest.h"
+#include "../../NimbleLIB/inc/NimbleLib.h"
 
 //-----------------------------------------------------------------------------
 // Namespace access

@@ -1,7 +1,12 @@
 let SessionLoad = 1
 let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
 let v:this_session=expand("<sfile>:p")
+let VM_check_mappings =  1 
+let VM_mouse_mappings =  0 
+let VM_default_mappings =  1 
+let VM_persistent_registers =  0 
 let NetrwTopLvlMenu = "Netrw."
+let VM_highlight_matches = "underline"
 let NetrwMenuPriority =  80 
 silent only
 silent tabonly
@@ -15,20 +20,24 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +133 NimbleLIB/src/Modules/Screen/ScreenPrint.cpp
-badd +38 NimbleLIB/inc/Modules/Screen/ScreenPrint.h
-badd +1 NimbleLIB/src/Modules/Screen/ScreenBox.cpp
-badd +3 NimbleLIB/inc/Modules/Screen/ScreenBox.h
+badd +109 NimbleLIB/inc/Modules/Curses/CursesMenu.h
+badd +161 NimbleLIB/src/Modules/Curses/CursesMenu.cpp
+badd +1 D:/NewProjects/Utilities/NimbleIDE/Trunk
+badd +218 NimbleIDE/src/main.cpp
 argglobal
 %argdel
-$argadd .
-edit NimbleLIB/src/Modules/Screen/ScreenBox.cpp
+$argadd D:/NewProjects/Utilities/NimbleIDE/Trunk
+edit NimbleLIB/src/Modules/Curses/CursesMenu.cpp
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -41,7 +50,7 @@ set winminwidth=0
 set winwidth=1
 wincmd =
 argglobal
-balt NimbleLIB/src/Modules/Screen/ScreenPrint.cpp
+balt NimbleIDE/src/main.cpp
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -50,20 +59,52 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 1 - ((0 * winheight(0) + 53) / 106)
+118
+normal! zo
+131
+normal! zo
+182
+normal! zo
+let s:l = 161 - ((38 * winheight(0) + 53) / 106)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
+keepjumps 161
+normal! 05|
+lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
+wincmd w
+argglobal
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h | endif
+if &buftype ==# 'terminal'
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h
+endif
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/Curses/CursesMenu.cpp
+setlocal fdm=indent
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=99
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+57
+normal! zo
+91
+normal! zo
+let s:l = 96 - ((11 * winheight(0) + 26) / 53)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 96
 normal! 0
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
 argglobal
-if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Screen/ScreenBox.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Screen/ScreenBox.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Screen/ScreenBox.h | endif
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp | endif
 if &buftype ==# 'terminal'
-  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Screen/ScreenBox.h
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp
 endif
-balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Screen/ScreenPrint.h
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/Curses/CursesMenu.h
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -72,15 +113,18 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 3 - ((2 * winheight(0) + 53) / 106)
+119
+normal! zo
+153
+normal! zo
+let s:l = 218 - ((22 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 3
-normal! 023|
+keepjumps 218
+normal! 0
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
-2wincmd w
 wincmd =
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'

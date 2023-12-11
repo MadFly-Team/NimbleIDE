@@ -5,7 +5,7 @@ include(ExternalProject)
 find_package(Git REQUIRED)
 
 # add the main executable folder
-file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h"  "../src/modules/*.cpp" "../inc/modules/*.h" )
+file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h" )
 
 # tells cmake that it will be creating an executable 
 add_executable(TestNimbleIDE ${SOURCE_FILES})
