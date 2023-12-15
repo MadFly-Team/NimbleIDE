@@ -4,6 +4,10 @@ project(TestNimbleLIB VERSION 0.0.1)
 include(ExternalProject)
 find_package(Git REQUIRED)
 
+# Add the PDCurses include and library directories
+include_directories("${CMAKE_SOURCE_DIR}/ExternalLibraries/PDcurses")
+link_directories("${CMAKE_SOURCE_DIR}/ExternalLibraries/PDcurses")
+
 # add the main executable folder
 file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h" )
 
@@ -11,7 +15,7 @@ file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h
 add_executable(TestNimbleLIB ${SOURCE_FILES})
 
 # link libraries
-target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB)
+target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB pdcurses.dll)
 
 # include path for libraries
 target_include_directories(TestNimbleLIB PUBLIC NimbleLIB)

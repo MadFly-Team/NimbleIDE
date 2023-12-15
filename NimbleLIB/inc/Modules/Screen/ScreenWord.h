@@ -103,6 +103,12 @@ class ScreenWord
     --------------------------------------------------------------------------*/
     ScreenWord()
     {
+        effect.value = 0;
+        xPos         = 0;
+        yPos         = 0;
+        fgColour     = 0;
+        bgColour     = 0;
+        word         = "";
     }
     /**---------------------------------------------------------------------------
         @ingroup    NimbleLIBScreen Nimble Library Screen Module

@@ -123,13 +123,18 @@ class ScreenPrint
      ------------------------------------------------------------------------*/
     ~ScreenPrint();
 
-    // Print functions
+    // Add to string functions -------------------------------------------------
     void Add( const ScreenWord& word );
     void Add( const std::string& inText );
     void Add( uint32_t x, uint32_t y, const std::string& inText );
 
+    // Display functions ------------------------------------------------------
     void Display();
     void DisplayWord( const ScreenWord& word );
+
+    // Unit test functions ----------------------------------------------------
+    std::string GetStreamString() const;
+    void        ClearStream();
 };
 
 //-----------------------------------------------------------------------------

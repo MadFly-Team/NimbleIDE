@@ -81,6 +81,16 @@ enum class LibraryError
 
     // Screen Errors
     Screen_base_error = FileHandlding_base_error + MODULE_OFFSET, //!< 0x10005000 Base error for the Screen module
+    Screen_ConsoleInfoFailed,                                     //!< 0x10005001 Failed to get the console information
+    Screen_SetupConsoleFailed,                                    //!< 0x10005002 Failed to setup the console
+    Screen_StartColorFailed,                                      //!< 0x10005003 Failed to start the color
+    Screen_CBreakFailed,                                          //!< 0x10005004 Failed to set cbreak
+    Screen_NoEchoFailed,                                          //!< 0x10005005 Failed to set noecho
+    Screen_KeyPadFailed,                                          //!< 0x10005006 Failed to set keypad
+    Screen_CursSetFailed,                                         //!< 0x10005007 Failed to set curs_set
+    Screen_RefreshFailed,                                         //!< 0x10005008 Failed to refresh the screen
+    Screen_InitPairFailed,                                        //!< 0x10005009 Failed to setup the console
+    Screen_EndWinFailed,                                          //!< 0x1000500A Failed to end the window
 
     // Utllities Errors
     Utilities_base_error = Screen_base_error + MODULE_OFFSET, //!< 0x10006000 Base error for the Utilities module

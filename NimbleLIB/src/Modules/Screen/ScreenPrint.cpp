@@ -134,9 +134,30 @@ void ScreenPrint::DisplayWord( const ScreenWord& word )
     // clear the string stream
     m_ss.str( "" );
 
-    // send tje word to be formatted and displayed
+    // send the word to be formatted and displayed
     Add( word );
     Display();
+}
+
+// Unit test functionality ----------------------------------------------------
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Returns the string stream
+    @return     string stream
+  --------------------------------------------------------------------------*/
+std::string ScreenPrint::GetStreamString() const
+{
+    return m_ss.str();
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Clears the string stream
+  --------------------------------------------------------------------------*/
+void ScreenPrint::ClearStream()
+{
+    m_ss.str( "" );
 }
 
 //-----------------------------------------------------------------------------

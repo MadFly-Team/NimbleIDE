@@ -30,6 +30,7 @@ Version:
 
 #include "../../../inc/Modules/Screen/ScreenInfo.h"
 #include "../../../inc/Modules/Global/Globals.h"
+#include "../../../inc/Modules/ErrorHandling/ErrorHandler.h"
 
 //-----------------------------------------------------------------------------
 // Namespace access
@@ -53,7 +54,11 @@ void ScreenInfo::RetrieveConsoleInfo()
     CONSOLE_SCREEN_BUFFER_INFO csbi; //!< Local: Console screen buffer information
 
     // Retrieve the console information
-    GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi );
+    if ( GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi ) == false )
+    {
+        ErrorHandler::getInstance().LogError( LibraryError::Screen_ConsoleInfoFailed, "Failed to retrieve console information" );
+        return;
+    }
 
     // Set the width and height
     width  = csbi.srWindow.Right - csbi.srWindow.Left + 1;
@@ -86,14 +91,26 @@ void ScreenInfo::RetrieveConsoleInfo()
 void ScreenInfo::SetupConsole()
 {
 #if defined( WIN32 ) || defined( _WIN32 )
-    SetConsoleOutputCP( CP_UTF8 );
-    SetConsoleCP( CP_UTF8 );
+    if ( SetConsoleOutputCP( CP_UTF8 ) == false )
+    {
+        ErrorHandler::getInstance().LogError( LibraryError::Screen_SetupConsoleFailed, "Failed to set console output code page" );
+        return;
+    }
+    if ( SetConsoleCP( CP_UTF8 ) == false )
+    {
+        ErrorHandler::getInstance().LogError( LibraryError::Screen_SetupConsoleFailed, "Failed to set console code page" );
+        return;
+    }
 
     // Enable VT processing on stdout and stdin
     auto  stdout_handle = GetStdHandle( STD_OUTPUT_HANDLE );
 
     DWORD out_mode      = 0;
-    GetConsoleMode( stdout_handle, &out_mode );
+    if ( GetConsoleMode( stdout_handle, &out_mode ) == false )
+    {
+        ErrorHandler::getInstance().LogError( LibraryError::Screen_SetupConsoleFailed, "Failed to get console mode" );
+        return;
+    }
 
     // https://docs.microsoft.com/en-us/windows/console/setconsolemode
     const int enable_virtual_terminal_processing = 0x0004;
@@ -101,7 +118,12 @@ void ScreenInfo::SetupConsole()
     out_mode |= enable_virtual_terminal_processing;
     out_mode |= disable_newline_auto_return;
 
-    SetConsoleMode( stdout_handle, out_mode );
+    if ( SetConsoleMode( stdout_handle, out_mode ) == false )
+    {
+        ErrorHandler::getInstance().LogError( LibraryError::Screen_SetupConsoleFailed, "Failed to set console mode" );
+        return;
+    }
+
 #endif
 }
 
