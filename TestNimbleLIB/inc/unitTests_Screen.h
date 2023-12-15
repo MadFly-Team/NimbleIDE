@@ -91,7 +91,7 @@ TEST_CASE( "Testing the Screen Module" )
         ss << COLOUR_BG_START << blankWord.GetBGColour() << COLOUR_END << COLOUR_START << blankWord.GetFGColour() << COLOUR_END;
         ss << blankWord.GetWord() << CHAR_RESET;
 
-        // test the add functionality, with string and ScreenWord classes
+        // test the 'add' functionality, with string and ScreenWord classes
         screenPrint.Add( testString );
         CHECK( screenPrint.GetStreamString() == testString );
         screenPrint.ClearStream();

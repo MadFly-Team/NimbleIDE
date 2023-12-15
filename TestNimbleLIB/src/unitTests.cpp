@@ -55,10 +55,10 @@ TEST_SUITE( "Nimble LIB Test Suite" )
     #include "../inc/unitTests_Screen.h"
 
     //-----------------------------------------------------------------------------
-    // Test the Screen Module
+    // Test the Error Handler Module
     //-----------------------------------------------------------------------------
 
-    //#include "../inc/unitTests_Screen.h"
+    #include "../inc/unitTests_ErrorHandler.h"
 
     //-----------------------------------------------------------------------------
 
