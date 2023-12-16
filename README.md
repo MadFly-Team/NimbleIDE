@@ -14,6 +14,7 @@ This is in initial development, the project has only just started.
 - [NimbleLIB](#nimblelib)
 - [NimbleIDE](#nimbleide)
 - [TestNimbleIDE](#testnimbleide)
+- [TestNimbleLIB](#testnimblelib)
 
 ## NimbleLIB
 
@@ -64,6 +65,7 @@ Tests the modules developed in NimbleIDE and NimbleLIB.
 ## TestNimbleLIB
 
 Complete tests for the NimbleLIB modules.
+Currently only tests the Screen and ErrorHandling modules.
 
 ## Pre-requisites
 
