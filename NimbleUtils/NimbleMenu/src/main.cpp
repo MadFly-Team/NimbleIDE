@@ -125,7 +125,7 @@ int main( int argc, char* argv[] )
         keypad( stdscr, TRUE );
         nodelay( stdscr, TRUE );
         noecho();
-
+        start_color();
         CursesColour::getInstance().init();
 
         winStatus = std::make_unique<CursesWin>( COLS, 1, 0, LINES - 1, COLOR_BLACK, COLOR_WHITE );

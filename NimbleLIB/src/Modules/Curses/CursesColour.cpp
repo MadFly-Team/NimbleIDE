@@ -102,35 +102,28 @@ LibraryError CursesColour::init()
 {
     LibraryError error = LibraryError::No_Error;
 
-    if ( isInitialized() )
+    if ( start_color() == ERR )
     {
-        error = LibraryError::CursesColour_AlreadyInitialised;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesColour_CannotStartColour, "Failed to start curses colours for the terminal" );
     }
-    else
+
+    // Create the colour pairs
+    colourPairs.clear();
+    for ( uint32_t i = 0; i < MAX_COLOURS; i++ )
     {
-        if ( start_color() == ERR )
-        {
-            ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesColour_CannotStartColour, "Failed to start curses colours for the terminal" );
-        }
+        // Create the colour pair
+        ColourPair newColourPair;
+        newColourPair.index = i + 1;
+        newColourPair.ink   = i % NUUM_BASE_COLORS;
+        newColourPair.paper = i / NUUM_BASE_COLORS;
+        // Add the colour pair to the list
+        colourPairs.push_back( newColourPair );
 
-        // Create the colour pairs
-        colourPairs.clear();
-        for ( uint32_t i = 0; i < MAX_COLOURS; i++ )
-        {
-            // Create the colour pair
-            ColourPair newColourPair;
-            newColourPair.index = i + 1;
-            newColourPair.ink   = i % NUUM_BASE_COLORS;
-            newColourPair.paper = i / NUUM_BASE_COLORS;
-            // Add the colour pair to the list
-            colourPairs.push_back( newColourPair );
-
-            // Set the colour pair in the curses library
-            init_pair( newColourPair.index, newColourPair.ink, newColourPair.paper );
-        }
-        // Set the initialized flag
-        setInitialized();
+        // Set the colour pair in the curses library
+        init_pair( newColourPair.index, newColourPair.ink, newColourPair.paper );
     }
+    // Set the initialized flag
+    setInitialized();
 
     return error;
 }
