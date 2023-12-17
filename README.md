@@ -1,5 +1,15 @@
 # Nimble IDE Suite
 
+## testing
+
+```plantumlcode
+@startuml
+alice->bob:hello
+@enduml
+
+```
+
+
 ## IMPORTANT NOTE
 
 This is in initial development, the project has only just started.
@@ -89,7 +99,7 @@ Each command is sperated by either of the following:
 * ` && ` - runs the next command if no errors are reported by the previous command
 
 The following is a working example of the configuration file
-<img title="NimbleMenu Image" alt="NimbleMenu image" src="NimbleMenu.png">
+<img title="NimbleMenu Image" alt="NimbleMenu image" src="content/NimbleMenu1.png">
 
 And it is created by the following configuration - called `NimbeMenu.cfg`.
 
