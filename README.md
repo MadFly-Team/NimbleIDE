@@ -8,7 +8,7 @@ alice->bob:hello
 @enduml
 
 ```
-
+![TestImage](content/testPlantUML.png)
 
 ## IMPORTANT NOTE
 
