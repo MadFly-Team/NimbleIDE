@@ -69,15 +69,6 @@ using namespace Nimble::Screen;
 // Typedefs, enums and structs
 //-----------------------------------------------------------------------------
 
-typedef void ( *FN_COMMAND )();
-
-typedef struct
-{
-    std::string text;
-    FN_COMMAND  function;
-
-} MENUCOMMAND, *PMENUCOMMAND;
-
 //-----------------------------------------------------------------------------
 // Forward declarations
 //-----------------------------------------------------------------------------
@@ -95,13 +86,7 @@ void ResetScreenToMenu();
 // Variables
 //-----------------------------------------------------------------------------
 
-std::unique_ptr<CursesWin> winTitle;
-std::unique_ptr<CursesWin> winStatus;
-
-WINDOW*                    winMenu;
-WINDOW*                    winBody;
-
-int                        old_option = -1, new_option = 0, ch;
+std::unique_ptr<CursesWin> winMain;
 
 //-----------------------------------------------------------------------------
 // External Functionality
@@ -117,6 +102,36 @@ int main( int argc, char* argv[] )
     noecho();
     start_color();
     CursesColour::getInstance().init();
+    clear();
+
+    winMain = std::make_unique<CursesWin>( COLS, LINES, 0, 0, COLOR_WHITE, COLOR_GREEN );
+    winMain->print( 0, 0, "Nimble Calculator : Version 0.0.1" );
+    winMain->print( 0, LINES - 1, "Enter commands or press 'Q' to quit" );
+
+    // scan key for input, quit if 'q' pressed
+    uint32_t key = 0;
+    while ( key != 'q' )
+    {
+        key = wgetch( stdscr );
+        if ( key != ERR )
+        {
+            if ( key == 'q' || key == 'Q' )
+            {
+                // quit program
+                break;
+            }
+
+            std::stringstream ss;
+            ss << "Key pressed : " << key;
+            if ( key < 128 && key > 30 )
+            {
+                ss << " : " << (char)key;
+            }
+            ss << "      ";
+            winMain->print( 2, 5, ss.str() );
+            winMain->draw();
+        }
+    }
 
     endwin();
     // Return success
@@ -128,4 +143,4 @@ int main( int argc, char* argv[] )
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // End of file: main.cpp
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
