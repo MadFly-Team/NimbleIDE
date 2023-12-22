@@ -18,21 +18,12 @@ Version:
 // Headers
 //-----------------------------------------------------------------------------
 
-// #include <windows.h>
-#include <windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include <cstddef>
-#include <functional>
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
-#include <fstream>
-#include <vector>
 #include <string>
-#include <format>
-#include <filesystem>
-// #include <conio.h>
+
+#undef MOUSE_MOVED
 
 extern "C"
 {
@@ -133,6 +124,33 @@ int main( int argc, char* argv[] )
         }
     }
 
+    // Create the main window
+    winMain = std::make_unique<CursesWin>( COLS, LINES, 0, 0, 2, 7 );
+    winMain->colourWindow( 2, false );
+    winMain->print( 0, 0, "NimbleCalculator : Version 0.0.1" );
+    winMain->refresh();
+
+    // scan for keypresses
+    uint32_t key = 0;
+    while ( true )
+    {
+        key = wgetch( stdscr );
+
+        // if a key was pressed
+        if ( key != ERR )
+        {
+            if ( key == 'q' || key == 'Q' )
+                break;
+            std::stringstream ss;
+            ss << "Key pressed >  " << std::hex << key << std::dec;
+            if ( key >= 30 && key < 128 )
+            {
+                ss << " ( " << (char)key << " )        ";
+            }
+            winMain->print( 2, 2, ss.str() );
+            winMain->refresh();
+        }
+    }
     endwin();
     // Return success
     return EXIT_SUCCESS;
