@@ -94,6 +94,10 @@ enum class LibraryError
 
     // Utllities Errors
     Utilities_base_error = Screen_base_error + MODULE_OFFSET, //!< 0x10006000 Base error for the Utilities module
+
+    // IDE Errors
+    IDE_base_error = Utilities_base_error + MODULE_OFFSET, //!< 0x10007000 Base error for the IDE module
+    IDEEditline_IncorrectBufferIndex,                      //!< 0x10007001 Incorrect buffer index
 };
 
 // ----------------------------------------------------------------------------
