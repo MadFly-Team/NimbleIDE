@@ -40,6 +40,7 @@ class StatusCtrl
     StatusCtrl();
     ~StatusCtrl();
     // Methods -----------------------------------------------------------------
+    bool isNotInitialized() const noexcept;
     bool isInitialized() const noexcept;
     bool isReady() const noexcept;
     bool isBusy() const noexcept;

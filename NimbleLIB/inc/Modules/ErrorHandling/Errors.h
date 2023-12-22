@@ -98,6 +98,9 @@ enum class LibraryError
     // IDE Errors
     IDE_base_error = Utilities_base_error + MODULE_OFFSET, //!< 0x10007000 Base error for the IDE module
     IDEEditline_IncorrectBufferIndex,                      //!< 0x10007001 Incorrect buffer index
+    IDEEditline_InitNotCalled,                             //!< 0x10007002 Init not called
+    IDEEditline_AlreadyInitialized,                        //!< 0x10007003 Already initialized
+    IDEEditline_IncorrectBufferIndex2,                     //!< 0x10007004 Incorrect buffer index
 };
 
 // ----------------------------------------------------------------------------

@@ -70,6 +70,16 @@ StatusCtrl::~StatusCtrl()
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
+    @brief      Check to see if the module is not initialized
+    @return     bool true if not initialized, false otherwise
+ -----------------------------------------------------------------------------*/
+bool StatusCtrl::isNotInitialized() const noexcept
+{
+    return status.notInitialized == ON;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Check if the module is initialized
     @return     true if initialized, false otherwise
  -----------------------------------------------------------------------------*/
@@ -171,7 +181,8 @@ void StatusCtrl::clearReady()
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setInitialized()
 {
-    status.initialized = ON;
+    status.notInitialized = OFF;
+    status.initialized    = ON;
 }
 
 /**----------------------------------------------------------------------------

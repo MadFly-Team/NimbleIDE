@@ -34,6 +34,7 @@ extern "C"
 }
 
 #include "../ErrorHandling/ErrorHandler.h"
+#include "../Utilities/StatusCtrl.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -46,8 +47,9 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-class IDEEditline
+class IDEEditline : public StatusCtrl
 {
+  public:
   public:
     // constructors & destructors ----------------------------------------------
     IDEEditline();
@@ -68,10 +70,13 @@ class IDEEditline
     void setLineInkColour( uint32_t inkColour );
     void setLinePaperColour( uint32_t paperColour );
     void setLineCursor( uint32_t cursor );
-    void setLineBufferChar( uint32_t index, int8_t value );
+    void setLineBufferChar( uint32_t index, uint8_t value );
+    // initialization ----------------------------------------------------------
+    LibraryError init( std::string& inText, uint32_t inXpos, uint32_t inYpos );
+    LibraryError setParams( uint32_t inCursor, uint32_t inInk, uint32_t inPapaer );
 
   private:
-    // private variables --------------------------------------------------------
+    // private variables -------------------------------------------------------
     uint32_t            lineXpos;        //!< X position of line
     uint32_t            lineYpos;        //!< Y position of line
     uint32_t            lineLength;      //!< Length of line
