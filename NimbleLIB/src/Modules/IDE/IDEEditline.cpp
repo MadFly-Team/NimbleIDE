@@ -8,7 +8,6 @@
 
 Notes:
 
-    TODO - Hightlighting params, cursor position, get set text, delete text
 
 Version:
 
@@ -137,6 +136,36 @@ uint8_t IDEEditline::getLineBufferChar( uint32_t index ) const
     return ( charToReturn );
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the start of the hilight
+    @return     uint32_t    start of the hilight
+-----------------------------------------------------------------------------*/
+uint32_t IDEEditline::getHilightStart() const
+{
+    return hilightStart;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the end of the hilight
+    @return     uint32_t    end of the hilight
+-----------------------------------------------------------------------------*/
+uint32_t IDEEditline::getHilightEnd() const
+{
+    return hilightEnd;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the line buffer as a string
+    @return     std::string line buffer as a string
+-----------------------------------------------------------------------------*/
+std::string IDEEditline::getLineString() const
+{
+    return std::string( lineBuffer.begin(), lineBuffer.end() );
+}
+
 // setters ---------------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -217,6 +246,26 @@ void IDEEditline::setLineBufferChar( uint32_t index, uint8_t charToSet )
     }
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Set the start of the hilight
+    @param      start   start of the hilight
+-----------------------------------------------------------------------------*/
+void IDEEditline::setHilightStart( uint32_t start )
+{
+    hilightStart = start;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Set the end of the hilight
+    @param      end     value for the highlight end
+-----------------------------------------------------------------------------*/
+void IDEEditline::setHilightEnd( uint32_t end )
+{
+    hilightEnd = end;
+}
+
 // Initialisation --------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -273,7 +322,7 @@ LibraryError IDEEditline::setParams( uint32_t inCursor, uint32_t inInk, uint32_t
         if ( inCursor > lineLength )
         {
             ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::setParams() : cursor out of bounds" );
-            inCursor = lineLength - 1;
+            inCursor = lineLength;
         }
 
         lineCursor      = inCursor;
@@ -283,6 +332,199 @@ LibraryError IDEEditline::setParams( uint32_t inCursor, uint32_t inInk, uint32_t
         returnError     = LibraryError::No_Error;
     }
 
+    return ( returnError );
+}
+
+// Editing ---------------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Inserts a character at the cursor position
+    @param      inChar  character to insert
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::addChar( uint8_t inChar )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor > lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertChar() : cursor out of bounds" );
+            lineCursor = lineLength;
+        }
+        // insert the character at the cursor position
+        lineBuffer.insert( lineBuffer.begin() + lineCursor, inChar );
+        // increment the line length
+        lineLength++;
+        // increment the cursor position
+        lineCursor++;
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Deletes a character at the cursor position
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::deleteChar( void )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor >= lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::deleteChar() : cursor out of bounds" );
+            lineCursor = lineLength - 1;
+        }
+        // delete the character at the cursor position
+        lineBuffer.erase( lineBuffer.begin() + lineCursor );
+        // decrement the line length
+        lineLength--;
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      adds a string at the cursor position
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::addString( std::string& inString )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor > lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertString() : cursor out of bounds" );
+            lineCursor = lineLength;
+        }
+        // insert the string at the cursor position
+        lineBuffer.insert( lineBuffer.begin() + lineCursor, inString.begin(), inString.end() );
+        // increment the line length
+        lineLength += inString.length();
+        // increment the cursor position
+        lineCursor += inString.length();
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Deletes a numver of char starting at the cursor position
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::deleteChars( uint32_t numChars )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor >= lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::deleteChars() : cursor out of bounds" );
+            lineCursor = lineLength - 1;
+        }
+        // delete the character at the cursor position
+        lineBuffer.erase( lineBuffer.begin() + lineCursor );
+        // decrement the line length
+        lineLength--;
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+// Navigation ------------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Moves the cursor to the left
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::moveCursorLeft( void )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor > lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::moveCursorLeft() : cursor out of bounds" );
+            lineCursor = lineLength;
+        }
+        // decrement the cursor position
+        if ( lineCursor > 0 )
+        {
+            lineCursor--;
+        }
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Moves the cursor to the right
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::moveCursorRight( void )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor > lineLength )
+        {
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::moveCursorRight() : cursor out of bounds" );
+            lineCursor = lineLength;
+        }
+        // increment the cursor position
+        if ( lineCursor < lineLength )
+        {
+            lineCursor++;
+        }
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Moves the cursor to the start of the line
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::moveCursorHome( void )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        lineCursor  = 0;
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Moves the cursor to the end of the line
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::moveCursorEnd( void )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        lineCursor  = lineLength;
+        returnError = LibraryError::No_Error;
+    }
     return ( returnError );
 }
 

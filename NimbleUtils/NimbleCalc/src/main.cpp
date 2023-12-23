@@ -131,7 +131,7 @@ int main( int argc, char* argv[] )
     winMain->refresh();
 
     // scan for keypresses
-    uint32_t key = 0;
+    key = 0;
     while ( true )
     {
         key = wgetch( stdscr );

@@ -100,7 +100,6 @@ enum class LibraryError
     IDEEditline_IncorrectBufferIndex,                      //!< 0x10007001 Incorrect buffer index
     IDEEditline_InitNotCalled,                             //!< 0x10007002 Init not called
     IDEEditline_AlreadyInitialized,                        //!< 0x10007003 Already initialized
-    IDEEditline_IncorrectBufferIndex2,                     //!< 0x10007004 Incorrect buffer index
 };
 
 // ----------------------------------------------------------------------------

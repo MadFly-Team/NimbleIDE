@@ -56,13 +56,16 @@ class IDEEditline : public StatusCtrl
     ~IDEEditline();
     // public functions --------------------------------------------------------
     // getters -----------------------------------------------------------------
-    uint32_t getLineXpos() const;
-    uint32_t getLineYpos() const;
-    uint32_t getLineLength() const;
-    uint32_t getLineInkColour() const;
-    uint32_t getLinePaperColour() const;
-    uint32_t getLineCursor() const;
-    uint8_t  getLineBufferChar( uint32_t index ) const;
+    uint32_t    getLineXpos() const;
+    uint32_t    getLineYpos() const;
+    uint32_t    getLineLength() const;
+    uint32_t    getLineInkColour() const;
+    uint32_t    getLinePaperColour() const;
+    uint32_t    getLineCursor() const;
+    uint8_t     getLineBufferChar( uint32_t index ) const;
+    uint32_t    getHilightStart() const;
+    uint32_t    getHilightEnd() const;
+    std::string getLineString() const;
     // setters -----------------------------------------------------------------
     void setLineXpos( uint32_t xpos );
     void setLineYpos( uint32_t ypos );
@@ -71,9 +74,21 @@ class IDEEditline : public StatusCtrl
     void setLinePaperColour( uint32_t paperColour );
     void setLineCursor( uint32_t cursor );
     void setLineBufferChar( uint32_t index, uint8_t value );
+    void setHilightStart( uint32_t start );
+    void setHilightEnd( uint32_t end );
     // initialization ----------------------------------------------------------
     LibraryError init( std::string& inText, uint32_t inXpos, uint32_t inYpos );
     LibraryError setParams( uint32_t inCursor, uint32_t inInk, uint32_t inPapaer );
+    // editing -----------------------------------------------------------------
+    LibraryError addChar( uint8_t inChar );
+    LibraryError addString( std::string& inString );
+    LibraryError deleteChar();
+    LibraryError deleteChars( uint32_t numChars );
+    // navagation --------------------------------------------------------------
+    LibraryError moveCursorLeft();
+    LibraryError moveCursorRight();
+    LibraryError moveCursorHome();
+    LibraryError moveCursorEnd();
 
   private:
     // private variables -------------------------------------------------------
@@ -84,6 +99,9 @@ class IDEEditline : public StatusCtrl
     uint32_t            linePaperColour; //!< Paper colour of line
     uint32_t            lineCursor;      //!< X position of cursor
     std::vector<int8_t> lineBuffer;      //!< Buffer for line
+    // advanced editline --------------------------------------------------------
+    uint32_t hilightStart; //!< Start of hilight
+    uint32_t hilightEnd;   //!< End of hilight
 };
 
 //-----------------------------------------------------------------------------
