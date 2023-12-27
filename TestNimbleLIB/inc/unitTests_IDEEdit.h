@@ -96,6 +96,22 @@ TEST_CASE( "Testing the IDE Edit functionality within the IDE Module" )
         CHECK( editline.deleteChars( 2 ) == LibraryError::No_Error );         //!< test delete chars
         CHECK( editline.getLineString() == "atest string" );                  //!< test get line string
     }
+    // check the user flags ----------------------------------------------------
+    SUBCASE( "IDEEditline check user flags" )
+    {
+        // Test the Editline user flags functionality
+        std::string testString = "test string";
+        IDEEditline editline;
+        CHECK( editline.init( testString, 1, 2 ) == LibraryError::No_Error );                                         //!< test the init function, string and position 1,2
+        CHECK( editline.setEditlineFlag( IDEEditline::EditlineFlags::CursorActive ) == LibraryError::No_Error );      //!< test set flag
+        CHECK( editline.isEditlineFlagSet( IDEEditline::EditlineFlags::CursorActive ) == true );                      //!< test get flag
+        CHECK( editline.clearEditlineFlag( IDEEditline::EditlineFlags::CursorActive ) == LibraryError::No_Error );    //!< test clear flag
+        CHECK( editline.isEditlineFlagSet( IDEEditline::EditlineFlags::CursorActive ) == false );                     //!< test get flag
+        CHECK( editline.setEditlineFlag( IDEEditline::EditlineFlags::FormatWhenPrint ) == LibraryError::No_Error );   //!< test set flag
+        CHECK( editline.isEditlineFlagSet( IDEEditline::EditlineFlags::FormatWhenPrint ) == true );                   //!< test get flag
+        CHECK( editline.clearEditlineFlag( IDEEditline::EditlineFlags::FormatWhenPrint ) == LibraryError::No_Error ); //!< test clear flag
+        CHECK( editline.isEditlineFlagSet( IDEEditline::EditlineFlags::FormatWhenPrint ) == false );                  //!< test get flag
+    }
 }
 
 // end of TEST_CASE

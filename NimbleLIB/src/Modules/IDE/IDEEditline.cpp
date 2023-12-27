@@ -528,6 +528,59 @@ LibraryError IDEEditline::moveCursorEnd( void )
     return ( returnError );
 }
 
+// FLag control ----------------------------------------------------------------
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Sets the Editline flags
+    @param      inFlag     Flag to set
+    @return     LibraryError    Error code or LibraryError::No_Error
+
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::setEditlineFlag( EditlineFlags inFlag )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        setUserFlag( (uint32_t)inFlag );
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Clears the Editline flags
+    @param      inFlag     Flag to clear
+    @return     LibraryError    Error code or LibraryError::No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditline::clearEditlineFlag( EditlineFlags inFlag )
+{
+    LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
+    if ( isNotInitialized() == false )
+    {
+        clearUserFlag( (uint32_t)inFlag );
+        returnError = LibraryError::No_Error;
+    }
+    return ( returnError );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Gets the Editline flag
+    @param      inFlag     Flag to get
+    @return     bool    true if flag is set
+
+-----------------------------------------------------------------------------*/
+bool IDEEditline::isEditlineFlagSet( EditlineFlags inFlag ) const noexcept
+{
+    bool returnFlag = false;
+    if ( isNotInitialized() == false )
+    {
+        returnFlag = isUserFlagSet( (uint32_t)inFlag );
+    }
+    return ( returnFlag );
+}
+
 //-----------------------------------------------------------------------------
 
 } // namespace Nimble

@@ -50,10 +50,21 @@ namespace Nimble
 class IDEEditline : public StatusCtrl
 {
   public:
-  public:
     // constructors & destructors ----------------------------------------------
     IDEEditline();
     ~IDEEditline();
+    // enum --------------------------------------------------------------------
+
+    /**----------------------------------------------------------------------------
+        @ingroup    NimbleLIBIDE Nimble Library IDE Module
+        @brief      Editline flags, used with StatusCtrl class
+    -----------------------------------------------------------------------------*/
+    enum class EditlineFlags
+    {
+        CursorActive = 0, //!< Cursor is active
+        FormatWhenPrint,  //!< Format when printing
+    };
+
     // public functions --------------------------------------------------------
     // getters -----------------------------------------------------------------
     uint32_t    getLineXpos() const;
@@ -89,6 +100,10 @@ class IDEEditline : public StatusCtrl
     LibraryError moveCursorRight();
     LibraryError moveCursorHome();
     LibraryError moveCursorEnd();
+    // Flag control ------------------------------------------------------------
+    LibraryError setEditlineFlag( EditlineFlags flag );
+    LibraryError clearEditlineFlag( EditlineFlags flag );
+    bool         isEditlineFlagSet( EditlineFlags flag ) const noexcept;
 
   private:
     // private variables -------------------------------------------------------

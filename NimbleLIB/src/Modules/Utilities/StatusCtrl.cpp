@@ -23,6 +23,14 @@ Notes:
     ready state. The module can be set to error from any state. The module
     can be set to ready from any state.
 
+    User flags are also provided to allow the user to set flags as required.
+    A total of 8 user flags are provided.
+    The following functions support this;
+
+        void  setUserFlag( uint32_t userFlag );
+        void  clearUserFlag( uint32_t userFlag );
+        bool  isUserFlagSet( uint32_t userFlag ) const noexcept;
+
 Version:
 
         0.0.1.0     First Release, development phase. Draft copy
@@ -54,7 +62,7 @@ namespace Nimble
 StatusCtrl::StatusCtrl()
 {
     // Startup state - not initialized
-    status.statusByte     = 0;
+    status.statusData     = 0;
     status.notInitialized = ON;
 }
 
@@ -192,6 +200,54 @@ void StatusCtrl::setInitialized()
 void StatusCtrl::clearInitialized()
 {
     status.initialized = OFF;
+}
+// user status ----------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBStatus Nimble Library Status Module
+    @brief      Sets the user status flag, up to 8 flags can be set
+    @param      userFlag - user status to clear
+ -----------------------------------------------------------------------------*/
+void StatusCtrl::setUserFlag( uint32_t userFlag )
+{
+    if ( userFlag >= TOTAL_USER_FLAGS )
+    {
+        userFlag = TOTAL_USER_FLAGS - 1;
+    }
+
+    uint16_t mskFlag = 1 << ( userFlag + START_USER_FLAGS );
+    status.statusData |= mskFlag;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBStatus Nimble Library Status Module
+    @brief      Clears the user status flag, up to 8 flags can be cleared
+    @param      userFlag - user status to clear
+ -----------------------------------------------------------------------------*/
+void StatusCtrl::clearUserFlag( uint32_t userFlag )
+{
+    if ( userFlag >= TOTAL_USER_FLAGS )
+    {
+        userFlag = TOTAL_USER_FLAGS - 1;
+    }
+    uint16_t mskFlag = 1 << ( userFlag + START_USER_FLAGS );
+    status.statusData &= ~mskFlag;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBStatus Nimble Library Status Module
+    @brief      Check if the user status flag is set
+    @param      userFlag - user status to check
+    @return     true if set, false otherwise
+ -----------------------------------------------------------------------------*/
+bool StatusCtrl::isUserFlagSet( uint32_t userFlag ) const noexcept
+{
+    if ( userFlag >= TOTAL_USER_FLAGS )
+    {
+        userFlag = TOTAL_USER_FLAGS - 1;
+    }
+    uint16_t mskFlag = 1 << ( userFlag + START_USER_FLAGS );
+    return ( status.statusData & mskFlag ) != 0;
 }
 
 //-----------------------------------------------------------------------------
