@@ -99,6 +99,11 @@ int main( int argc, char* argv[] )
     winMain->print( 0, 0, "Nimble Calculator : Version 0.0.1" );
     winMain->print( 0, LINES - 1, "Enter commands or press 'Q' to quit" );
 
+    // test the edit box
+    IDEEditBox editBox;
+    editBox.initBox( 10, 10, 30, 3, COLOR_WHITE, COLOR_GREEN );
+    editBox.colourWindow( 24, true );
+    editBox.print( 1, 1, "Edit box test" );
     // scan key for input, quit if 'q' pressed
     uint32_t key = 0;
     while ( key != 'q' )
@@ -126,7 +131,7 @@ int main( int argc, char* argv[] )
 
     // Create the main window
     winMain = std::make_unique<CursesWin>( COLS, LINES, 0, 0, 2, 7 );
-    winMain->colourWindow( 2, false );
+    winMain->colourWindow( 3, false );
     winMain->print( 0, 0, "NimbleCalculator : Version 0.0.1" );
     winMain->refresh();
 

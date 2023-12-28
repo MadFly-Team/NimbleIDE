@@ -170,6 +170,40 @@ LibraryError CursesWin::init()
 
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Initialises the curses window
+    @param      width       The width of the window
+    @param      height      The height of the window
+    @param      x           The x position of the window
+    @param      y           The y position of the window
+    @param      inkColour   The ink colour of the window
+    @param      paperColour The paper colour of the window
+    @return     LibraryError  LibraryError::No_Error if ok
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::init( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour )
+{
+    LibraryError error = LibraryError::No_Error;
+
+    // initialise variables
+    winWidth       = width;
+    winHeight      = height;
+    winX           = x;
+    winY           = y;
+    winInkColour   = inkColour;
+    winPaperColour = paperColour;
+
+    // create the window
+    win = subwin( stdscr, winHeight, winWidth, winY, winX );
+    if ( win == nullptr )
+    {
+        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesWin_FailedToCreateWindow, "Failed to create the curses window" );
+        error = LibraryError::CursesWin_FailedToCreateWindow;
+    }
+
+    return ( error );
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Draws the curses window
     @return     The error code
   --------------------------------------------------------------------------*/
