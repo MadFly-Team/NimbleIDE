@@ -49,9 +49,13 @@ class IDEEditBox : public IDEEditline, public CursesWin
     ~IDEEditBox();
     // initialisation -----------------------------------------------------------
     LibraryError initBox( int16_t x, int16_t y, int16_t width, int16_t height, int16_t ink, int16_t paper );
+    // process and control ------------------------------------------------------
+    LibraryError process( uint32_t key );
 
   private:
     // private vairables --------------------------------------------------------
+    uint32_t nFrameCount;  //!< frame count for the IDEEditBox
+    bool     bCursorDrawn; //!< flag to indicate if the cursor has been drawn
 };
 
 //-----------------------------------------------------------------------------

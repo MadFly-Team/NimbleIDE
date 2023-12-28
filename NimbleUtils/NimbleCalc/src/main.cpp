@@ -85,30 +85,42 @@ std::unique_ptr<CursesWin> winMain;
 
 int main( int argc, char* argv[] )
 {
+    // iniialise the curses screen
     setlocale( LC_ALL, "" );
     initscr();
-
     keypad( stdscr, TRUE );
     nodelay( stdscr, TRUE );
     noecho();
+
+    // start the colour system and clear the screen, turning off the cursor
     start_color();
     CursesColour::getInstance().init();
     clear();
+    curs_set( 0 );
 
+    // create the main window
     winMain = std::make_unique<CursesWin>( COLS, LINES, 0, 0, COLOR_WHITE, COLOR_GREEN );
     winMain->print( 0, 0, "Nimble Calculator : Version 0.0.1" );
     winMain->print( 0, LINES - 1, "Enter commands or press 'Q' to quit" );
 
     // test the edit box
     IDEEditBox editBox;
-    editBox.initBox( 10, 10, 30, 3, COLOR_WHITE, COLOR_GREEN );
-    editBox.colourWindow( 24, true );
+    editBox.initBox( 10, 10, 60, 3, COLOR_WHITE, COLOR_GREEN ); // TODO remove the color params
+    editBox.colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLACK ), true );
     editBox.print( 1, 1, "Edit box test" );
+
     // scan key for input, quit if 'q' pressed
     uint32_t key = 0;
     while ( key != 'q' )
     {
+        // check for key press
+        delay_output( 25 );
         key = wgetch( stdscr );
+
+        // pass the key to the edit box
+        editBox.process( key );
+
+        // process the key within the main window
         if ( key != ERR )
         {
             if ( key == 'q' || key == 'Q' )
@@ -117,6 +129,7 @@ int main( int argc, char* argv[] )
                 break;
             }
 
+            // print the key to the screen
             std::stringstream ss;
             ss << "Key pressed : " << key;
             if ( key < 128 && key > 30 )
@@ -124,39 +137,16 @@ int main( int argc, char* argv[] )
                 ss << " : " << (char)key;
             }
             ss << "      ";
+            ss << "Cursor position : " << editBox.getLineCursor() << "      ";
             winMain->print( 2, 5, ss.str() );
             winMain->draw();
         }
     }
 
-    // Create the main window
-    winMain = std::make_unique<CursesWin>( COLS, LINES, 0, 0, 2, 7 );
-    winMain->colourWindow( 3, false );
-    winMain->print( 0, 0, "NimbleCalculator : Version 0.0.1" );
-    winMain->refresh();
-
-    // scan for keypresses
-    key = 0;
-    while ( true )
-    {
-        key = wgetch( stdscr );
-
-        // if a key was pressed
-        if ( key != ERR )
-        {
-            if ( key == 'q' || key == 'Q' )
-                break;
-            std::stringstream ss;
-            ss << "Key pressed >  " << std::hex << key << std::dec;
-            if ( key >= 30 && key < 128 )
-            {
-                ss << " ( " << (char)key << " )        ";
-            }
-            winMain->print( 2, 2, ss.str() );
-            winMain->refresh();
-        }
-    }
+    // terminate the program
+    curs_set( 1 );
     endwin();
+
     // Return success
     return EXIT_SUCCESS;
 }

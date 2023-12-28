@@ -77,6 +77,7 @@ class IDEEditline : public StatusCtrl
     uint32_t    getHilightStart() const;
     uint32_t    getHilightEnd() const;
     std::string getLineString() const;
+    uint32_t    getLineBufferLimit() const;
     // setters -----------------------------------------------------------------
     void setLineXpos( uint32_t xpos );
     void setLineYpos( uint32_t ypos );
@@ -87,6 +88,7 @@ class IDEEditline : public StatusCtrl
     void setLineBufferChar( uint32_t index, uint8_t value );
     void setHilightStart( uint32_t start );
     void setHilightEnd( uint32_t end );
+    void setLineBufferLimit( uint32_t limit );
     // initialization ----------------------------------------------------------
     LibraryError init( std::string& inText, uint32_t inXpos, uint32_t inYpos );
     LibraryError setParams( uint32_t inCursor, uint32_t inInk, uint32_t inPapaer );
@@ -113,6 +115,7 @@ class IDEEditline : public StatusCtrl
     uint32_t            lineInkColour;   //!< Ink colour of line
     uint32_t            linePaperColour; //!< Paper colour of line
     uint32_t            lineCursor;      //!< X position of cursor
+    uint32_t            lineBufferLimit; //!< Limit of line buffer
     std::vector<int8_t> lineBuffer;      //!< Buffer for line
     // advanced editline --------------------------------------------------------
     uint32_t hilightStart; //!< Start of hilight

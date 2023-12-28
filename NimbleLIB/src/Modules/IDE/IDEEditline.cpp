@@ -42,6 +42,7 @@ namespace Nimble
 -----------------------------------------------------------------------------*/
 IDEEditline::IDEEditline()
 {
+    lineBufferLimit = 27;
 }
 
 /**----------------------------------------------------------------------------
@@ -166,6 +167,16 @@ std::string IDEEditline::getLineString() const
     return std::string( lineBuffer.begin(), lineBuffer.end() );
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the line buffer limit
+    @return     uint32 line buffer limit
+-----------------------------------------------------------------------------*/
+uint32_t IDEEditline::getLineBufferLimit() const
+{
+    return lineBufferLimit;
+}
+
 // setters ---------------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -266,6 +277,16 @@ void IDEEditline::setHilightEnd( uint32_t end )
     hilightEnd = end;
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Set the line buffer limit
+    @param      limit     line buffer limit
+-----------------------------------------------------------------------------*/
+void IDEEditline::setLineBufferLimit( uint32_t limit )
+{
+    lineBufferLimit = limit;
+}
+
 // Initialisation --------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -348,19 +369,22 @@ LibraryError IDEEditline::addChar( uint8_t inChar )
     LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
     if ( isNotInitialized() == false )
     {
-        // check the cursor is within the bounds of the line buffer
-        if ( lineCursor > lineLength )
+        if ( lineLength < lineBufferLimit )
         {
-            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertChar() : cursor out of bounds" );
-            lineCursor = lineLength;
+            // check the cursor is within the bounds of the line buffer
+            if ( lineCursor > lineLength )
+            {
+                ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertChar() : cursor out of bounds" );
+                lineCursor = lineLength;
+            }
+            // insert the character at the cursor position
+            lineBuffer.insert( lineBuffer.begin() + lineCursor, inChar );
+            // increment the line length
+            lineLength++;
+            // increment the cursor position
+            lineCursor++;
+            returnError = LibraryError::No_Error;
         }
-        // insert the character at the cursor position
-        lineBuffer.insert( lineBuffer.begin() + lineCursor, inChar );
-        // increment the line length
-        lineLength++;
-        // increment the cursor position
-        lineCursor++;
-        returnError = LibraryError::No_Error;
     }
     return ( returnError );
 }
@@ -375,16 +399,24 @@ LibraryError IDEEditline::deleteChar( void )
     LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
     if ( isNotInitialized() == false )
     {
-        // check the cursor is within the bounds of the line buffer
-        if ( lineCursor >= lineLength )
+        if ( lineLength > 0 )
         {
-            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::deleteChar() : cursor out of bounds" );
-            lineCursor = lineLength - 1;
+            // delete the character at the cursor position
+            if ( lineCursor > 0 )
+            {
+                lineCursor--;
+            }
+            // check the cursor is within the bounds of the line buffer
+            if ( lineCursor >= lineLength )
+            {
+                ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::deleteChar() : cursor out of bounds" );
+                lineCursor = lineLength - 1;
+            }
+            lineBuffer[ lineLength - 1 ] = 0;
+            lineBuffer.erase( lineBuffer.begin() + lineCursor );
+            // decrement the line length
+            lineLength--;
         }
-        // delete the character at the cursor position
-        lineBuffer.erase( lineBuffer.begin() + lineCursor );
-        // decrement the line length
-        lineLength--;
         returnError = LibraryError::No_Error;
     }
     return ( returnError );
@@ -488,9 +520,8 @@ LibraryError IDEEditline::moveCursorRight( void )
         }
         // increment the cursor position
         if ( lineCursor < lineLength )
-        {
             lineCursor++;
-        }
+
         returnError = LibraryError::No_Error;
     }
     return ( returnError );

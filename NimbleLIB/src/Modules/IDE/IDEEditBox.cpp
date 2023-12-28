@@ -79,7 +79,7 @@ LibraryError IDEEditBox::initBox( int16_t x, int16_t y, int16_t width, int16_t h
         {
             // set the editline as editable
             setParams( 0, ink, paper );
-
+            setLineBufferLimit( width - 3 );
             // and initialise the curses window
             error = CursesWin::init( width, height, x, y, ink, paper );
             if ( error == LibraryError::No_Error )
@@ -99,6 +99,94 @@ LibraryError IDEEditBox::initBox( int16_t x, int16_t y, int16_t width, int16_t h
         ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditBox_InitAlreadyCalled, "IDEEditBox - init() already called, ignored" );
     }
 
+    return ( error );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Process the IDEEditBox class
+    @return     LibraryError     Any errors generated, otherwise No_Error
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditBox::process( uint32_t key )
+{
+    LibraryError error = LibraryError::No_Error;
+
+    nFrameCount++;
+    std::string text = getLineString();
+
+    if ( key != ERR )
+    {
+        switch ( key )
+        {
+            case 8:
+            case 330:
+            {
+                deleteChar();
+                text = getLineString();
+                break;
+            }
+            case KEY_LEFT:
+            {
+                moveCursorLeft();
+                break;
+            }
+            case KEY_RIGHT:
+            {
+                moveCursorRight();
+                break;
+            }
+            case 262: // home
+            {
+                moveCursorHome();
+                break;
+            }
+            case 358: // end
+            {
+                moveCursorEnd();
+                break;
+            }
+            default:
+            {
+                if ( key >= 30 && key < 128 )
+                {
+                    addChar( key );
+                    text = getLineString();
+                }
+                break;
+            }
+        }
+    }
+
+    uint32_t len = text.length();
+    if ( len > getWidth() - 3 )
+        text = text.substr( len - getWidth() + 3, getWidth() - 3 );
+
+    std::string blankString = "";
+    for ( int16_t i = 0; i < getWidth() - 2; i++ ) blankString += " ";
+
+    print( 1, 1, blankString );
+    print( 1, 1, text );
+
+    uint32_t cursorPos = getLineCursor();
+    if ( getLineLength() > getWidth() - 3 )
+    {
+        cursorPos = getLineCursor() - ( getLineLength() - ( getWidth() - 3 ) );
+    }
+
+    // print the cursor, if required
+    if ( ( nFrameCount & 7 ) == 0 )
+        bCursorDrawn = bCursorDrawn ? false : true;
+
+    if ( bCursorDrawn )
+    {
+        if ( cursorPos > getWidth() - 3 )
+        {
+            cursorPos = getWidth() - 3;
+        }
+        print( cursorPos + 1, 1, "\xDB" );
+    }
+
+    draw();
     return ( error );
 }
 
