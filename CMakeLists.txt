@@ -33,6 +33,7 @@ add_subdirectory(NimbleIDE)
 add_subdirectory(TestNimbleIDE)
 add_subdirectory(TestNimbleLIB)
 add_subdirectory(NimbleUtils/NimbleMenu)
+add_subdirectory(NimbleUtils/NimbleCalc)
 
 # install the files needed for test
 #file( COPY "Tools/UnitTests/Content" DESTINATION "Tools/UnitTests/Debug" )

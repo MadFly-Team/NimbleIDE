@@ -1,5 +1,15 @@
 # Nimble IDE Suite
 
+## testing
+
+```plantumlcode
+@startuml
+alice->bob:hello
+@enduml
+
+```
+![TestImage](Content/testPlantUML.png)
+
 ## IMPORTANT NOTE
 
 This is in initial development, the project has only just started.
@@ -11,10 +21,15 @@ This is in initial development, the project has only just started.
 
 ## Application list
 
+Main Library And Applications
+
 - [NimbleLIB](#nimblelib)
 - [NimbleIDE](#nimbleide)
 - [TestNimbleIDE](#testnimbleide)
 - [TestNimbleLIB](#testnimblelib)
+
+Nimble Utilities
+- [NimbeUtils - NimbleMenu](#nimblemenu)
 
 ## NimbleLIB
 
@@ -67,12 +82,48 @@ Tests the modules developed in NimbleIDE and NimbleLIB.
 Complete tests for the NimbleLIB modules.
 Currently only tests the Screen and ErrorHandling modules.
 
+## NimbleMenu
+
+##### Found in NimbleUtils directory
+This utility allows quick selection of actions from a menu.
+Setup to allow for easy integration into other applications.
+The menu is a simple list of options, with a title and a prompt.
+The options are numbered in a configuration file that is loaded from
+the current directory where `NimbleMunu.exe` is ran.
+Configuration file is called `NimbleMenu.cfg`
+Items are numbered from 0 to 9, and are displayed in the order they are in the file.
+Each item has a title and a command to run.
+Please note 'cd' commands are supported, 'cd' is stripped and also the '\n' is stripped.
+Each command is sperated by either of the following:
+* ` & ` - run the command and continue
+* ` && ` - runs the next command if no errors are reported by the previous command
+
+The following is a working example of the configuration file
+<img title="NimbleMenu Image" alt="NimbleMenu image" src="Content/NimbleMenu1.png">
+
+And it is created by the following configuration - called `NimbeMenu.cfg`.
+
+```
+// Nimble Menu Items -
+Items = 9
+1^Directory - NimbleIDE^cd D:\NewProjects\Utilities\NimbleIDE\Trunk
+2^Directory - USBConsoleSuit^cd D:\NewProjects\Utilities\USBHIDConsoleSuite\Trunk
+3^Clean-Build Project^cd build && rmdir -f . & cmake .. && cmake --build .
+4^Build & Run NimbleIDE^ cmake --build build --target NimbleIDE && cd build\NimbleIDE\Debug\ && .\NimbleIDE.exe
+5^Build & Run NimbleMenu^ cmake --build build --target NimbleMenu && cd build\NimbleUtils\NimbleMENU\Debug\ && .\NimbleMENU.exe
+6^Build & Run TestNimbleLIB^ cmake --build build --target TestNimbleLIB && cd build\TestNimbleLIB\Debug\ && .\TestNimbleLIB.exe && timeout /t 10
+7^Explorer at this location^explorer .
+8^Far Manager at this location^"c:\Program Files\Far Manager\Far.exe" .
+9^Lazygit at this location^lazygit.exe
+```
+
+
 ## Pre-requisites
 
 - CMake - for creating and building the projects.
 - Visual Studio 2022 - for building the projects.
 - Git - for cloning the repository.
-- Doxygen - for generating the documentation.
+ Doxygen - for generating the documentation.
 - .Net 7.0 SDK - for building the projects.
 - .Net 7.0 Runtime - for running the projects.
 

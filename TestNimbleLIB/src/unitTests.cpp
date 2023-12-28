@@ -61,6 +61,11 @@ TEST_SUITE( "Nimble LIB Test Suite" )
     #include "../inc/unitTests_ErrorHandler.h"
 
     //-----------------------------------------------------------------------------
+    // Test the IDE Module
+    //-----------------------------------------------------------------------------
+
+    #include "../inc/unitTests_IDEEdit.h"
+
 
 } // TEST_SUITE( "Nimble LIB Test Suite" )
 // clang-format on

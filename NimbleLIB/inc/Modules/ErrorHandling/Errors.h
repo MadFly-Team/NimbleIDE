@@ -94,6 +94,15 @@ enum class LibraryError
 
     // Utllities Errors
     Utilities_base_error = Screen_base_error + MODULE_OFFSET, //!< 0x10006000 Base error for the Utilities module
+
+    // IDE Errors
+    IDE_base_error = Utilities_base_error + MODULE_OFFSET, //!< 0x10007000 Base error for the IDE module
+    IDEEditline_IncorrectBufferIndex,                      //!< 0x10007001 Incorrect buffer index
+    IDEEditline_InitNotCalled,                             //!< 0x10007002 Init not called
+    IDEEditline_AlreadyInitialized,                        //!< 0x10007003 Already initialized
+    IDEEditBox_InitAlreadyCalled,                          //!< 0x10007004 Init already called
+    IDEEditBox_InitNotCalled,                              //!< 0x10007005 Init not called
+    IDEEditBox_FailedToCreateWindow,                       //!< 0x10007006 Failed to create window
 };
 
 // ----------------------------------------------------------------------------

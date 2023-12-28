@@ -74,6 +74,7 @@ class CursesWin
     void setColour( uint32_t colour );
     // Control ------------------------------------------------------------------
     LibraryError init();
+    LibraryError init( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour );
     LibraryError draw();
     LibraryError clear();
     LibraryError refresh();

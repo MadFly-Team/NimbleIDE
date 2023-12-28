@@ -104,26 +104,30 @@ LibraryError CursesColour::init()
 
     if ( start_color() == ERR )
     {
-        ErrorHandler::getInstance().handleError( ErrorType::Error, LibraryError::CursesColour_CannotStartColour, "Failed to start curses colours for the terminal" );
+        // Failed to start colours
+        error = LibraryError::CursesColour_CannotStartColour;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to start curses colours for the terminal" );
     }
-
-    // Create the colour pairs
-    colourPairs.clear();
-    for ( uint32_t i = 0; i < MAX_COLOURS; i++ )
+    else
     {
-        // Create the colour pair
-        ColourPair newColourPair;
-        newColourPair.index = i + 1;
-        newColourPair.ink   = i % NUUM_BASE_COLORS;
-        newColourPair.paper = i / NUUM_BASE_COLORS;
-        // Add the colour pair to the list
-        colourPairs.push_back( newColourPair );
+        // Create the colour pairs
+        colourPairs.clear();
+        for ( uint32_t i = 0; i < MAX_COLOURS; i++ )
+        {
+            // Create the colour pair
+            ColourPair newColourPair;
+            newColourPair.index = i + 1;
+            newColourPair.ink   = i % NUUM_BASE_COLORS;
+            newColourPair.paper = i / NUUM_BASE_COLORS;
+            // Add the colour pair to the list
+            colourPairs.push_back( newColourPair );
 
-        // Set the colour pair in the curses library
-        init_pair( newColourPair.index, newColourPair.ink, newColourPair.paper );
+            // Set the colour pair in the curses library
+            init_pair( newColourPair.index, newColourPair.ink, newColourPair.paper );
+        }
+        // Set the initialized flag
+        setInitialized();
     }
-    // Set the initialized flag
-    setInitialized();
 
     return error;
 }
@@ -204,8 +208,13 @@ LibraryError CursesColour::setPaperColourPair( uint32_t pair, uint32_t paper )
     return error;
 }
 
-//-----------------------------------------------------------------------------
-
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Sets the curses colour pair
+    @param      win     The curses window to set the colour pair for
+    @param      pair    The colour pair to set
+    @return     LibraryError    Error code
+-----------------------------------------------------------------------------*/
 LibraryError CursesColour::setColour( std::unique_ptr<CursesWin> win, uint32_t pair )
 {
     LibraryError error = LibraryError::No_Error;
@@ -219,6 +228,8 @@ LibraryError CursesColour::setColour( std::unique_ptr<CursesWin> win, uint32_t p
     }
     return error;
 }
+
+//-----------------------------------------------------------------------------
 
 } // namespace Nimble
 

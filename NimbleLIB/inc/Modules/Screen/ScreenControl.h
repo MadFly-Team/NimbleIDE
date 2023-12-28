@@ -34,21 +34,6 @@ namespace Screen
 {
 
 //-----------------------------------------------------------------------------
-// Defines
-//-----------------------------------------------------------------------------
-
-#define TITLECOLOR       1 /* color pair indices */
-#define MAINMENUCOLOR    ( 2 | A_BOLD )
-#define MAINMENUREVCOLOR ( 3 | A_BOLD | A_REVERSE )
-#define SUBMENUCOLOR     ( 4 | A_BOLD )
-#define SUBMENUREVCOLOR  ( 5 | A_BOLD | A_REVERSE )
-#define BODYCOLOR        6
-#define STATUSCOLOR      ( 5 )
-#define INPUTBOXCOLOR    8
-#define EDITBOXCOLOR     ( 9 | A_BOLD | A_REVERSE )
-#define A_ATTR           ( A_ATTRIBUTES ^ A_COLOR ) /* A_BLINK, A_REVERSE, A_BOLD */
-
-//-----------------------------------------------------------------------------
 // Class Definition
 //-----------------------------------------------------------------------------
 
