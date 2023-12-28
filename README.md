@@ -8,7 +8,7 @@ alice->bob:hello
 @enduml
 
 ```
-![TestImage](content/testPlantUML.png)
+![TestImage](Content/testPlantUML.png)
 
 ## IMPORTANT NOTE
 
@@ -99,7 +99,7 @@ Each command is sperated by either of the following:
 * ` && ` - runs the next command if no errors are reported by the previous command
 
 The following is a working example of the configuration file
-<img title="NimbleMenu Image" alt="NimbleMenu image" src="content/NimbleMenu1.png">
+<img title="NimbleMenu Image" alt="NimbleMenu image" src="Content/NimbleMenu1.png">
 
 And it is created by the following configuration - called `NimbeMenu.cfg`.
 
