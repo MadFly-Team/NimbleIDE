@@ -93,18 +93,18 @@ class IDEFileHandler : public StatusCtrl
     IDEFileHandler();
     ~IDEFileHandler();
     // setters -----------------------------------------------------------------
-    void SetFlags( FileHandlerFlags flags );
-    void SetStatus( std::string status );
+    void setFlags( uint32_t flags );
+    void setStatus( std::string status );
     // getters -----------------------------------------------------------------
-    std::string      GetStatus();
-    FileHandlerFlags GetFlags();
+    std::string getStatus();
+    uint32_t    getFlags();
     // file functions ----------------------------------------------------------
-    LibraryError OpenFile( std::string filename );
-    LibraryError SaveFile( std::string filename );
+    LibraryError openFile( std::string& filename );
+    LibraryError saveFile( std::string& filename );
     //--------------------------------------------------------------------------
   private:
     // private variables -------------------------------------------------------
-    FileHandlerFlags         m_flags;     //!< File handler flags
+    uint32_t                 m_flags;     //!< File handler flags
     std::string              m_filename;  //!< Filename
     std::string              m_status;    //!< Status string
     std::ofstream            m_fileOut;   //!< File stream - output

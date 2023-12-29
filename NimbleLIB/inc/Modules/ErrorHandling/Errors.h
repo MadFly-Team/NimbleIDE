@@ -105,6 +105,7 @@ enum class LibraryError
     IDEEditBox_FailedToCreateWindow,                       //!< 0x10007006 Failed to create window
     IDEFileHandler_FailedToOpenFile,                       //!< 0x10007007 Failed to open file
     IDEFileHandler_FailedToSaveFile,                       //!< 0x10007008 Failed to close file
+    IDEFileHandler_FileNotOpen,                            //!< 0x10007009 File not opened
 };
 
 // ----------------------------------------------------------------------------
