@@ -103,6 +103,8 @@ enum class LibraryError
     IDEEditBox_InitAlreadyCalled,                          //!< 0x10007004 Init already called
     IDEEditBox_InitNotCalled,                              //!< 0x10007005 Init not called
     IDEEditBox_FailedToCreateWindow,                       //!< 0x10007006 Failed to create window
+    IDEFileHandler_FailedToOpenFile,                       //!< 0x10007007 Failed to open file
+    IDEFileHandler_FailedToSaveFile,                       //!< 0x10007008 Failed to close file
 };
 
 // ----------------------------------------------------------------------------
