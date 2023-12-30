@@ -27,17 +27,23 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +131 NimbleLIB/inc/Modules/IDE/IDEEditline.h
-badd +593 NimbleLIB/src/Modules/IDE/IDEEditline.cpp
-badd +107 NimbleLIB/inc/Modules/ErrorHandling/Errors.h
+badd +80 NimbleLIB/inc/Modules/IDE/IDEEditline.h
+badd +22 NimbleLIB/src/Modules/IDE/IDEEditline.cpp
+badd +91 NimbleLIB/inc/Modules/ErrorHandling/Errors.h
 badd +101 NimbleLIB/inc/Modules/ErrorHandling/ErrorHandler.h
-badd +0 D:/NewProjects/Utilities/NimbleIDE/Trunk
-badd +110 NimbleLIB/inc/Modules/IDE/IDEFileHandler.h
-badd +139 NimbleLIB/src/Modules/IDE/IDEFileHandler.cpp
+badd +1 D:/NewProjects/Utilities/NimbleIDE/Trunk
+badd +97 NimbleLIB/inc/Modules/IDE/IDEFileHandler.h
+badd +185 NimbleLIB/src/Modules/IDE/IDEFileHandler.cpp
+badd +135 NimbleLIB/src/Modules/IDE/IDEEditor.cpp
+badd +71 NimbleLIB/inc/Modules/IDE/IDEEditor.h
+badd +146 NimbleIDE/src/main.cpp
+badd +36 NimbleLIB/inc/Modules/IDE/IDEEditBox.h
+badd +1 NimbleLIB/src/Modules/IDE/IDEEditBox.cpp
+badd +39 NimbleLIB/inc/NimbleLib.h
 argglobal
 %argdel
 $argadd D:/NewProjects/Utilities/NimbleIDE/Trunk
-edit NimbleLIB/src/Modules/IDE/IDEFileHandler.cpp
+edit NimbleLIB/src/Modules/IDE/IDEEditBox.cpp
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -60,7 +66,7 @@ set winminwidth=0
 set winwidth=1
 wincmd =
 argglobal
-balt NimbleLIB/inc/Modules/IDE/IDEFileHandler.h
+balt NimbleLIB/inc/Modules/IDE/IDEEditBox.h
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -69,20 +75,20 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal nofen
-let s:l = 119 - ((4 * winheight(0) + 40) / 80)
+let s:l = 145 - ((54 * winheight(0) + 41) / 83)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 119
-normal! 036|
+keepjumps 145
+normal! 032|
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
 argglobal
-if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEFileHandler.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEFileHandler.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEFileHandler.h | endif
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEEditor.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEEditor.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEEditor.h | endif
 if &buftype ==# 'terminal'
-  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEFileHandler.h
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEEditor.h
 endif
-balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/IDE/IDEEditline.h
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleIDE/src/main.cpp
 setlocal fdm=indent
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -91,36 +97,62 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-52
+let s:l = 71 - ((30 * winheight(0) + 20) / 41)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 71
+normal! 028|
+lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
+wincmd w
+argglobal
+if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/IDE/IDEEditor.cpp", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/IDE/IDEEditor.cpp | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/IDE/IDEEditor.cpp | endif
+if &buftype ==# 'terminal'
+  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/IDE/IDEEditor.cpp
+endif
+balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/NimbleLib.h
+setlocal fdm=indent
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=99
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+68
 normal! zo
-let s:l = 75 - ((35 * winheight(0) + 20) / 40)
+97
+normal! zo
+104
+normal! zo
+122
+normal! zo
+145
+normal! zo
+148
+normal! zo
+150
+normal! zo
+152
+normal! zo
+161
+normal! zo
+151
+normal! zo
+153
+normal! zo
+155
+normal! zo
+157
+normal! zo
+166
+normal! zo
+let s:l = 135 - ((17 * winheight(0) + 20) / 41)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 75
-normal! 034|
-lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
-wincmd w
-argglobal
-if bufexists(fnamemodify("D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/ErrorHandling/Errors.h", ":p")) | buffer D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/ErrorHandling/Errors.h | else | edit D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/ErrorHandling/Errors.h | endif
-if &buftype ==# 'terminal'
-  silent file D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/inc/Modules/ErrorHandling/Errors.h
-endif
-balt D:/NewProjects/Utilities/NimbleIDE/Trunk/NimbleLIB/src/Modules/IDE/IDEEditline.cpp
-setlocal fdm=indent
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=99
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-let s:l = 107 - ((27 * winheight(0) + 19) / 39)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 107
-normal! 031|
+keepjumps 135
+normal! 05|
 lcd D:/NewProjects/Utilities/NimbleIDE/Trunk
 wincmd w
 3wincmd w

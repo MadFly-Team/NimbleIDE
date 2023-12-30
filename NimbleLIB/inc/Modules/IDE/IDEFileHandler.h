@@ -104,14 +104,14 @@ class IDEFileHandler : public StatusCtrl
     //--------------------------------------------------------------------------
   private:
     // private variables -------------------------------------------------------
-    uint32_t                 m_flags;     //!< File handler flags
-    std::string              m_filename;  //!< Filename
-    std::string              m_status;    //!< Status string
-    std::ofstream            m_fileOut;   //!< File stream - output
-    std::ifstream            m_fileIn;    //!< File stream - input
+    uint32_t      m_flags;    //!< File handler flags
+    std::string   m_filename; //!< Filename
+    std::string   m_status;   //!< Status string
+    std::ofstream m_fileOut;  //!< File stream - output
+    std::ifstream m_fileIn;   //!< File stream - input
+  protected:
     std::vector<IDEEditline> m_editlines; //!< Edit lines
 
-    // private functions -------------------------------------------------------
     //--------------------------------------------------------------------------
 };
 

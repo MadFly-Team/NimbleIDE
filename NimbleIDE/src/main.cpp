@@ -132,6 +132,22 @@ int main( int argc, char* argv[] )
     winStatus->colourWindow( STATUSCOLOR, 0 );
     winStatus->print( 2, 0, "Status Bar : " );
 
+    IDEEditor winEditor;
+    winEditor.init( COLS, LINES - 2, 0, 1 );
+
+    std::string filename = "test.txt";
+    winEditor.start( filename );
+
+    uint32_t key = 0;
+    while ( key != 'q' )
+    {
+        key = getch();
+        delay_output( DELAYSIZE );
+        winEditor.processKey( key );
+    }
+
+#if 0
+
     CursesMenu menu;
 
     // setup the menu text...
@@ -164,7 +180,7 @@ int main( int argc, char* argv[] )
             break;
         }
     }
-
+#endif
     // Return success
     return EXIT_SUCCESS;
 }

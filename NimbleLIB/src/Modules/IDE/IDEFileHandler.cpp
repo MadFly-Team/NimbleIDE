@@ -1,6 +1,6 @@
 /**----------------------------------------------------------------------------
 
-    @file       IDEFileHandler.h
+    @file       IDEFileHandler.cpp
     @defgroup   NimbleLIBIDE Nimble Library IDE Module
     @brief      IDEFileHandler class for the Nimble Library
 
@@ -8,7 +8,6 @@
 
 Notes:
 
-        please see IDEFileHandler.cpp for full details.
 
 Version:
 
@@ -127,7 +126,7 @@ LibraryError IDEFileHandler::openFile( std::string& filename )
         while ( getline( m_fileIn, line ) )
         {
             IDEEditline editline;
-            editline.addString( line );
+            editline.init( line, 0, 0 );
             m_editlines.push_back( editline );
         }
         m_fileIn.close();
@@ -182,5 +181,5 @@ LibraryError IDEFileHandler::saveFile( std::string& filename )
 } // namespace Nimble
 
 //-----------------------------------------------------------------------------
-// End of file: IDEFileHandler.h
+// End of file: IDEFileHandler.cpp
 // ----------------------------------------------------------------------------
