@@ -190,6 +190,36 @@ LibraryError IDEEditBox::process( uint32_t key )
     return ( error );
 }
 
+// special functions ----------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      special function - displays line numbers
+    @param      nLine    Starting line number
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLines )
+{
+    LibraryError error = LibraryError::IDEEditBox_InitNotCalled;
+
+    if ( isInitialized() )
+    {
+        uint32_t nAmount = getHeight() - 2;
+        for ( uint32_t i = 0; i < nAmount ; i++ )
+        {
+            std::string line = std::format( "{:5}", nLine + i );
+            if ( nLine + i > nTotalLines )
+            {
+                line = "     ";
+            }
+            print( 1, i + 1, line );
+        }
+        draw();
+        error = LibraryError::No_Error;
+    }
+
+    return error;
+}
+
 //-----------------------------------------------------------------------------
 
 } // namespace Nimble

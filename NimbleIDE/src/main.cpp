@@ -132,18 +132,25 @@ int main( int argc, char* argv[] )
     winStatus->colourWindow( STATUSCOLOR, 0 );
     winStatus->print( 2, 0, "Status Bar : " );
 
-    IDEEditor winEditor;
-    winEditor.init( COLS, LINES - 2, 0, 1 );
-
+    IDEEditBox winLineNumbers;
+    IDEEditor  winEditor;
+    winEditor.init( COLS - 8, LINES - 4, 8, 2 );
     std::string filename = "test.txt";
     winEditor.start( filename );
+
+    winLineNumbers.initBox( 0, 1, 7, LINES - 2, COLOR_WHITE, COLOR_BLACK );
+    winLineNumbers.colourWindow( COLOUR_INDEX( 0, 1 ), true );
+    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     uint32_t key = 0;
     while ( key != 'q' )
     {
         key = getch();
         delay_output( DELAYSIZE );
-        winEditor.processKey( key );
+        if ( winEditor.processKey( key ) == true )
+        {
+            winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+        }
     }
 
 #if 0

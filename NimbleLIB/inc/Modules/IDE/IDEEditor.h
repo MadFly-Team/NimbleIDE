@@ -52,8 +52,6 @@ namespace Nimble
 
 class IDEEditor : protected IDEFileHandler
 {
-    friend class IDEFileHandler;
-
   public:
     // constructor & destructor -------------------------------------------------
     IDEEditor();
@@ -62,10 +60,14 @@ class IDEEditor : protected IDEFileHandler
     LibraryError init( uint32_t width, uint32_t height, uint32_t x, uint32_t y );
     LibraryError start( std::string& filename );
     // public functions --------------------------------------------------------
+    // getters -----------------------------------------------------------------
+    uint32_t getCurrentLine() const;
+    uint32_t getCurrentColumn() const;
+    uint32_t getTotalLines() const;
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
     // control functions -------------------------------------------------------
-    void processKey( uint32_t key );
+    bool processKey( uint32_t key );
 
   private:
     // private variables -------------------------------------------------------

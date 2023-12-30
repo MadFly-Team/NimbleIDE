@@ -129,26 +129,34 @@ LibraryError IDEEditor::displayEditor()
     while ( curline < ( m_height ) && ( curline < ( m_height + m_editlines.size() - 1 ) ) )
     {
         std::string line;
+
+        line = blankline;
         if ( ( curline + m_currentLine ) < m_editlines.size() )
         {
             line = m_editlines[ curline + m_currentLine ].getLineString();
+        }
+
+        // move to the current column, blanking if off screen
+        if ( line.length() > 0 && line.length() >= curcol )
+        {
+            line = line.substr( curcol, m_width );
         }
         else
         {
             line = blankline;
         }
-        if ( line.length() == 0 )
+
+        // pad the line to the correct length
+        if ( line.length() < m_width )
         {
-            line = blankline;
-        }
-        else if ( line.length() < m_width )
-        {
-            line += blankline.substr( 0, m_width - line.length() );
+            line += blankline.substr( curcol, m_width - line.length() );
         }
         else if ( line.length() > m_width )
         {
             line = line.substr( 0, m_width );
         }
+
+        // print the line
         m_editorWin->print( 0, curline, line );
         curline++;
     }
@@ -158,15 +166,50 @@ LibraryError IDEEditor::displayEditor()
     return error;
 }
 
+// getters --------------------------------------------------------------------
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      get the current line
+    @return     uint32_t    current line
+-----------------------------------------------------------------------------*/
+uint32_t IDEEditor::getCurrentLine() const
+{
+    return m_currentLine;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      get the current column
+    @return     uint32_t    current column
+-----------------------------------------------------------------------------*/
+uint32_t IDEEditor::getCurrentColumn() const
+{
+    return m_currentColumn;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      get the total lines
+    @return     uint32_t    total lines
+------------------------------------------------------------------------------*/
+uint32_t IDEEditor::getTotalLines() const
+{
+    return m_editlines.size();
+}
+
 // control functions ----------------------------------------------------------
 
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      process the keys presses
     @param      key     key pressed
+    @return     bool    true if display changed
 ------------------------------------------------------------------------------*/
-void IDEEditor::processKey( uint32_t key )
+bool IDEEditor::processKey( uint32_t key )
 {
+    bool displayChanged = false;
+
     if ( key != ERR )
     {
         switch ( key )
@@ -177,6 +220,7 @@ void IDEEditor::processKey( uint32_t key )
                 {
                     m_currentLine--;
                     displayEditor();
+                    displayChanged = true;
                 }
                 break;
             }
@@ -186,6 +230,7 @@ void IDEEditor::processKey( uint32_t key )
                 {
                     m_currentLine++;
                     displayEditor();
+                    displayChanged = true;
                 }
                 break;
             }
@@ -197,6 +242,7 @@ void IDEEditor::processKey( uint32_t key )
                     m_currentLine = 0;
                 }
                 displayEditor();
+                displayChanged = true;
                 break;
             }
             case 338: // page down
@@ -207,6 +253,7 @@ void IDEEditor::processKey( uint32_t key )
                     m_currentLine = m_editlines.size() - 1;
                 }
                 displayEditor();
+                displayChanged = true;
                 break;
             }
             case 260: // left
@@ -215,6 +262,7 @@ void IDEEditor::processKey( uint32_t key )
                 {
                     m_currentColumn--;
                     displayEditor();
+                    displayChanged = true;
                 }
                 break;
             }
@@ -224,6 +272,7 @@ void IDEEditor::processKey( uint32_t key )
                 {
                     m_currentColumn++;
                     displayEditor();
+                    displayChanged = true;
                 }
                 break;
             }
@@ -233,6 +282,7 @@ void IDEEditor::processKey( uint32_t key )
             }
         }
     }
+    return displayChanged;
 }
 
 //-----------------------------------------------------------------------------
