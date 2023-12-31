@@ -82,7 +82,8 @@ class CursesWin
     // display functions --------------------------------------------------------
     LibraryError print( uint32_t x, uint32_t y, const std::string& text );
     LibraryError colourWindow( uint32_t colour, bool hasBox );
-
+    LibraryError eraseChar( uint32_t x, uint32_t y );
+    // Helper
   private:
     // Constants ----------------------------------------------------------------
     const uint32_t MIN_WIN_SIZE = 2; //!< Minimum size of the window

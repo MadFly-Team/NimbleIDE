@@ -69,6 +69,7 @@ enum class LibraryError
     CursesWin_FailedToColourWindow,                                         //!< 0x10002102 Curses Window class failed to colour window
     CursesWin_FailedToColourBackground,                                     //!< 0x10002103 Curses Window class failed to colour background
     CursesWin_FailedToClearWindow,                                          //!< 0x10001004 Curses Window class failed to clear window
+    CursesWin_FailedToEraseChar,                                            //!< 0x10001005 Curses Window class failed to erase character
     FileHandlding_base_error = Curses_base_error + MODULE_OFFSET,           //!< 0x10003000 Base error for the File Handling module
     ErrorHandler_base_error  = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10004000 Base error for the Error Handling module
     Screen_base_error        = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10005000 Base error for the Screen module

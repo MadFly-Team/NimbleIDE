@@ -67,7 +67,9 @@ class IDEEditor : protected IDEFileHandler
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
     // control functions -------------------------------------------------------
-    bool processKey( uint32_t key );
+    bool processKeyViewOnly( uint32_t key );
+    bool processKeyEdit( uint32_t key );
+    bool processDisplay();
 
   private:
     // private variables -------------------------------------------------------
@@ -77,7 +79,20 @@ class IDEEditor : protected IDEFileHandler
     uint32_t                   m_yStart;        //!< y position of the editor window
     int32_t                    m_currentLine;   //!< current line number
     int32_t                    m_currentColumn; //!< current column number
+    uint32_t                   m_cursorX;       //!< x position of the cursor
+    uint32_t                   m_cursorY;       //!< y position of the cursor
+    uint32_t                   m_oldCursorX;    //!< x position of the cursor before it was moved
+    uint32_t                   m_oldCursorY;    //!< y position of the cursor before it was moved
+    bool                       m_cursorDrawn;   //!< flag to indicate if the cursor has been drawn
+    uint32_t                   m_frameCount;    //!< frame count for the IDEEditor
     std::unique_ptr<CursesWin> m_editorWin;     //!< editor window
+    std::unique_ptr<CursesWin> m_overlayWin;    //!< editor overlay window
+    // private functions -------------------------------------------------------
+    bool    checkCursorKeys( uint32_t key );
+    bool    checkEditKeys( uint32_t key );
+    uint8_t getCharFromEditor( uint32_t x, uint32_t y );
+    void    eraseCharFromEditor( uint32_t x, uint32_t y );
+    void    insertCharIntoEditor( uint32_t x, uint32_t y, uint8_t ch );
 };
 
 //-----------------------------------------------------------------------------

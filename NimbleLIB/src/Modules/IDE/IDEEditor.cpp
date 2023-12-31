@@ -20,6 +20,7 @@ Version:
 // ----------------------------------------------------------------------------
 
 #include "../../../inc/Modules/IDE/IDEEditor.h"
+#include <cstdint>
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -42,6 +43,10 @@ IDEEditor::IDEEditor()
 {
     m_currentLine   = 0;
     m_currentColumn = 0;
+    m_cursorX       = 0;
+    m_cursorY       = 0;
+    m_oldCursorX    = 0;
+    m_oldCursorY    = 0;
 }
 
 /**-----------------------------------------------------------------------------
@@ -79,7 +84,8 @@ LibraryError IDEEditor::init( uint32_t width, uint32_t height, uint32_t x, uint3
         m_yStart = y;
 
         // create the curses window
-        m_editorWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
+        m_editorWin  = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
+        m_overlayWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
         setInitialized();
     }
 
@@ -149,7 +155,8 @@ LibraryError IDEEditor::displayEditor()
         // pad the line to the correct length
         if ( line.length() < m_width )
         {
-            line += blankline.substr( curcol, m_width - line.length() );
+            uint32_t nPad = m_width - line.length();
+            line += blankline.substr( 0, nPad );
         }
         else if ( line.length() > m_width )
         {
@@ -202,11 +209,34 @@ uint32_t IDEEditor::getTotalLines() const
 
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      process the keys presses for EDIT mode
+    @param      key     key pressed
+    @return     bool    true if display changed
+------------------------------------------------------------------------------*/
+bool IDEEditor::processKeyEdit( uint32_t key )
+{
+    bool displayChanged = false;
+
+    if ( key != ERR )
+    {
+
+        displayChanged = checkCursorKeys( key );
+        if ( displayChanged == false )
+        {
+            displayChanged = checkEditKeys( key );
+        }
+    }
+
+    return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      process the keys presses
     @param      key     key pressed
     @return     bool    true if display changed
 ------------------------------------------------------------------------------*/
-bool IDEEditor::processKey( uint32_t key )
+bool IDEEditor::processKeyViewOnly( uint32_t key )
 {
     bool displayChanged = false;
 
@@ -219,7 +249,6 @@ bool IDEEditor::processKey( uint32_t key )
                 if ( m_currentLine > 0 )
                 {
                     m_currentLine--;
-                    displayEditor();
                     displayChanged = true;
                 }
                 break;
@@ -229,7 +258,6 @@ bool IDEEditor::processKey( uint32_t key )
                 if ( m_currentLine < m_editlines.size() - 1 )
                 {
                     m_currentLine++;
-                    displayEditor();
                     displayChanged = true;
                 }
                 break;
@@ -241,7 +269,6 @@ bool IDEEditor::processKey( uint32_t key )
                 {
                     m_currentLine = 0;
                 }
-                displayEditor();
                 displayChanged = true;
                 break;
             }
@@ -252,7 +279,6 @@ bool IDEEditor::processKey( uint32_t key )
                 {
                     m_currentLine = m_editlines.size() - 1;
                 }
-                displayEditor();
                 displayChanged = true;
                 break;
             }
@@ -261,7 +287,6 @@ bool IDEEditor::processKey( uint32_t key )
                 if ( m_currentColumn > 0 )
                 {
                     m_currentColumn--;
-                    displayEditor();
                     displayChanged = true;
                 }
                 break;
@@ -271,7 +296,6 @@ bool IDEEditor::processKey( uint32_t key )
                 if ( m_currentColumn < 10000 )
                 {
                     m_currentColumn++;
-                    displayEditor();
                     displayChanged = true;
                 }
                 break;
@@ -283,6 +307,251 @@ bool IDEEditor::processKey( uint32_t key )
         }
     }
     return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      process the dispay
+    @return     bool    true if display changed
+-----------------------------------------------------------------------------*/
+bool IDEEditor::processDisplay()
+{
+    bool        displayChanged = false;
+    std::string charStr        = " ";
+
+    // flash the cursor...
+    m_frameCount++;
+    if ( ( m_frameCount & 0x7 ) == 0 )
+    {
+        m_cursorDrawn = m_cursorDrawn ? false : true;
+    }
+
+    charStr[ 0 ] = getCharFromEditor( m_oldCursorX, m_oldCursorY );
+    m_overlayWin->print( m_oldCursorX, m_oldCursorY, charStr );
+
+    if ( m_cursorDrawn )
+    {
+        m_overlayWin->print( m_cursorX, m_cursorY, "\xDB" );
+    }
+    m_overlayWin->draw();
+    return displayChanged;
+}
+
+// private functions ----------------------------------------------------------
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      check the cursor keys
+    @param      key     key pressed
+    @return     bool    true if display changed
+-----------------------------------------------------------------------------*/
+bool IDEEditor::checkCursorKeys( uint32_t key )
+{
+    bool displayChanged = false;
+
+    switch ( key )
+    {
+        case 259: // up
+        {
+            if ( m_cursorY > 0 )
+            {
+                m_cursorY--;
+                displayChanged = true;
+            }
+            else
+            {
+                if ( m_currentLine > 0 )
+                {
+                    m_currentLine--;
+                    displayChanged = true;
+                }
+            }
+            break;
+        }
+        case 258: // down
+        {
+            if ( m_cursorY < m_height - 1 )
+            {
+                m_cursorY++;
+                displayChanged = true;
+            }
+            else
+            {
+                if ( m_currentLine <= m_editlines.size() - 1 )
+                {
+                    m_currentLine++;
+                    displayChanged = true;
+                }
+            }
+            break;
+        }
+        case 260: // left
+        {
+            if ( m_cursorX > 0 )
+            {
+                m_cursorX--;
+                displayChanged = true;
+            }
+            else
+            {
+                if ( m_currentColumn > 0 )
+                {
+                    uint32_t adj = ( m_currentColumn > 16 ) ? 16 : m_currentColumn;
+                    m_currentColumn -= adj;
+                    m_cursorX += adj;
+                    displayChanged = true;
+                }
+            }
+            break;
+        }
+        case 261: // right
+        {
+            if ( m_cursorX < m_width - 1 )
+            {
+                m_cursorX++;
+                displayChanged = true;
+            }
+            else
+            {
+                m_currentColumn += 16;
+                m_cursorX -= 16;
+                displayChanged = true;
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      check the edit keys
+    @param      key     key pressed
+    @return     bool    true if display changed
+-----------------------------------------------------------------------------*/
+bool IDEEditor::checkEditKeys( uint32_t key )
+{
+    bool displayChanged = false;
+
+    switch ( key )
+    {
+        case 8: // backspace
+        {
+            if ( m_cursorX > 0 )
+            {
+                eraseCharFromEditor( m_cursorX, m_cursorY );
+                m_cursorX--;
+                displayChanged = true;
+            }
+            break;
+        }
+        case 10: // enter
+        {
+
+            break;
+        }
+        case 127: // delete
+        {
+            break;
+        }
+        case 330: // delete
+        {
+            eraseCharFromEditor( m_cursorX, m_cursorY );
+            displayChanged = true;
+            break;
+        }
+        default:
+        {
+            if ( key >= 32 && key <= 126 )
+            {
+                displayChanged = true;
+                insertCharIntoEditor( m_cursorX, m_cursorY, key );
+                m_cursorX++;
+            }
+            break;
+        }
+    }
+
+    return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      returns the character at the current cursor position
+    @param      x  x position
+    @param      y  y position
+    @return     uint8_t    character or space
+-----------------------------------------------------------------------------*/
+uint8_t IDEEditor::getCharFromEditor( uint32_t x, uint32_t y )
+{
+    uint8_t ch = ' ';
+
+    if ( ( y + m_currentLine ) <= m_editlines.size() - 1 )
+    {
+        x += m_currentColumn;
+        if ( x < m_editlines[ m_currentLine + y ].getLineString().length() )
+        {
+            ch = m_editlines[ m_currentLine + y ].getLineString()[ x ];
+        }
+    }
+    return ch;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      inserts a character into the editor
+    @param      x  x position
+    @param      y  y position
+    @param      ch character to insert
+-----------------------------------------------------------------------------*/
+void IDEEditor::insertCharIntoEditor( uint32_t x, uint32_t y, uint8_t ch )
+{
+    x += m_currentColumn;
+    y += m_currentLine;
+
+    if ( y < m_editlines.size() )
+    {
+        // pad with spaces if less then x position
+        if ( m_editlines[ y ].getLineString().length() < x )
+        {
+            uint32_t nCursorPos = m_editlines[ y ].getLineString().length();
+            m_editlines[ y ].setLineCursor( nCursorPos );
+            while ( nCursorPos <= x )
+            {
+                m_editlines[ y ].addChar( ' ' );
+                nCursorPos++;
+                m_editlines[ y ].setLineCursor( nCursorPos );
+            }
+        }
+        m_editlines[ y ].setLineCursor( x );
+        m_editlines[ y ].addChar( ch );
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      erases a character from the editor
+    @param      x  x position
+    @param      y  y position
+------------------------------------------------------------------------------*/
+void IDEEditor::eraseCharFromEditor( uint32_t x, uint32_t y )
+{
+    x += m_currentColumn;
+    y += m_currentLine;
+
+    if ( y < m_editlines.size() )
+    {
+        if ( m_editlines[ y ].getLineString().length() > x )
+        {
+            m_editlines[ y ].setLineCursor( x );
+            m_editlines[ y ].deleteChar();
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------

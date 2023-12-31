@@ -122,6 +122,7 @@ int main( int argc, char* argv[] )
     keypad( stdscr, TRUE );
     nodelay( stdscr, TRUE );
     noecho();
+    curs_set( 0 );
 
     CursesColour::getInstance().init();
 
@@ -147,11 +148,15 @@ int main( int argc, char* argv[] )
     {
         key = getch();
         delay_output( DELAYSIZE );
-        if ( winEditor.processKey( key ) == true )
+        if ( winEditor.processKeyEdit( key ) == true )
         {
+            winEditor.displayEditor();
             winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
         }
+        winEditor.processDisplay();
     }
+
+    curs_set( 1 );
 
 #if 0
 
