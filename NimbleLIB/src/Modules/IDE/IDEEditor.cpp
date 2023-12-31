@@ -413,22 +413,35 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
         }
         case 261: // right
         {
-            if ( m_cursorX < m_width - 1 && m_cursorX + m_currentColumn + m_width < m_editlines[ m_currentLine + m_cursorY ].length() )
+            if ( m_cursorX < m_width - 1 )
             {
-                m_cursorX++;
-                displayChanged = true;
+                if ( m_cursorX < m_editlines[ m_currentLine + m_cursorY ].length() )
+                {
+                    m_cursorX++;
+                    displayChanged = true;
+                }
             }
             else
             {
-                m_currentColumn += 16;
-                if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width )
+                if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
                 {
-                    m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width;
-                }
-                m_cursorX -= 16;
-                if ( m_cursorX + m_currentColumn - 1 < m_editlines[ m_currentLine + m_cursorY ].length() )
-                {
-                    m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length();
+                    m_currentColumn += 16;
+                    if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
+                    {
+                        m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
+                    }
+                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+                    {
+                        m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+                    }
+                    else
+                    {
+                        m_cursorX -= 16;
+                        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+                        {
+                            m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+                        }
+                    }
                 }
                 displayChanged = true;
             }
@@ -463,13 +476,21 @@ bool IDEEditor::checkEditKeys( uint32_t key )
                 eraseCharFromEditor( m_cursorX, m_cursorY );
                 displayChanged = true;
             }
+            else if ( m_currentLine + m_cursorY > 0 )
+            {
+                m_cursorX = m_editlines[ m_currentLine + m_cursorY - 1 ].length();
+                m_editlines[ m_currentLine + m_cursorY - 1 ] += m_editlines[ m_currentLine + m_cursorY ];
+                m_editlines.erase( m_editlines.begin() + m_currentLine + m_cursorY );
+                m_cursorY--;
+                displayChanged = true;
+            }
             break;
         }
         case 10: // enter
         {
-            insertLineIntoEditor( m_cursorY );
-            m_cursorX = 0;
             m_cursorY++;
+            insertLineIntoEditor( m_cursorY );
+            m_cursorX      = 0;
             displayChanged = true;
             break;
         }
@@ -578,7 +599,8 @@ void IDEEditor::insertLineIntoEditor( uint32_t y )
     y += m_currentLine;
     if ( y < m_editlines.size() )
     {
-        std::string newText = "";
+        std::string newText = m_editlines[ y - 1 ].substr( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
+        m_editlines[ y - 1 ].erase( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
         m_editlines.insert( m_editlines.begin() + y, newText );
     }
 }
