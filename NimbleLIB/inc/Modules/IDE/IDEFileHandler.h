@@ -110,7 +110,7 @@ class IDEFileHandler : public StatusCtrl
     std::ofstream m_fileOut;  //!< File stream - output
     std::ifstream m_fileIn;   //!< File stream - input
   protected:
-    std::vector<IDEEditline> m_editlines; //!< Edit lines
+    std::vector<std::string> m_editlines; //!< Edit lines
 
     //--------------------------------------------------------------------------
 };

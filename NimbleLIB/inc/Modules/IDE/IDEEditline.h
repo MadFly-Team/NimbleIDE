@@ -50,6 +50,7 @@ namespace Nimble
 class IDEEditline : public StatusCtrl
 {
   public:
+    typedef IDEEditline value_type;
     // constructors & destructors ----------------------------------------------
     IDEEditline();
     ~IDEEditline();

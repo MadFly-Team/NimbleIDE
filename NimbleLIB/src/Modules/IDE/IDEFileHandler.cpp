@@ -125,9 +125,7 @@ LibraryError IDEFileHandler::openFile( std::string& filename )
         std::string line;
         while ( getline( m_fileIn, line ) )
         {
-            IDEEditline editline;
-            editline.init( line, 0, 0 );
-            m_editlines.push_back( editline );
+            m_editlines.push_back( line );
         }
         m_fileIn.close();
         m_flags |= (uint32_t)FileHandlerFlags::Open;
@@ -159,7 +157,7 @@ LibraryError IDEFileHandler::saveFile( std::string& filename )
         {
             for ( auto& editline : m_editlines )
             {
-                m_fileOut << editline.getLineString() << std::endl;
+                m_fileOut << editline << std::endl;
             }
             m_fileOut.close();
             m_flags |= (uint32_t)FileHandlerFlags::Save;
