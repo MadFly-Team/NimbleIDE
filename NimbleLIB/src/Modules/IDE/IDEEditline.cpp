@@ -369,22 +369,20 @@ LibraryError IDEEditline::addChar( uint8_t inChar )
     LibraryError returnError = LibraryError::IDEEditline_InitNotCalled;
     if ( isNotInitialized() == false )
     {
-        if ( lineLength < lineBufferLimit )
+        // check the cursor is within the bounds of the line buffer
+        if ( lineCursor > lineLength )
         {
-            // check the cursor is within the bounds of the line buffer
-            if ( lineCursor > lineLength )
-            {
-                ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertChar() : cursor out of bounds" );
-                lineCursor = lineLength;
-            }
-            // insert the character at the cursor position
-            lineBuffer.insert( lineBuffer.begin() + lineCursor, inChar );
-            // increment the line length
-            lineLength++;
-            // increment the cursor position
-            lineCursor++;
-            returnError = LibraryError::No_Error;
+            ErrorHandler::getInstance().handleError( ErrorType::Warning, LibraryError::IDEEditline_IncorrectBufferIndex, "IDEEditline::insertChar() : cursor out of bounds" );
+            lineCursor = lineLength;
         }
+        // insert the character at the cursor position
+        lineBuffer.insert( lineBuffer.begin() + lineCursor, inChar );
+        // increment the line length
+        lineLength++;
+        lineBufferLimit++;
+        // increment the cursor position
+        lineCursor++;
+        returnError = LibraryError::No_Error;
     }
     return ( returnError );
 }
@@ -416,6 +414,7 @@ LibraryError IDEEditline::deleteChar( void )
             lineBuffer.erase( lineBuffer.begin() + lineCursor );
             // decrement the line length
             lineLength--;
+            lineBufferLimit--;
         }
         returnError = LibraryError::No_Error;
     }

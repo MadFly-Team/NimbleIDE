@@ -32,6 +32,7 @@ Version:
 #include "Modules/Curses/CursesMenu.h"            // CursesMenu class
 #include "Modules/IDE/IDEEditline.h"              // IDEEditline class
 #include "Modules/IDE/IDEEditBox.h"               // IDEEditBox class
+#include "Modules/IDE/IDEEditor.h"                // IDEEditor class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

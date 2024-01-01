@@ -122,6 +122,7 @@ int main( int argc, char* argv[] )
     keypad( stdscr, TRUE );
     nodelay( stdscr, TRUE );
     noecho();
+    curs_set( 0 );
 
     CursesColour::getInstance().init();
 
@@ -131,6 +132,33 @@ int main( int argc, char* argv[] )
     winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
     winStatus->colourWindow( STATUSCOLOR, 0 );
     winStatus->print( 2, 0, "Status Bar : " );
+
+    IDEEditBox winLineNumbers;
+    IDEEditor  winEditor;
+    winEditor.init( COLS - 8, LINES - 4, 8, 2 );
+    std::string filename = "test.txt";
+    winEditor.start( filename );
+
+    winLineNumbers.initBox( 0, 1, 7, LINES - 2, COLOR_WHITE, COLOR_BLACK );
+    winLineNumbers.colourWindow( COLOUR_INDEX( 0, 1 ), true );
+    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+
+    uint32_t key = 0;
+    while ( key != 'q' )
+    {
+        key = getch();
+        delay_output( DELAYSIZE );
+        if ( winEditor.processKeyEdit( key ) == true )
+        {
+            winEditor.displayEditor();
+            winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+        }
+        winEditor.processDisplay();
+    }
+
+    curs_set( 1 );
+
+#if 0
 
     CursesMenu menu;
 
@@ -164,7 +192,7 @@ int main( int argc, char* argv[] )
             break;
         }
     }
-
+#endif
     // Return success
     return EXIT_SUCCESS;
 }

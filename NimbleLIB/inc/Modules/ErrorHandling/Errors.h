@@ -56,13 +56,10 @@ namespace Nimble
 enum class LibraryError
 {
     // General Errors
-    No_Error = 0, //!< 0x00000000 No error
+    No_Error          = 0, //!< 0x00000000 No error
 
-    // Logger Errors
-    Logger_base_error = LIBRARY_ERROR_BASE, //!< 0x10001000 Base error for the Logger
-    Logger_InitializeNotCalled,             //!< 0x10001001 Failed to initialise the Logger
-
-    // Curses Errors
+    Logger_base_error = LIBRARY_ERROR_BASE,                                 //!< 0x10001000 Base error for the Logger
+    Logger_InitializeNotCalled,                                             //!< 0x10001001 Failed to initialise the Logger
     Curses_base_error = Logger_base_error + MODULE_OFFSET,                  //!< 0x10002000 Base error for the Curses module
     CursesColour_AlreadyInitialised,                                        //!< 0x10002001 Curses Colour class already initialised
     CursesColour_InvalidColourPair,                                         //!< 0x10002002 Curses Colour class invalid colour pair
@@ -72,37 +69,33 @@ enum class LibraryError
     CursesWin_FailedToColourWindow,                                         //!< 0x10002102 Curses Window class failed to colour window
     CursesWin_FailedToColourBackground,                                     //!< 0x10002103 Curses Window class failed to colour background
     CursesWin_FailedToClearWindow,                                          //!< 0x10001004 Curses Window class failed to clear window
-
-    // File Handling Errors
-    FileHandlding_base_error = Curses_base_error + MODULE_OFFSET, //!< 0x10003000 Base error for the File Handling module
-
-    // ErrorHandling Errors
-    ErrorHandler_base_error = FileHandlding_base_error + MODULE_OFFSET, //!< 0x10004000 Base error for the Error Handling module
-
-    // Screen Errors
-    Screen_base_error = FileHandlding_base_error + MODULE_OFFSET, //!< 0x10005000 Base error for the Screen module
-    Screen_ConsoleInfoFailed,                                     //!< 0x10005001 Failed to get the console information
-    Screen_SetupConsoleFailed,                                    //!< 0x10005002 Failed to setup the console
-    Screen_StartColorFailed,                                      //!< 0x10005003 Failed to start the color
-    Screen_CBreakFailed,                                          //!< 0x10005004 Failed to set cbreak
-    Screen_NoEchoFailed,                                          //!< 0x10005005 Failed to set noecho
-    Screen_KeyPadFailed,                                          //!< 0x10005006 Failed to set keypad
-    Screen_CursSetFailed,                                         //!< 0x10005007 Failed to set curs_set
-    Screen_RefreshFailed,                                         //!< 0x10005008 Failed to refresh the screen
-    Screen_InitPairFailed,                                        //!< 0x10005009 Failed to setup the console
-    Screen_EndWinFailed,                                          //!< 0x1000500A Failed to end the window
-
-    // Utllities Errors
-    Utilities_base_error = Screen_base_error + MODULE_OFFSET, //!< 0x10006000 Base error for the Utilities module
-
-    // IDE Errors
-    IDE_base_error = Utilities_base_error + MODULE_OFFSET, //!< 0x10007000 Base error for the IDE module
-    IDEEditline_IncorrectBufferIndex,                      //!< 0x10007001 Incorrect buffer index
-    IDEEditline_InitNotCalled,                             //!< 0x10007002 Init not called
-    IDEEditline_AlreadyInitialized,                        //!< 0x10007003 Already initialized
-    IDEEditBox_InitAlreadyCalled,                          //!< 0x10007004 Init already called
-    IDEEditBox_InitNotCalled,                              //!< 0x10007005 Init not called
-    IDEEditBox_FailedToCreateWindow,                       //!< 0x10007006 Failed to create window
+    CursesWin_FailedToEraseChar,                                            //!< 0x10001005 Curses Window class failed to erase character
+    FileHandlding_base_error = Curses_base_error + MODULE_OFFSET,           //!< 0x10003000 Base error for the File Handling module
+    ErrorHandler_base_error  = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10004000 Base error for the Error Handling module
+    Screen_base_error        = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10005000 Base error for the Screen module
+    Screen_ConsoleInfoFailed,                                               //!< 0x10005001 Failed to get the console information
+    Screen_SetupConsoleFailed,                                              //!< 0x10005002 Failed to setup the console
+    Screen_StartColorFailed,                                                //!< 0x10005003 Failed to start the color
+    Screen_CBreakFailed,                                                    //!< 0x10005004 Failed to set cbreak
+    Screen_NoEchoFailed,                                                    //!< 0x10005005 Failed to set noecho
+    Screen_KeyPadFailed,                                                    //!< 0x10005006 Failed to set keypad
+    Screen_CursSetFailed,                                                   //!< 0x10005007 Failed to set curs_set
+    Screen_RefreshFailed,                                                   //!< 0x10005008 Failed to refresh the screen
+    Screen_InitPairFailed,                                                  //!< 0x10005009 Failed to setup the console
+    Screen_EndWinFailed,                                                    //!< 0x1000500A Failed to end the window
+    Utilities_base_error = Screen_base_error + MODULE_OFFSET,               //!< 0x10006000 Base error for the Utilities module
+    IDE_base_error       = Utilities_base_error + MODULE_OFFSET,            //!< 0x10007000 Base error for the IDE module
+    IDEEditline_IncorrectBufferIndex,                                       //!< 0x10007001 Incorrect buffer index
+    IDEEditline_InitNotCalled,                                              //!< 0x10007002 Init not called
+    IDEEditline_AlreadyInitialized,                                         //!< 0x10007003 Already initialized
+    IDEEditBox_InitAlreadyCalled,                                           //!< 0x10007004 Init already called
+    IDEEditBox_InitNotCalled,                                               //!< 0x10007005 Init not called
+    IDEEditBox_FailedToCreateWindow,                                        //!< 0x10007006 Failed to create window
+    IDEFileHandler_FailedToOpenFile,                                        //!< 0x10007007 Failed to open file
+    IDEFileHandler_FailedToSaveFile,                                        //!< 0x10007008 Failed to close file
+    IDEFileHandler_FileNotOpen,                                             //!< 0x10007009 File not opened
+    IDEEditor_AlreadyInitialized,                                           //!< 0x1000700A Already initialized
+    IDEEditor_NotInitialized,                                               //!< 0x1000700B Not initialized
 };
 
 // ----------------------------------------------------------------------------

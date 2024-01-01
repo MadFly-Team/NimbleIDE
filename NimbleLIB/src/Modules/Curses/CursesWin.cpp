@@ -137,6 +137,27 @@ LibraryError CursesWin::print( uint32_t x, uint32_t y, const std::string& text )
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Prints text to the curses window
+    @param      x       The x position of the text
+    @param      y       The y position of the text
+    @param      text    The text to print
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::eraseChar( uint32_t x, uint32_t y )
+{
+    LibraryError error = LibraryError::No_Error;
+
+    if ( mvwdelch( win, y, x ) == ERR )
+    {
+        error = LibraryError::CursesWin_FailedToEraseChar;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to erase char from the curses window" );
+    }
+
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Prints text to the curses window
     @param      colour   The collour of the window
     @param      hasBox   Does the window have a box
     @return     The error code

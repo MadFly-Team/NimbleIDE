@@ -51,6 +51,8 @@ class IDEEditBox : public IDEEditline, public CursesWin
     LibraryError initBox( int16_t x, int16_t y, int16_t width, int16_t height, int16_t ink, int16_t paper );
     // process and control ------------------------------------------------------
     LibraryError process( uint32_t key );
+    // special functions --------------------------------------------------------
+    LibraryError displayLineNumbers( uint32_t nLine, uint32_t nTotalLines );
 
   private:
     // private vairables --------------------------------------------------------
@@ -65,3 +67,4 @@ class IDEEditBox : public IDEEditline, public CursesWin
 //-----------------------------------------------------------------------------
 // End of file: IDEEditBox.h
 // ----------------------------------------------------------------------------
+ 
