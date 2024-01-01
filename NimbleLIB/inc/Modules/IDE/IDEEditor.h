@@ -94,6 +94,7 @@ class IDEEditor : protected IDEFileHandler
     void    eraseCharFromEditor( uint32_t x, uint32_t y );
     void    insertCharIntoEditor( uint32_t x, uint32_t y, uint8_t ch );
     void    insertLineIntoEditor( uint32_t y );
+    void    placeCursorinLine( uint32_t y );
 };
 
 //-----------------------------------------------------------------------------
