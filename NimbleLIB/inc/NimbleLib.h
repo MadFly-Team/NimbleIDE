@@ -33,6 +33,7 @@ Version:
 #include "Modules/IDE/IDEEditline.h"              // IDEEditline class
 #include "Modules/IDE/IDEEditBox.h"               // IDEEditBox class
 #include "Modules/IDE/IDEEditor.h"                // IDEEditor class
+#include "Modules/IDE/IDEDialog.h"                // IDEDialog class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

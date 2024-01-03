@@ -76,6 +76,8 @@ class CursesWin
     LibraryError init();
     LibraryError init( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour );
     LibraryError draw();
+    LibraryError drawVerticalLine( uint32_t x, uint32_t y, uint32_t length );
+    LibraryError drawHorizontalLine( uint32_t x, uint32_t y, uint32_t length );
     LibraryError clear();
     LibraryError refresh();
 
