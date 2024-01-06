@@ -1,4 +1,3 @@
-
 /**----------------------------------------------------------------------------
 
     @file       NimbleLib.h
@@ -6,12 +5,6 @@
     @brief      Master include file for the Nimble Library
 
     @copyright  Neil Beresford 2023
-
-Notes:
-
-Version:
-
-        0.0.1.0   First Release, development phase. Draft copy
 
 -----------------------------------------------------------------------------*/
 

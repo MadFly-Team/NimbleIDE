@@ -1,4 +1,3 @@
-
 /**----------------------------------------------------------------------------
 
     @file       main.cpp
@@ -8,10 +7,6 @@
     @copyright  Neil Beresford 2023
 
 Notes:
-
-Version:
-
-        0.0.1.0   First Release, development phase. Draft copy
 
 -----------------------------------------------------------------------------*/
 
@@ -131,7 +126,7 @@ int main( int argc, char* argv[] )
     winTitle->colourWindow( TITLECOLOR, 0 );
     winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
     winStatus->colourWindow( STATUSCOLOR, 0 );
-    winStatus->print( 2, 0, "Status Bar : " );
+    winStatus->print( 2, 0, "Status Bar : Press 'q' to quit" );
 
     IDEEditBox winLineNumbers;
     IDEEditor  winEditor;
@@ -143,32 +138,44 @@ int main( int argc, char* argv[] )
     winLineNumbers.colourWindow( COLOUR_INDEX( 0, 1 ), true );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
-    // test the dialog...
-    IDEDialog   winDialog;
-    std::string dialogString = "Test Dialog";
-    winDialog.initDialog( 50, 15, 15, 5, COLOR_BLACK, COLOR_WHITE );
+    {
+        // test the dialog...
+        IDEDialog   winDialog;
+        std::string dialogString = "Test Dialog";
+        winDialog.initDialog( 50, 15, 15, 5, COLOR_BLACK, COLOR_WHITE );
 
-    winDialog.colourWindow( COLOUR_INDEX( 1, 7 ), true );
-    winDialog.print( 3, 4, "Test Dialog" );
-    winDialog.print( 3, 5, "Press any key to continue" );
-    winDialog.title( dialogString );
-    winDialog.status( "Status Bar Text" );
-    winDialog.setVerticalScroll();
-    winDialog.drawDialog();
+        winDialog.colourWindow( COLOUR_INDEX( 1, 7 ), true );
+        winDialog.print( 3, 4, "Test Dialog" );
+        winDialog.print( 3, 5, "Press 'q' to continue" );
+        winDialog.title( dialogString );
+        winDialog.status( "Status Bar Text" );
+        winDialog.setVerticalScroll();
+        winDialog.drawDialog();
 
-    winDialog.refresh();
+        winDialog.refresh();
+
+        uint32_t key = 0;
+        while ( key != 'q' )
+        {
+            key = getch();
+            delay_output( DELAYSIZE );
+        }
+    }
+
+    winEditor.displayEditor();
+    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     uint32_t key = 0;
     while ( key != 'q' )
     {
         key = getch();
         delay_output( DELAYSIZE );
-        // if ( winEditor.processKeyEdit( key ) == true )
+        if ( winEditor.processKeyEdit( key ) == true )
         {
-            // winEditor.displayEditor();
-            // winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+            winEditor.displayEditor();
+            winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
         }
-        // winEditor.processDisplay();
+        winEditor.processDisplay();
     }
 
     curs_set( 1 );

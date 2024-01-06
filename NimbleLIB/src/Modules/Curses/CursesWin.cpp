@@ -35,10 +35,6 @@ Notes:
             winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
 
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 //-----------------------------------------------------------------------------
 // Include files

@@ -47,10 +47,6 @@ Notes:
     etc. ( 64 colour pairs in total ) using the following formula:
     Colour Pair n: ( n % 8 ) on ( n / 8 )
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once

@@ -6,14 +6,6 @@
 
     @copyright  Neil Bereford 2023
 
-Notes:
-
-        please see CursesKeyboard.cpp for full details.
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once

@@ -5,14 +5,6 @@
     @brief      Logging Manager Module
     @copyright  Neil Bereford 2023
 
-Notes:
-
-        Please see Logger.cpp for full details.
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once

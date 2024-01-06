@@ -8,11 +8,6 @@
 
 Notes:
 
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -204,7 +199,7 @@ LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLine
     if ( isInitialized() )
     {
         uint32_t nAmount = getHeight() - 2;
-        for ( uint32_t i = 0; i < nAmount ; i++ )
+        for ( uint32_t i = 0; i < nAmount; i++ )
         {
             std::string line = std::format( "{:5}", nLine + i );
             if ( nLine + i > nTotalLines )

@@ -6,14 +6,11 @@
 
     @copyright	Neil Bereford 2023
 
-Notes:
-
 -----------------------------------------------------------------------------*/
 
 class CFrameworkObject
 {
   public:
-
     // virtual functions
     virtual void Init()          = 0;
     virtual void Process()       = 0;

@@ -21,10 +21,6 @@ Notes:
     TODO: Add the ability to log to a file
     TODO: Switch different output methods on and off
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 //-----------------------------------------------------------------------------
 // Includes

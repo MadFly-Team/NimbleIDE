@@ -46,4 +46,9 @@ else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 
+# test file for editor, copy to build location.
+if (MSVC)
+    file( COPY "./Content/" DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+endif(MSVC)
+file( COPY "./Content/" DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug )
 

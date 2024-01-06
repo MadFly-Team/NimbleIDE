@@ -21,11 +21,6 @@ Notes:
     Supported Modules:
     - Logger
 
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -99,7 +94,7 @@ enum class LibraryError
     IDEEditor_AlreadyInitialized,                                           //!< 0x1000700A Already initialized
     IDEEditor_NotInitialized,                                               //!< 0x1000700B Dialog not initialized
     IDEDialog_AlreadyInitialized,                                           //!< 0x1000700C Dialog already initialized
-    IDEDialog_InitNotCalled,                                                //!< 0x1000700D Init not called
+    IDEDialog_InitNotCalled,                                                //!< 0x1000700D Dialog init not called
 };
 
 // ----------------------------------------------------------------------------
