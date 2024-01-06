@@ -35,6 +35,7 @@ namespace Nimble
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Constructor for IDEDialog class
+
 ----------------------------------------------------------------------------*/
 IDEDialog::IDEDialog()
 {
@@ -44,6 +45,7 @@ IDEDialog::IDEDialog()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Destructor for IDEDialog class
+
 ----------------------------------------------------------------------------*/
 IDEDialog::~IDEDialog()
 {

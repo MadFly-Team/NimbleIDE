@@ -44,6 +44,7 @@ IDEEditline::IDEEditline()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Destructor for IDEEditline class
+
 -----------------------------------------------------------------------------*/
 IDEEditline::~IDEEditline()
 {
@@ -179,6 +180,7 @@ uint32_t IDEEditline::getLineBufferLimit() const
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the X position of the line
     @param      xpos    X position of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineXpos( uint32_t xpos )
 {
@@ -189,6 +191,7 @@ void IDEEditline::setLineXpos( uint32_t xpos )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the Y position of the line
     @param      ypos    Y position of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineYpos( uint32_t ypos )
 {
@@ -199,6 +202,7 @@ void IDEEditline::setLineYpos( uint32_t ypos )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the length of the line
     @param      length  length of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineLength( uint32_t length )
 {
@@ -209,6 +213,7 @@ void IDEEditline::setLineLength( uint32_t length )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the ink colour of the line
     @param      inkColour   ink colour of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineInkColour( uint32_t inkColour )
 {
@@ -219,6 +224,7 @@ void IDEEditline::setLineInkColour( uint32_t inkColour )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the paper or background colour of the line
     @param      paperColour paper or background colour of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLinePaperColour( uint32_t paperColour )
 {
@@ -229,6 +235,7 @@ void IDEEditline::setLinePaperColour( uint32_t paperColour )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the cursor position of the line
     @param      cursor  cursor position of the line
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineCursor( uint32_t cursor )
 {
@@ -240,6 +247,7 @@ void IDEEditline::setLineCursor( uint32_t cursor )
     @brief      Set the character at the specified index of the line buffer
     @param      index   index of the character to set
     @param      charToSet   character to set at the specified index of the line buffer
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineBufferChar( uint32_t index, uint8_t charToSet )
 {
@@ -257,6 +265,7 @@ void IDEEditline::setLineBufferChar( uint32_t index, uint8_t charToSet )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the start of the hilight
     @param      start   start of the hilight
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setHilightStart( uint32_t start )
 {
@@ -267,6 +276,7 @@ void IDEEditline::setHilightStart( uint32_t start )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the end of the hilight
     @param      end     value for the highlight end
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setHilightEnd( uint32_t end )
 {
@@ -277,6 +287,7 @@ void IDEEditline::setHilightEnd( uint32_t end )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Set the line buffer limit
     @param      limit     line buffer limit
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditline::setLineBufferLimit( uint32_t limit )
 {
@@ -595,7 +606,6 @@ LibraryError IDEEditline::clearEditlineFlag( EditlineFlags inFlag )
     @brief      Gets the Editline flag
     @param      inFlag     Flag to get
     @return     bool    true if flag is set
-
 -----------------------------------------------------------------------------*/
 bool IDEEditline::isEditlineFlagSet( EditlineFlags inFlag ) const noexcept
 {

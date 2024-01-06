@@ -73,6 +73,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Default constructor for the curses colour class
+
   --------------------------------------------------------------------------*/
 CursesColour::CursesColour()
 {
@@ -83,6 +84,7 @@ CursesColour::CursesColour()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Destructor for the curses colour class
+
   --------------------------------------------------------------------------*/
 CursesColour::~CursesColour()
 {
@@ -93,6 +95,7 @@ CursesColour::~CursesColour()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Initialises the colours for the curses colour class
+    @return     void
   --------------------------------------------------------------------------*/
 LibraryError CursesColour::init()
 {

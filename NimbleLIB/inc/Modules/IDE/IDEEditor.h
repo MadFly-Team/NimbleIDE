@@ -45,6 +45,17 @@ namespace Nimble
 class IDEEditor : protected IDEFileHandler
 {
   public:
+    // enums --------------------------------------------------------------------
+    /**----------------------------------------------------------------------------
+        @ingroup    NimbleLIBIDE Nimble Library IDE Module
+        @brief      Editor flags, used with StatusCtrl class
+
+    -----------------------------------------------------------------------------*/
+    enum class EditorFlags : uint32_t
+    {
+        FormatWhenPrint = 0, //!< 0: Format when printing, otherwise just print signel colour
+        MarkedTextActive,    //!< 1: Marked text is active
+    };
     // constructor & destructor -------------------------------------------------
     IDEEditor();
     ~IDEEditor();

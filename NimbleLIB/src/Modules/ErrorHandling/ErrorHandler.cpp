@@ -59,7 +59,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Constructor for the ErrorHandler class
-    @return     bool - true if successful
+
   --------------------------------------------------------------------------*/
 ErrorHandler::ErrorHandler()
 {
@@ -72,7 +72,7 @@ ErrorHandler::ErrorHandler()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Destructor for the ErrorHandler class
-    @return     bool - true if successful
+
   --------------------------------------------------------------------------*/
 ErrorHandler::~ErrorHandler()
 {
@@ -85,6 +85,7 @@ ErrorHandler::~ErrorHandler()
     @param      errorType - Type of error
     @param      errorNumber - Error number
     @param      message - Error message
+    @return     void
   --------------------------------------------------------------------------*/
 void ErrorHandler::handleError( ErrorType errorType, LibraryError errorNumber, const std::string& message )
 {
@@ -103,6 +104,7 @@ void ErrorHandler::handleError( ErrorType errorType, LibraryError errorNumber, c
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Clears the error list
+    @return     void
   --------------------------------------------------------------------------*/
 void ErrorHandler::clearErrors()
 {
@@ -112,6 +114,7 @@ void ErrorHandler::clearErrors()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Support function that reports the errors to the console terminal
+    @return     void
  --------------------------------------------------------------------------*/
 void ErrorHandler::reportErrors()
 {
@@ -134,7 +137,7 @@ void ErrorHandler::reportErrors()
     @ingroup    USBHIDConsoleApplication USB HID Console Application
     @brief      Returns the current status of the error handler
                 This is used for Unit Tests
-    @return     TS_ERRORHANDLER_STATUS - Status of the error handler
+    @return     ErrorStatus - Status of the error handler
   --------------------------------------------------------------------------*/
 ErrorStatus ErrorHandler::getStatusInformation()
 {
@@ -176,6 +179,7 @@ ErrorStatus ErrorHandler::getStatusInformation()
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Displays the passed in error to the console terminal
     @param      error - Error structure
+    @return     void
   --------------------------------------------------------------------------*/
 void ErrorHandler::displayMessage( const ErrorInformation& error )
 {
@@ -216,6 +220,7 @@ void ErrorHandler::displayMessage( const ErrorInformation& error )
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBError Nimble Library Error Module
     @brief      Clears all the members of ErrorStatus
+    @return     void
   --------------------------------------------------------------------------*/
 void ErrorStatus::Clear()
 {

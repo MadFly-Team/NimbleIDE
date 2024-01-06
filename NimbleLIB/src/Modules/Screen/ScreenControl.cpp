@@ -54,6 +54,7 @@ namespace Screen
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBScreen Nimble Library Screen Module
     @brief      Constructor for the ScreenControl class.
+
 ----------------------------------------------------------------------------*/
 ScreenControl::ScreenControl()
 {
@@ -115,6 +116,7 @@ ScreenControl::ScreenControl()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBScreen Nimble Library Screen Module
     @brief      Destructor for the ScreenControl class.
+
 ----------------------------------------------------------------------------*/
 ScreenControl::~ScreenControl()
 {

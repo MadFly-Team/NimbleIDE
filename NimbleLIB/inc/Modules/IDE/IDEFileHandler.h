@@ -41,8 +41,26 @@ namespace Nimble
 class IDEFileHandler : public StatusCtrl
 {
   public:
-    // enum --------------------------------------------------------------------
-    /**----------------------------------------------------------------------------
+    // typedefs and enums ------------------------------------------------------
+    typedef struct _EditLineAttributes
+    {
+        uint16_t MarkStart; //!< Mark start (highlight)
+        uint16_t MarkEnd;   //!< Mark end (highlight)
+
+        /**-------------------------------------------------------------------------
+            @ingroup    NimbleLIBIDE Nimble Library IDE Module
+            @brief      EditLineAttributes - Clear the attributes
+
+        ----------------------------------------------------------------------------*/
+        void clear()
+        {
+            MarkStart = 0;
+            MarkEnd   = 0;
+        }
+
+    } EditLineAttributes, *pEditLineAttributes; //!< Editline attributes
+
+    /**-------------------------------------------------------------------------
         @ingroup    NimbleLIBIDE Nimble Library IDE Module
         @brief      File handler flags, used with StatusCtrl class
     ----------------------------------------------------------------------------*/
@@ -102,8 +120,8 @@ class IDEFileHandler : public StatusCtrl
     std::ofstream m_fileOut;  //!< File stream - output
     std::ifstream m_fileIn;   //!< File stream - input
   protected:
-    std::vector<std::string> m_editlines; //!< Edit lines
-
+    std::vector<std::string>        m_editlines;          //!< Edit lines
+    std::vector<EditLineAttributes> m_editlineAttributes; //!< Edit line attributes
     //--------------------------------------------------------------------------
 };
 

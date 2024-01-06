@@ -34,6 +34,7 @@ namespace Nimble
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      IDEFileHandler Constructor
+
 ------------------------------------------------------------------------------*/
 IDEFileHandler::IDEFileHandler()
 {
@@ -42,6 +43,7 @@ IDEFileHandler::IDEFileHandler()
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      IDEFileHandler Destructor
+
 ------------------------------------------------------------------------------*/
 IDEFileHandler::~IDEFileHandler()
 {
@@ -75,6 +77,7 @@ std::string IDEFileHandler::getStatus()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      set the flags of the IDEFileHandler class
     @param      flags   FileHandlerFlags full set of flags
+    @return     void
 ------------------------------------------------------------------------------*/
 void IDEFileHandler::setFlags( uint32_t flags )
 {
@@ -85,6 +88,7 @@ void IDEFileHandler::setFlags( uint32_t flags )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      set the status string of the IDEFileHandler class
     @param      status  std::string   status string
+    @return     void
 ------------------------------------------------------------------------------*/
 void IDEFileHandler::setStatus( std::string status )
 {
@@ -113,6 +117,8 @@ LibraryError IDEFileHandler::openFile( std::string& filename )
     {
         // prep for the file read
         m_editlines.clear();
+        m_editlineAttributes.clear();
+
         m_filename = filename;
         m_status   = "File Opened : ";
         m_status += m_filename;
@@ -121,7 +127,10 @@ LibraryError IDEFileHandler::openFile( std::string& filename )
         std::string line;
         while ( getline( m_fileIn, line ) )
         {
+            EditLineAttributes lineAttributes;
+            lineAttributes.clear();
             m_editlines.push_back( line );
+            m_editlineAttributes.push_back( lineAttributes );
         }
         m_fileIn.close();
         m_flags |= (uint32_t)FileHandlerFlags::Open;

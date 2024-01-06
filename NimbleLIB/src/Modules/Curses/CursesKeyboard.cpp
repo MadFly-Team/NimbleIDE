@@ -64,6 +64,7 @@ namespace Nimble
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Curses keyboard constructor
+
 --------------------------------------------------------------------------*/
 CursesKeyboard::CursesKeyboard()
 {
@@ -76,6 +77,7 @@ CursesKeyboard::CursesKeyboard()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Curses keyboard copy constructor
     @param      other   Curses keyboard to copy
+
   --------------------------------------------------------------------------*/
 CursesKeyboard::CursesKeyboard( const CursesKeyboard& other )
 {
@@ -90,6 +92,7 @@ CursesKeyboard::CursesKeyboard( const CursesKeyboard& other )
     @param      name        Name of the key mapping
     @param      keys        List of keys
     @param      function    Function pointer callback
+
     --------------------------------------------------------------------------*/
 CursesKeyboard::CursesKeyboard( const std::string name, const std::vector<uint32_t> keys, pKeyFunction function )
 {
@@ -98,6 +101,7 @@ CursesKeyboard::CursesKeyboard( const std::string name, const std::vector<uint32
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Curses keyboard destructor
+
 --------------------------------------------------------------------------*/
 CursesKeyboard::~CursesKeyboard()
 {
@@ -134,6 +138,7 @@ uint32_t CursesKeyboard::getKey() const noexcept
     @param      name        Name of the key mapping
     @param      keys        List of keys
     @param      function    Function pointer callback
+    @return     void
     --------------------------------------------------------------------------*/
 void CursesKeyboard::addKeyMap( const std::string& name, const std::vector<uint32_t>& keys, pKeyFunction function )
 {
@@ -150,6 +155,7 @@ void CursesKeyboard::addKeyMap( const std::string& name, const std::vector<uint3
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Add a key map array
     @param      keyMapArray     Key map array
+    @return     void
     --------------------------------------------------------------------------*/
 void CursesKeyboard::addKeyMapArray( const std::vector<KeyMap>& keyMapArray )
 {
@@ -162,6 +168,7 @@ void CursesKeyboard::addKeyMapArray( const std::vector<KeyMap>& keyMapArray )
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Clear all key maps
+    @return     void
     --------------------------------------------------------------------------*/
 void CursesKeyboard::clearKeyMaps()
 {
@@ -171,6 +178,7 @@ void CursesKeyboard::clearKeyMaps()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Process the keyboard
+    @return     void
     --------------------------------------------------------------------------*/
 void CursesKeyboard::processKeyMaps()
 {

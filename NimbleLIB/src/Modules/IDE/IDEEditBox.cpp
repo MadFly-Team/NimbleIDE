@@ -34,6 +34,7 @@ namespace Nimble
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Constructor for IDEEditBox class
+
 ----------------------------------------------------------------------------*/
 IDEEditBox::IDEEditBox()
 {
@@ -42,6 +43,7 @@ IDEEditBox::IDEEditBox()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Destructor for IDEEditBox class
+
 ----------------------------------------------------------------------------*/
 IDEEditBox::~IDEEditBox()
 {
@@ -191,6 +193,8 @@ LibraryError IDEEditBox::process( uint32_t key )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      special function - displays line numbers
     @param      nLine    Starting line number
+    @param      nTotalLines Total number of lines
+    @return     LibraryError     Any errors generated, otherwise No_Error
 -----------------------------------------------------------------------------*/
 LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLines )
 {

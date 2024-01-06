@@ -44,7 +44,7 @@ using namespace Nimble::Screen;
 // Defines
 //-----------------------------------------------------------------------------
 
-#define DELAYSIZE        20
+#define DELAYSIZE        1
 #define MAX_OPTIONS      7
 #define TITLECOLOR       57 /* color pair indices */
 #define MAINMENUCOLOR    ( 2 | A_BOLD )

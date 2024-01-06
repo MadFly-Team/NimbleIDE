@@ -33,6 +33,7 @@ namespace Nimble
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Constructor for the CursesMenu class.
+
 -----------------------------------------------------------------------------*/
 CursesMenu::CursesMenu()
 {
@@ -43,6 +44,7 @@ CursesMenu::CursesMenu()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Destructor for the CursesMenu class.
+
 -----------------------------------------------------------------------------*/
 CursesMenu::~CursesMenu()
 {
@@ -54,6 +56,7 @@ CursesMenu::~CursesMenu()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Set the menu title.
     @param      title       Menu title
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::setMenuTitle( std::string& title )
 {
@@ -64,6 +67,7 @@ void CursesMenu::setMenuTitle( std::string& title )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Set the menu subtitle.
     @param      subtitle    Menu subtitle
+    @return     void
 ------------------------------------------------------------------------------*/
 void CursesMenu::setMenuSubTitle( std::string& subtitle )
 {
@@ -74,6 +78,7 @@ void CursesMenu::setMenuSubTitle( std::string& subtitle )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Set the menu footer.
     @param      footer      Menu footer
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::setMenuFooter( std::string& footer )
 {
@@ -84,6 +89,7 @@ void CursesMenu::setMenuFooter( std::string& footer )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Set the menu options.
     @param      options     Menu options
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::setMenuOptions( std::vector<std::string>& options )
 {
@@ -108,6 +114,7 @@ uint32_t CursesMenu::getMenuOption() const noexcept
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Display the menu.
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::displayMenu()
 {
@@ -140,6 +147,7 @@ void CursesMenu::displayMenu()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Display the menu options.
+    @return     void
  -----------------------------------------------------------------------------*/
 void CursesMenu::displayMenuOptions()
 {
@@ -201,6 +209,7 @@ int32_t CursesMenu::processMenu()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Process the key.
     @param      key         Key code
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::processKey( int32_t key )
 {
@@ -221,6 +230,7 @@ void CursesMenu::processKey( int32_t key )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Controller for the navigation of the menu.
     @param      key         Key code
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::fnMenuNavigation( int32_t key )
 {
@@ -258,6 +268,7 @@ void CursesMenu::fnMenuNavigation( int32_t key )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Controller for the menu control.
     @param      key         Key code
+    @return     void
 -----------------------------------------------------------------------------*/
 void CursesMenu::fnMenuControl( int32_t key )
 {

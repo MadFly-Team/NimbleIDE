@@ -54,6 +54,7 @@ namespace Nimble
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Status Control Constructor
+
  -----------------------------------------------------------------------------*/
 StatusCtrl::StatusCtrl()
 {
@@ -65,6 +66,7 @@ StatusCtrl::StatusCtrl()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Status Control Destructor
+
  -----------------------------------------------------------------------------*/
 StatusCtrl::~StatusCtrl()
 {
@@ -127,6 +129,7 @@ bool StatusCtrl::isError() const noexcept
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Sets the erorr flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setError()
 {
@@ -136,6 +139,7 @@ void StatusCtrl::setError()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Clear the error flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::clearError()
 {
@@ -145,6 +149,7 @@ void StatusCtrl::clearError()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Sets the busy flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setBusy()
 {
@@ -164,6 +169,7 @@ void StatusCtrl::clearBusy()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Sets the ready flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setReady()
 {
@@ -173,6 +179,7 @@ void StatusCtrl::setReady()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Clear the ready flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::clearReady()
 {
@@ -182,6 +189,7 @@ void StatusCtrl::clearReady()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Sets the initialized flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setInitialized()
 {
@@ -192,6 +200,7 @@ void StatusCtrl::setInitialized()
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Clear the inialized flag
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::clearInitialized()
 {
@@ -203,6 +212,7 @@ void StatusCtrl::clearInitialized()
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Sets the user status flag, up to 8 flags can be set
     @param      userFlag - user status to clear
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::setUserFlag( uint32_t userFlag )
 {
@@ -219,6 +229,7 @@ void StatusCtrl::setUserFlag( uint32_t userFlag )
     @ingroup    NimbleLIBStatus Nimble Library Status Module
     @brief      Clears the user status flag, up to 8 flags can be cleared
     @param      userFlag - user status to clear
+    @return     void
  -----------------------------------------------------------------------------*/
 void StatusCtrl::clearUserFlag( uint32_t userFlag )
 {
