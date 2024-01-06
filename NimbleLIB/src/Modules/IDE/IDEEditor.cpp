@@ -419,26 +419,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
             }
             else
             {
-                if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
-                {
-                    m_currentColumn += 16;
-                    if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
-                    {
-                        m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
-                    }
-                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
-                    {
-                        m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
-                    }
-                    else
-                    {
-                        m_cursorX -= 16;
-                        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
-                        {
-                            m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
-                        }
-                    }
-                }
+                moveTextRight();
                 displayChanged = true;
             }
             break;
@@ -487,6 +468,23 @@ bool IDEEditor::checkEditKeys( uint32_t key )
             m_cursorY++;
             insertLineIntoEditor( m_cursorY );
             m_cursorX      = 0;
+            displayChanged = true;
+            break;
+        }
+        case 9: // tab
+        {
+            // spaces to add to string...
+            uint32_t spaces = 4 - ( m_cursorX & 0x3 );
+            for ( uint32_t i = 0; i < spaces; i++ )
+            {
+                m_editlines[ m_currentLine + m_cursorY ].insert( m_cursorX, " " );
+            }
+            m_cursorX += spaces;
+
+            if ( m_cursorX > m_width - 1 )
+            {
+                moveTextRight();
+            }
             displayChanged = true;
             break;
         }
@@ -671,7 +669,36 @@ void IDEEditor::placeCursorinLine( uint32_t y )
         {
             m_currentColumn = 0;
         }
-        m_cursorX = m_editlines[ y ].length() - m_currentColumn;
+        // m_cursorX = m_editlines[ y ].length() - m_currentColumn;
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      moves the text right - 16 characters
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::moveTextRight()
+{
+    if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
+    {
+        m_currentColumn += 16;
+        if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
+        {
+            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
+        }
+        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+        {
+            m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+        }
+        else
+        {
+            m_cursorX -= 16;
+            if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+            {
+                m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+            }
+        }
     }
 }
 
