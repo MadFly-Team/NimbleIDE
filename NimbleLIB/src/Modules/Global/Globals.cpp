@@ -1,16 +1,12 @@
 /**----------------------------------------------------------------------------
 
-    @file       Globals.h
+    @file       Globals.cpp
     @defgroup   NimbleLIBScreen Nimble Library Screen Module
     @brief      Globals class for the Nimble LIB
 
     @copyright  Neil Bereford 2023
 
 Notes:
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
 
 -----------------------------------------------------------------------------*/
 
@@ -41,5 +37,5 @@ namespace Screen
 } // namespace Nimble
 
 //-----------------------------------------------------------------------------
-// End of file: Globals.h
+// End of file: Globals.cpp
 //-----------------------------------------------------------------------------

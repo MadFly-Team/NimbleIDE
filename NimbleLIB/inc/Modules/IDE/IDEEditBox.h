@@ -6,14 +6,6 @@
 
     @copyright  Neil Bereford 2023
 
-Notes:
-
-        please see IDEEditBox.cpp for full details.
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -67,4 +59,4 @@ class IDEEditBox : public IDEEditline, public CursesWin
 //-----------------------------------------------------------------------------
 // End of file: IDEEditBox.h
 // ----------------------------------------------------------------------------
- 
+

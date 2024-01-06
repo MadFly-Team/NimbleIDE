@@ -35,10 +35,6 @@ Notes:
 
     Please also note, functionality for ErrorStatus is included in this file.
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 //-----------------------------------------------------------------------------

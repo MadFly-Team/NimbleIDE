@@ -8,10 +8,6 @@
 
 Notes:
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once

@@ -21,11 +21,6 @@ Notes:
     Supported Modules:
     - Logger
 
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -70,6 +65,8 @@ enum class LibraryError
     CursesWin_FailedToColourBackground,                                     //!< 0x10002103 Curses Window class failed to colour background
     CursesWin_FailedToClearWindow,                                          //!< 0x10001004 Curses Window class failed to clear window
     CursesWin_FailedToEraseChar,                                            //!< 0x10001005 Curses Window class failed to erase character
+    CursesWin_FailedToDrawVerticalLine,                                     //!< 0x10001006 Curses Window class failed to draw vertical line
+    CursesWin_FailedToDrawHorizontalLine,                                   //!< 0x10001007 Curses Window class failed to draw horizontal line
     FileHandlding_base_error = Curses_base_error + MODULE_OFFSET,           //!< 0x10003000 Base error for the File Handling module
     ErrorHandler_base_error  = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10004000 Base error for the Error Handling module
     Screen_base_error        = FileHandlding_base_error + MODULE_OFFSET,    //!< 0x10005000 Base error for the Screen module
@@ -95,7 +92,9 @@ enum class LibraryError
     IDEFileHandler_FailedToSaveFile,                                        //!< 0x10007008 Failed to close file
     IDEFileHandler_FileNotOpen,                                             //!< 0x10007009 File not opened
     IDEEditor_AlreadyInitialized,                                           //!< 0x1000700A Already initialized
-    IDEEditor_NotInitialized,                                               //!< 0x1000700B Not initialized
+    IDEEditor_NotInitialized,                                               //!< 0x1000700B Dialog not initialized
+    IDEDialog_AlreadyInitialized,                                           //!< 0x1000700C Dialog already initialized
+    IDEDialog_InitNotCalled,                                                //!< 0x1000700D Dialog init not called
 };
 
 // ----------------------------------------------------------------------------

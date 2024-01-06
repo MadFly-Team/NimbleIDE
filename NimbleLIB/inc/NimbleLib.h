@@ -1,4 +1,3 @@
-
 /**----------------------------------------------------------------------------
 
     @file       NimbleLib.h
@@ -6,12 +5,6 @@
     @brief      Master include file for the Nimble Library
 
     @copyright  Neil Beresford 2023
-
-Notes:
-
-Version:
-
-        0.0.1.0   First Release, development phase. Draft copy
 
 -----------------------------------------------------------------------------*/
 
@@ -33,6 +26,7 @@ Version:
 #include "Modules/IDE/IDEEditline.h"              // IDEEditline class
 #include "Modules/IDE/IDEEditBox.h"               // IDEEditBox class
 #include "Modules/IDE/IDEEditor.h"                // IDEEditor class
+#include "Modules/IDE/IDEDialog.h"                // IDEDialog class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

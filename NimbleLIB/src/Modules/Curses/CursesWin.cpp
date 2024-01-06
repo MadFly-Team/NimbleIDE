@@ -35,10 +35,6 @@ Notes:
             winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
 
 
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 //-----------------------------------------------------------------------------
 // Include files
@@ -84,6 +80,7 @@ CursesWin::CursesWin()
     @param      y           The y position of the window
     @param      inkColour   The ink colour of the window
     @param      paperColour The paper colour of the window
+
   --------------------------------------------------------------------------*/
 CursesWin::CursesWin( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour )
 {
@@ -106,6 +103,7 @@ CursesWin::CursesWin( uint32_t width, uint32_t height, uint32_t x, uint32_t y, u
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Destructor for the curses window class
+
   --------------------------------------------------------------------------*/
 CursesWin::~CursesWin()
 {
@@ -120,6 +118,7 @@ CursesWin::~CursesWin()
     @param      y       The y position of the text
     @param      text    The text to print
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::print( uint32_t x, uint32_t y, const std::string& text )
 {
@@ -141,6 +140,7 @@ LibraryError CursesWin::print( uint32_t x, uint32_t y, const std::string& text )
     @param      y       The y position of the text
     @param      text    The text to print
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::eraseChar( uint32_t x, uint32_t y )
 {
@@ -161,6 +161,7 @@ LibraryError CursesWin::eraseChar( uint32_t x, uint32_t y )
     @param      colour   The collour of the window
     @param      hasBox   Does the window have a box
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::colourWindow( uint32_t colour, bool hasBox )
 {
@@ -181,6 +182,7 @@ LibraryError CursesWin::colourWindow( uint32_t colour, bool hasBox )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Initialises the curses window
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::init()
 {
@@ -199,6 +201,7 @@ LibraryError CursesWin::init()
     @param      inkColour   The ink colour of the window
     @param      paperColour The paper colour of the window
     @return     LibraryError  LibraryError::No_Error if ok
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::init( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour )
 {
@@ -227,6 +230,7 @@ LibraryError CursesWin::init( uint32_t width, uint32_t height, uint32_t x, uint3
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Draws the curses window
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::draw()
 {
@@ -240,8 +244,49 @@ LibraryError CursesWin::draw()
 
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Draws a vertyical line in the curses window
+    @param      x       The x position of the line
+    @param      y       The y position of the line
+    @param      length  The length of the line
+    @return     The error code
+
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::drawVerticalLine( uint32_t x, uint32_t y, uint32_t length )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( mvwvline( win, y, x, ACS_VLINE, length ) == ERR )
+    {
+        error = LibraryError::CursesWin_FailedToDrawVerticalLine;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to draw vertical line in the curses window" );
+    }
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Draws a horizontal line in the curses window
+    @param      x       The x position of the line
+    @param      y       The y position of the line
+    @param      length  The length of the line
+    @return     The error code
+
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::drawHorizontalLine( uint32_t x, uint32_t y, uint32_t length )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( mvwhline( win, y, x, ACS_HLINE, length ) == ERR )
+    {
+        error = LibraryError::CursesWin_FailedToDrawHorizontalLine;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to draw horizontal line in the curses window" );
+    }
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Clears the curses window
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::clear()
 {
@@ -254,6 +299,7 @@ LibraryError CursesWin::clear()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Refreshes the curses window
     @return     The error code
+
   --------------------------------------------------------------------------*/
 LibraryError CursesWin::refresh()
 {
@@ -268,6 +314,7 @@ LibraryError CursesWin::refresh()
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the width of the window
     @return     The width of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getWidth() const noexcept
 {
@@ -278,6 +325,7 @@ uint32_t CursesWin::getWidth() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the height of the window
     @return     The height of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getHeight() const noexcept
 {
@@ -288,6 +336,7 @@ uint32_t CursesWin::getHeight() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the x position of the window
     @return     The x position of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getX() const noexcept
 {
@@ -298,6 +347,7 @@ uint32_t CursesWin::getX() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the y position of the window
     @return     The y position of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getY() const noexcept
 {
@@ -308,6 +358,7 @@ uint32_t CursesWin::getY() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the ink colour of the window
     @return     The ink colour of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getInkColour() const noexcept
 {
@@ -318,6 +369,7 @@ uint32_t CursesWin::getInkColour() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Gets the paper colour of the window
     @return     The paper colour of the window
+
   --------------------------------------------------------------------------*/
 uint32_t CursesWin::getPaperColour() const noexcept
 {
@@ -330,6 +382,7 @@ uint32_t CursesWin::getPaperColour() const noexcept
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the width of the window
     @param      width   The width of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setWidth( uint32_t width )
 {
@@ -340,6 +393,7 @@ void CursesWin::setWidth( uint32_t width )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the height of the window
     @param      height  The height of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setHeight( uint32_t height )
 {
@@ -350,6 +404,7 @@ void CursesWin::setHeight( uint32_t height )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the x position of the window
     @param      x       The x position of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setX( uint32_t x )
 {
@@ -360,6 +415,7 @@ void CursesWin::setX( uint32_t x )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the y position of the window
     @param      y       The y position of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setY( uint32_t y )
 {
@@ -370,6 +426,7 @@ void CursesWin::setY( uint32_t y )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the ink colour of the window
     @param      inkColour   The ink colour of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setInkColour( uint32_t inkColour )
 {
@@ -380,6 +437,7 @@ void CursesWin::setInkColour( uint32_t inkColour )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the paper colour of the window
     @param      paperColour The paper colour of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setPaperColour( uint32_t paperColour )
 {
@@ -394,6 +452,7 @@ void CursesWin::setPaperColour( uint32_t paperColour )
     @param      colour  The colour of the box
     @param      hasBox  Whether the box should be drawn
     @return     bool    true if the box was drawn, false otherwise
+
   --------------------------------------------------------------------------*/
 bool CursesWin::colourBox( uint32_t colour, bool hasBox )
 {
@@ -434,6 +493,7 @@ bool CursesWin::colourBox( uint32_t colour, bool hasBox )
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Sets the colour of the window
     @param      colour   The colour of the window
+
   --------------------------------------------------------------------------*/
 void CursesWin::setColour( uint32_t colour )
 {

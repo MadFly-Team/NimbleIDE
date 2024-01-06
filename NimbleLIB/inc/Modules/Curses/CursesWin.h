@@ -6,14 +6,6 @@
 
     @copyright  Neil Bereford 2023
 
-Notes:
-
-        please see CursesWin.cpp for full details.
-
-Version:
-
-        0.0.1.0     First Release, development phase. Draft copy
-
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -76,6 +68,8 @@ class CursesWin
     LibraryError init();
     LibraryError init( uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t inkColour, uint32_t paperColour );
     LibraryError draw();
+    LibraryError drawVerticalLine( uint32_t x, uint32_t y, uint32_t length );
+    LibraryError drawHorizontalLine( uint32_t x, uint32_t y, uint32_t length );
     LibraryError clear();
     LibraryError refresh();
 
