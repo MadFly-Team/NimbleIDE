@@ -14,13 +14,13 @@ file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h
 add_executable(NimbleIDE ${SOURCE_FILES})
 
 # Add /NODEFAULTLIB:Library flag
-#if(MSVC)
-#    target_compile_options(NimbleIDE PRIVATE "/MD")
-#endif()
+if(MSVC)
+    target_link_options(NimbleIDE PRIVATE "/NODEFAULTLIB:LIBCMT")
+endif()
 
 # link libraries
-target_link_libraries(NimbleIDE PRIVATE NimbleLIB pdcurses.dll)
-                                                             	
+target_link_libraries(NimbleIDE PRIVATE NimbleLIB pdcurses.dll )
+                                                              	
 # include path for libraries
 target_include_directories(NimbleIDE PUBLIC NimbleLIB)
 

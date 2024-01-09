@@ -14,9 +14,9 @@ file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h
 add_executable(NimbleCalc ${SOURCE_FILES})
 
 # Add /NODEFAULTLIB:Library flag
-#if(MSVC)
-#    target_compile_options(NimbleIDE PRIVATE "/MD")
-#endif()
+if(MSVC)
+    target_link_options(NimbleCalc PRIVATE "/NODEFAULTLIB:LIBCMT")
+endif()
 
 # link libraries
 target_link_libraries(NimbleCalc PRIVATE NimbleLIB pdcurses.dll)

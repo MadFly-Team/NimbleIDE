@@ -167,6 +167,9 @@ LibraryError IDEEditor::displayEditor()
         {
             m_editorWin->print( 0, curline, line );
         }
+
+        // attribute the line
+        updateHighlighting( curline );
         curline++;
     }
 
@@ -567,6 +570,11 @@ bool IDEEditor::checkEditKeys( uint32_t key )
                 displayChanged = true;
                 insertCharIntoEditor( m_cursorX, m_cursorY, key );
                 m_cursorX++;
+                // check if we need to move the text right
+                if ( m_cursorX >= m_width )
+                {
+                    moveTextRight();
+                }
             }
             break;
         }
@@ -698,7 +706,7 @@ void IDEEditor::placeCursorinLine( uint32_t y )
 ------------------------------------------------------------------------------*/
 void IDEEditor::moveTextRight()
 {
-    if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
+    // if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
     {
         m_currentColumn += 16;
         if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
@@ -715,6 +723,38 @@ void IDEEditor::moveTextRight()
             if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
             {
                 m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+            }
+        }
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      does the hightlighting for the editor line that is to be displayed
+    @param      curline  current line
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::updateHighlighting( uint32_t curline )
+{
+    int32_t nStart  = (int32_t)m_editlineAttributes[ curline ].MarkStart - m_currentColumn;
+    int32_t nEnd    = (int32_t)m_editlineAttributes[ curline ].MarkEnd - m_currentColumn;
+
+    if ( nStart < 0 )
+    {
+
+        nStart = 0;
+    }
+    if ( nStart < m_width )
+    {
+        if ( nEnd > 0 )
+        {
+            if ( nEnd > m_width )
+            {
+                nEnd = m_width;
+            }
+            if ( ( nEnd - nStart ) > 0 )
+            {
+                m_editorWin->displayHighlight( 0, curline, nStart, nEnd );
             }
         }
     }

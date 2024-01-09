@@ -99,6 +99,7 @@ class IDEEditor : protected IDEFileHandler
     void    insertLineIntoEditor( uint32_t y );
     void    placeCursorinLine( uint32_t y );
     void    moveTextRight();
+    void    updateHighlighting( uint32_t curline );
 };
 
 //-----------------------------------------------------------------------------

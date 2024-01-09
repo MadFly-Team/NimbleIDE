@@ -133,6 +133,27 @@ LibraryError CursesWin::print( uint32_t x, uint32_t y, const std::string& text )
     return error;
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Prints text to the curses window
+    @param      x       The x position of the text
+    @param      y       The y position of the text
+    @param      markStart The start of the text to highlight
+    @param      markEnd   The end of the text to highlight
+    @param      markAll   Highlight all the text
+    @return     The error code
+--------------------------------------------------------------------------*/
+LibraryError CursesWin::displayHighlight( uint32_t x, uint32_t y, uint32_t markStart, uint32_t markEnd )
+{
+    LibraryError error = LibraryError::No_Error;
+    if ( mvwchgat( win, y, x + markStart, markEnd - markStart, A_REVERSE, 0, nullptr ) == ERR )
+    {
+        error = LibraryError::CursesWin_FailedToPrintToWindow;
+        ErrorHandler::getInstance().handleError( ErrorType::Error, error, "Failed to print to the curses window" );
+    }
+    return error;
+}
+
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Prints text to the curses window

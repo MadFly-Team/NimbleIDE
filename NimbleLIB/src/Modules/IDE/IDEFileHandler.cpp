@@ -131,6 +131,7 @@ LibraryError IDEFileHandler::openFile( std::string& filename )
             lineAttributes.clear();
             m_editlines.push_back( line );
             m_editlineAttributes.push_back( lineAttributes );
+
         }
         m_fileIn.close();
         m_flags |= (uint32_t)FileHandlerFlags::Open;

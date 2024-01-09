@@ -50,12 +50,21 @@ class IDEFileHandler : public StatusCtrl
         /**-------------------------------------------------------------------------
             @ingroup    NimbleLIBIDE Nimble Library IDE Module
             @brief      EditLineAttributes - Clear the attributes
-
+            @return     void
         ----------------------------------------------------------------------------*/
         void clear()
         {
             MarkStart = 0;
             MarkEnd   = 0;
+        }
+        /**-------------------------------------------------------------------------
+            @ingroup    NimbleLIBIDE Nimble Library IDE Module
+            @brief      EditLineAttributes - Get the length
+            @return     Length of the marked text
+        ----------------------------------------------------------------------------*/
+        uint32_t length()
+        {
+            return ( MarkEnd - MarkStart );
         }
 
     } EditLineAttributes, *pEditLineAttributes; //!< Editline attributes
@@ -120,8 +129,9 @@ class IDEFileHandler : public StatusCtrl
     std::ofstream m_fileOut;  //!< File stream - output
     std::ifstream m_fileIn;   //!< File stream - input
   protected:
-    std::vector<std::string>        m_editlines;          //!< Edit lines
-    std::vector<EditLineAttributes> m_editlineAttributes; //!< Edit line attributes
+    std::vector<std::string>                  m_editlines;          //!< Edit lines
+    std::vector<EditLineAttributes>           m_editlineAttributes; //!< Edit line attributes
+    std::vector<std::unique_ptr<IDEEditline>> m_test;               //!< Test for class insertion
     //--------------------------------------------------------------------------
 };
 

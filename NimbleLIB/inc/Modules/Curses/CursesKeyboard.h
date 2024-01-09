@@ -6,6 +6,10 @@
 
     @copyright  Neil Bereford 2023
 
+Notes:
+
+        please see CursesKeyboard.cpp for full details.
+
 -----------------------------------------------------------------------------*/
 
 #pragma once
