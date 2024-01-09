@@ -10,6 +10,11 @@ add_library(NimbleLIB ${SOURCE_FILES})
 
 add_compile_definitions(NIMBLELIBRARY _CRT_SECURE_NO_WARNINGS)
 
+# Add /NODEFAULTLIB:Library flag
+if(MSVC)
+    target_link_options(NimbleLIB PRIVATE "/NODEFAULTLIB:LIBCMT")
+endif()
+
 # check if Doxygen is installed
 find_package(Doxygen)
 if (DOXYGEN_FOUND)

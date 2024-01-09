@@ -33,6 +33,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBTools Nimble Library Tools Module
     @brief      Constructor for the Tools class
+
   --------------------------------------------------------------------------*/
 Tools::Tools()
 {
@@ -41,6 +42,7 @@ Tools::Tools()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBTools Nimble Library Tools Module
     @brief      Destructor for the Tools class
+
   --------------------------------------------------------------------------*/
 Tools::~Tools()
 {

@@ -34,6 +34,7 @@ namespace Screen
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      ScreenPrint constructor
+
   --------------------------------------------------------------------------*/
 ScreenPrint::ScreenPrint()
 {
@@ -43,6 +44,7 @@ ScreenPrint::ScreenPrint()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      ScreenPrint destructor
+
   --------------------------------------------------------------------------*/
 ScreenPrint::~ScreenPrint()
 {
@@ -51,6 +53,8 @@ ScreenPrint::~ScreenPrint()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Adds a ScreenWord to the string stream
+    @param      word    ScreenWord to add
+    return      void
     --------------------------------------------------------------------------*/
 void ScreenPrint::Add( const ScreenWord& word )
 {
@@ -84,6 +88,7 @@ void ScreenPrint::Add( const ScreenWord& word )
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Adds the text to the string stream, no formatting.
     @param      inText - string to add to the string stream
+    return      void
   --------------------------------------------------------------------------*/
 void ScreenPrint::Add( const std::string& inText )
 {
@@ -97,6 +102,7 @@ void ScreenPrint::Add( const std::string& inText )
     @param      x - x position to add the text
     @param      y - y position to add the text
     @param      inText - string to add to the string stream
+    return      void
   --------------------------------------------------------------------------*/
 void ScreenPrint::Add( uint32_t x, uint32_t y, const std::string& inText )
 {
@@ -111,6 +117,7 @@ void ScreenPrint::Add( uint32_t x, uint32_t y, const std::string& inText )
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Displays the string stream to the screen
     @param      inText - string to add to the string stream
+    return      void
   --------------------------------------------------------------------------*/
 void ScreenPrint::Display()
 {
@@ -124,6 +131,7 @@ void ScreenPrint::Display()
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Displays the ScreenWord straight to the screen
     @param      word - ScreenWord to display
+    return      void
   --------------------------------------------------------------------------*/
 void ScreenPrint::DisplayWord( const ScreenWord& word )
 {
@@ -150,6 +158,7 @@ std::string ScreenPrint::GetStreamString() const
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Clears the string stream
+    return      void
   --------------------------------------------------------------------------*/
 void ScreenPrint::ClearStream()
 {

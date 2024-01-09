@@ -35,20 +35,27 @@ namespace Nimble
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      IDEEditor Constructor
+
 -----------------------------------------------------------------------------*/
 IDEEditor::IDEEditor()
 {
+    // default the editor values
     m_currentLine   = 0;
     m_currentColumn = 0;
     m_cursorX       = 0;
     m_cursorY       = 0;
     m_oldCursorX    = 0;
     m_oldCursorY    = 0;
+
+    // set up the Editor flags
+    clearUserFlag( (uint32_t)EditorFlags::FormatWhenPrint );
+    clearUserFlag( (uint32_t)EditorFlags::MarkedTextActive );
 }
 
 /**-----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      IDEEditor Destructor
+
 -----------------------------------------------------------------------------*/
 IDEEditor::~IDEEditor()
 {
@@ -160,6 +167,9 @@ LibraryError IDEEditor::displayEditor()
         {
             m_editorWin->print( 0, curline, line );
         }
+
+        // attribute the line
+        updateHighlighting( curline );
         curline++;
     }
 
@@ -211,6 +221,10 @@ uint32_t IDEEditor::getTotalLines() const
 bool IDEEditor::processKeyEdit( uint32_t key )
 {
     bool displayChanged = false;
+
+    // save the old cursor position
+    m_oldCursorX = m_cursorX;
+    m_oldCursorY = m_cursorY;
 
     if ( key != ERR )
     {
@@ -316,7 +330,7 @@ bool IDEEditor::processDisplay()
 
     // flash the cursor...
     m_frameCount++;
-    if ( ( m_frameCount & 0x7 ) == 0 )
+    if ( ( m_frameCount & 0x1f ) == 0 )
     {
         m_cursorDrawn = m_cursorDrawn ? false : true;
     }
@@ -419,26 +433,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
             }
             else
             {
-                if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
-                {
-                    m_currentColumn += 16;
-                    if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
-                    {
-                        m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
-                    }
-                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
-                    {
-                        m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
-                    }
-                    else
-                    {
-                        m_cursorX -= 16;
-                        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
-                        {
-                            m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
-                        }
-                    }
-                }
+                moveTextRight();
                 displayChanged = true;
             }
             break;
@@ -477,6 +472,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
                 m_cursorX = m_editlines[ m_currentLine + m_cursorY - 1 ].length();
                 m_editlines[ m_currentLine + m_cursorY - 1 ] += m_editlines[ m_currentLine + m_cursorY ];
                 m_editlines.erase( m_editlines.begin() + m_currentLine + m_cursorY );
+                m_editlineAttributes.erase( m_editlineAttributes.begin() + m_currentLine + m_cursorY );
                 m_cursorY--;
                 displayChanged = true;
             }
@@ -487,6 +483,23 @@ bool IDEEditor::checkEditKeys( uint32_t key )
             m_cursorY++;
             insertLineIntoEditor( m_cursorY );
             m_cursorX      = 0;
+            displayChanged = true;
+            break;
+        }
+        case 9: // tab
+        {
+            // spaces to add to string...
+            uint32_t spaces = 4 - ( m_cursorX & 0x3 );
+            for ( uint32_t i = 0; i < spaces; i++ )
+            {
+                m_editlines[ m_currentLine + m_cursorY ].insert( m_cursorX, " " );
+            }
+            m_cursorX += spaces;
+
+            if ( m_cursorX > m_width - 1 )
+            {
+                moveTextRight();
+            }
             displayChanged = true;
             break;
         }
@@ -504,6 +517,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
             {
                 m_editlines[ m_currentLine + m_cursorY ] += m_editlines[ m_currentLine + m_cursorY + 1 ];
                 m_editlines.erase( m_editlines.begin() + m_currentLine + m_cursorY + 1 );
+                m_editlineAttributes.erase( m_editlineAttributes.begin() + m_currentLine + m_cursorY + 1 );
             }
             displayChanged = true;
             break;
@@ -556,6 +570,11 @@ bool IDEEditor::checkEditKeys( uint32_t key )
                 displayChanged = true;
                 insertCharIntoEditor( m_cursorX, m_cursorY, key );
                 m_cursorX++;
+                // check if we need to move the text right
+                if ( m_cursorX >= m_width )
+                {
+                    moveTextRight();
+                }
             }
             break;
         }
@@ -592,6 +611,7 @@ uint8_t IDEEditor::getCharFromEditor( uint32_t x, uint32_t y )
     @param      x  x position
     @param      y  y position
     @param      ch character to insert
+    @return     void
 -----------------------------------------------------------------------------*/
 void IDEEditor::insertCharIntoEditor( uint32_t x, uint32_t y, uint8_t ch )
 {
@@ -619,6 +639,7 @@ void IDEEditor::insertCharIntoEditor( uint32_t x, uint32_t y, uint8_t ch )
     @brief      erases a character from the editor
     @param      x  x position
     @param      y  y position
+    @return     void
 ------------------------------------------------------------------------------*/
 void IDEEditor::eraseCharFromEditor( uint32_t x, uint32_t y )
 {
@@ -638,6 +659,7 @@ void IDEEditor::eraseCharFromEditor( uint32_t x, uint32_t y )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      inserts a line into the editor
     @param      y  y position
+    @return     void
 ------------------------------------------------------------------------------*/
 void IDEEditor::insertLineIntoEditor( uint32_t y )
 {
@@ -647,6 +669,9 @@ void IDEEditor::insertLineIntoEditor( uint32_t y )
         std::string newText = m_editlines[ y - 1 ].substr( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
         m_editlines[ y - 1 ].erase( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
         m_editlines.insert( m_editlines.begin() + y, newText );
+        EditLineAttributes attr;
+        attr.clear();
+        m_editlineAttributes.insert( m_editlineAttributes.begin() + y, attr );
     }
 }
 
@@ -654,7 +679,7 @@ void IDEEditor::insertLineIntoEditor( uint32_t y )
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      places the cursor in the line
     @param      y  y position
-
+    @return     void
 ------------------------------------------------------------------------------*/
 void IDEEditor::placeCursorinLine( uint32_t y )
 {
@@ -671,7 +696,67 @@ void IDEEditor::placeCursorinLine( uint32_t y )
         {
             m_currentColumn = 0;
         }
-        m_cursorX = m_editlines[ y ].length() - m_currentColumn;
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      moves the text right - 16 characters
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::moveTextRight()
+{
+    // if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
+    {
+        m_currentColumn += 16;
+        if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
+        {
+            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
+        }
+        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+        {
+            m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+        }
+        else
+        {
+            m_cursorX -= 16;
+            if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+            {
+                m_cursorX = m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn;
+            }
+        }
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      does the hightlighting for the editor line that is to be displayed
+    @param      curline  current line
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::updateHighlighting( uint32_t curline )
+{
+    int32_t nStart  = (int32_t)m_editlineAttributes[ curline ].MarkStart - m_currentColumn;
+    int32_t nEnd    = (int32_t)m_editlineAttributes[ curline ].MarkEnd - m_currentColumn;
+
+    if ( nStart < 0 )
+    {
+
+        nStart = 0;
+    }
+    if ( nStart < m_width )
+    {
+        if ( nEnd > 0 )
+        {
+            if ( nEnd > m_width )
+            {
+                nEnd = m_width;
+            }
+            if ( ( nEnd - nStart ) > 0 )
+            {
+                m_editorWin->displayHighlight( 0, curline, nStart, nEnd );
+            }
+        }
     }
 }
 

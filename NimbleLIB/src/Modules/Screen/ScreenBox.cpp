@@ -32,6 +32,15 @@ namespace Screen
 // Class definitions
 //-----------------------------------------------------------------------------
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Print box on screen
+    @param      x       x position
+    @param      y       y position
+    @param      width   width of box
+    @param      height  height of box
+    @return     void
+-----------------------------------------------------------------------------*/
 void ScreenBox::PrintBox( uint32_t x, uint32_t y, uint32_t width, uint32_t height )
 {
     uint32_t i;
@@ -80,6 +89,15 @@ void ScreenBox::PrintBox( uint32_t x, uint32_t y, uint32_t width, uint32_t heigh
     global.Print();
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Print double box on screen
+    @param      x       x position
+    @param      y       y position
+    @param      width   width of box
+    @param      height  height of box
+    @return     void
+-----------------------------------------------------------------------------*/
 void ScreenBox::PrintBoxDouble( uint32_t x, uint32_t y, uint32_t width, uint32_t height )
 {
     uint32_t i;
@@ -128,6 +146,14 @@ void ScreenBox::PrintBoxDouble( uint32_t x, uint32_t y, uint32_t width, uint32_t
     global.Print();
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleIDEScreen Nimble IDE Screen Module
+    @brief      Add vertical line to box
+    @param      x       x position
+    @param      y       y position
+    @param      height  height of box
+    @return     void
+-----------------------------------------------------------------------------*/
 void ScreenBox::AddVertLine( uint32_t x, uint32_t y, uint32_t height )
 {
     uint32_t i;

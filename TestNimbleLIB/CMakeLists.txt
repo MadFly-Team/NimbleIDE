@@ -14,6 +14,11 @@ file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h
 # tells cmake that it will be creating an executable 
 add_executable(TestNimbleLIB ${SOURCE_FILES})
 
+# Add /NODEFAULTLIB:Library flag
+if(MSVC)
+    target_link_options(TestNimbleLIB PRIVATE "/NODEFAULTLIB:LIBCMT")
+endif()
+
 # link libraries
 target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB pdcurses.dll)
 

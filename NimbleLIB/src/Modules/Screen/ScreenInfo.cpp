@@ -43,6 +43,7 @@ namespace Screen
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Interogate the console for the screen information
+    @return     void
   --------------------------------------------------------------------------*/
 void ScreenInfo::RetrieveConsoleInfo()
 {
@@ -83,6 +84,7 @@ void ScreenInfo::RetrieveConsoleInfo()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleIDEScreen Nimble IDE Screen Module
     @brief      Setup console for the NimbleIDE Screen
+    @return     void
     --------------------------------------------------------------------------*/
 void ScreenInfo::SetupConsole()
 {

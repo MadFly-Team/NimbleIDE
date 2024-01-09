@@ -44,7 +44,7 @@ using namespace Nimble::Screen;
 // Defines
 //-----------------------------------------------------------------------------
 
-#define DELAYSIZE        20
+#define DELAYSIZE        1
 #define MAX_OPTIONS      7
 #define TITLECOLOR       57 /* color pair indices */
 #define MAINMENUCOLOR    ( 2 | A_BOLD )
@@ -122,10 +122,10 @@ int main( int argc, char* argv[] )
     CursesColour::getInstance().init();
 
     winStatus = std::make_unique<CursesWin>( COLS, 1, 0, LINES - 1, COLOR_BLACK, COLOR_WHITE );
-    winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_BLUE );
-    winTitle->colourWindow( TITLECOLOR, 0 );
+    winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_YELLOW );
+    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), 0 );
     winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winStatus->colourWindow( STATUSCOLOR, 0 );
+    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), 0 );
     winStatus->print( 2, 0, "Status Bar : Press 'q' to quit" );
 
     IDEEditBox winLineNumbers;
@@ -135,16 +135,18 @@ int main( int argc, char* argv[] )
     winEditor.start( filename );
 
     winLineNumbers.initBox( 0, 1, 7, LINES - 2, COLOR_WHITE, COLOR_BLACK );
-    winLineNumbers.colourWindow( COLOUR_INDEX( 0, 1 ), true );
+    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
+    winLineNumbers.setLineInkColour( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ) );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     {
         // test the dialog...
         IDEDialog   winDialog;
         std::string dialogString = "Test Dialog";
+        uint32_t    colour       = 0;
         winDialog.initDialog( 50, 15, 15, 5, COLOR_BLACK, COLOR_WHITE );
 
-        winDialog.colourWindow( COLOUR_INDEX( 1, 7 ), true );
+        winDialog.colourWindow( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_MAGENTA ), true );
         winDialog.print( 3, 4, "Test Dialog" );
         winDialog.print( 3, 5, "Press 'q' to continue" );
         winDialog.title( dialogString );
@@ -159,6 +161,17 @@ int main( int argc, char* argv[] )
         {
             key = getch();
             delay_output( DELAYSIZE );
+
+            if ( key == 'a' || key == 'A' )
+            {
+                winDialog.colourWindow( colour, true );
+                winDialog.drawDialog();
+                colour++;
+                if ( colour > 64 )
+                {
+                    colour = 0;
+                }
+            }
         }
     }
 
@@ -177,7 +190,6 @@ int main( int argc, char* argv[] )
         }
         winEditor.processDisplay();
     }
-
     curs_set( 1 );
 
 #if 0

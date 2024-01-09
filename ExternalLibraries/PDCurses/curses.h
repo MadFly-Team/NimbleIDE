@@ -81,7 +81,9 @@ extern "C"
 #define ERR ( -1 )
 
 #undef OK
-#define OK 0
+#define OK      0
+
+#define PDC_RGB 1 /* RGB color model instead of BGR (default) */
 
 #if !defined( PDC_PP98 ) && !defined( __bool_true_false_are_defined )
     typedef unsigned char bool;
@@ -147,22 +149,22 @@ typedef unsigned long mmask_t;
         int   changes;     /* flags indicating what has changed with the mouse */
     } MOUSE_STATUS;
 
-#define BUTTON_RELEASED         0x0000
-#define BUTTON_PRESSED          0x0001
-#define BUTTON_CLICKED          0x0002
-#define BUTTON_DOUBLE_CLICKED   0x0003
-#define BUTTON_TRIPLE_CLICKED   0x0004
-#define BUTTON_MOVED            0x0005 /* PDCurses */
-#define WHEEL_SCROLLED          0x0006 /* PDCurses */
-#define BUTTON_ACTION_MASK      0x0007 /* PDCurses */
+#define BUTTON_RELEASED       0x0000
+#define BUTTON_PRESSED        0x0001
+#define BUTTON_CLICKED        0x0002
+#define BUTTON_DOUBLE_CLICKED 0x0003
+#define BUTTON_TRIPLE_CLICKED 0x0004
+#define BUTTON_MOVED          0x0005 /* PDCurses */
+#define WHEEL_SCROLLED        0x0006 /* PDCurses */
+#define BUTTON_ACTION_MASK    0x0007 /* PDCurses */
 
-#define PDC_BUTTON_SHIFT        0x0008 /* PDCurses */
-#define PDC_BUTTON_CONTROL      0x0010 /* PDCurses */
-#define PDC_BUTTON_ALT          0x0020 /* PDCurses */
-#define BUTTON_MODIFIER_MASK    0x0038 /* PDCurses */
+#define PDC_BUTTON_SHIFT      0x0008 /* PDCurses */
+#define PDC_BUTTON_CONTROL    0x0010 /* PDCurses */
+#define PDC_BUTTON_ALT        0x0020 /* PDCurses */
+#define BUTTON_MODIFIER_MASK  0x0038 /* PDCurses */
 
-#define MOUSE_X_POS             ( Mouse_status.x )
-#define MOUSE_Y_POS             ( Mouse_status.y )
+#define MOUSE_X_POS           ( Mouse_status.x )
+#define MOUSE_Y_POS           ( Mouse_status.y )
 
     /*
      * Bits associated with the .changes field:
@@ -179,14 +181,15 @@ typedef unsigned long mmask_t;
      *                         100000000 <- mouse wheel right
      */
 
-#define PDC_MOUSE_MOVED         0x0008
-#define PDC_MOUSE_POSITION      0x0010
-#define PDC_MOUSE_WHEEL_UP      0x0020
-#define PDC_MOUSE_WHEEL_DOWN    0x0040
-#define PDC_MOUSE_WHEEL_LEFT    0x0080
-#define PDC_MOUSE_WHEEL_RIGHT   0x0100
+#define PDC_MOUSE_MOVED       0x0008
+#define PDC_MOUSE_POSITION    0x0010
+#define PDC_MOUSE_WHEEL_UP    0x0020
+#define PDC_MOUSE_WHEEL_DOWN  0x0040
+#define PDC_MOUSE_WHEEL_LEFT  0x0080
+#define PDC_MOUSE_WHEEL_RIGHT 0x0100
 
-#define A_BUTTON_CHANGED        ( Mouse_status.changes & 7 )
+#define A_BUTTON_CHANGED      ( Mouse_status.changes & 7 )
+#undef MOUSE_MOVED // Added by Neil Beresford, prior to this MOUSE_MOVED was defined elsewhere.
 #define MOUSE_MOVED             ( Mouse_status.changes & PDC_MOUSE_MOVED )
 #define MOUSE_POS_REPORT        ( Mouse_status.changes & PDC_MOUSE_POSITION )
 #define BUTTON_CHANGED( x )     ( Mouse_status.changes & ( 1 << ( (x)-1 ) ) )

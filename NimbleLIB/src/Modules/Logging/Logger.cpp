@@ -45,6 +45,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBLogger Nimble Library Logger Module
     @brief      Constructor for the Logger class
+
   --------------------------------------------------------------------------*/
 Logger::Logger()
 {
@@ -56,6 +57,7 @@ Logger::Logger()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBLogger Nimble Library Logger Module
     @brief      Destructor for the Logger class
+
   --------------------------------------------------------------------------*/
 Logger::~Logger()
 {

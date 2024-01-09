@@ -30,6 +30,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBFile Nimble Library File Module
     @brief      Constructor for the FileManager class
+
   --------------------------------------------------------------------------*/
 FileManager::FileManager()
 {
@@ -41,6 +42,7 @@ FileManager::FileManager()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBFile Nimble Library File Module
     @brief      Destructor for the FileManager class
+
   --------------------------------------------------------------------------*/
 FileManager::~FileManager()
 {

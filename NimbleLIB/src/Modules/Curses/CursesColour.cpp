@@ -73,6 +73,7 @@ namespace Nimble
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Default constructor for the curses colour class
+
   --------------------------------------------------------------------------*/
 CursesColour::CursesColour()
 {
@@ -83,6 +84,7 @@ CursesColour::CursesColour()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Destructor for the curses colour class
+
   --------------------------------------------------------------------------*/
 CursesColour::~CursesColour()
 {
@@ -93,6 +95,7 @@ CursesColour::~CursesColour()
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Initialises the colours for the curses colour class
+    @return     void
   --------------------------------------------------------------------------*/
 LibraryError CursesColour::init()
 {
@@ -112,9 +115,9 @@ LibraryError CursesColour::init()
         {
             // Create the colour pair
             ColourPair newColourPair;
-            newColourPair.index = i + 1;
-            newColourPair.ink   = i % NUUM_BASE_COLORS;
-            newColourPair.paper = i / NUUM_BASE_COLORS;
+            newColourPair.index = i;
+            newColourPair.ink   = i % NUM_BASE_COLORS;
+            newColourPair.paper = i / NUM_BASE_COLORS;
             // Add the colour pair to the list
             colourPairs.push_back( newColourPair );
 
