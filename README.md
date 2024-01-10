@@ -1,24 +1,20 @@
 # Nimble IDE Suite
 
-## testing
+## Current Images
 
-```plantumlcode
-@startuml
-alice->bob:hello
-@enduml
+<img title="NimbleIDE Image" alt="NimbleIDE image" src="Content/NimbleIDE004.png">
 
-```
-![TestImage](Content/testPlantUML.png)
+<img title="NimbleMenu Image" alt="NimbleMenu image" src="Content/NimbleMenu1.png">
+
 
 ## IMPORTANT NOTE
 
 This is in initial development, the project has only just started.
 
-* develop branch will always have a buildable project.
-* development is via issues and created branchs from develop.
+* develop branch will always have a build-able project.
+* development is via issues and created branches from develop.
 * releases will go to the main branch, as and when
  
-
 ## Application list
 
 Main Library And Applications
@@ -30,28 +26,47 @@ Main Library And Applications
 
 Nimble Utilities
 - [NimbeUtils - NimbleMenu](#nimblemenu)
+- [NimbeUtils - NimbleCalc](#nimblecalc)
+
 
 ## NimbleLIB
 
 NimbleLIB is the library of modules used by NimbleIDE and TestNimbleIDE. It contains the following modules:
 
-### Screen
+| Module                          | Description                                                       |
+| :------------------------------ | :---------------------------------------------------------------- |
+| [Screen](#screen)               | Low-level ASCII encoded console screen functionality              |
+| [Curses](#curses)               | Various support for the ncurses SDK                               |
+| [ErrorHandling](#errorhandling) | ErrorHandling and error numbers reporting failures in the library |
+| [IDE](#ide)                     | Editor and editing support for the IDE                            |
+| [Global](#global)               | Global information, shared across modules                         |
+| [Logger](#logger)               | Logs formated messages to various outputs                         |
+| [Utilities](#utilities)         | Functionality shared across the modules                           |
+| [Framework](#framework)         | Framework for the supporting CPUs                                 |
+
+#### Screen
 
 This module contains basic support for screen clear, displaying text and moving the cursor.
 
 Basic ASCII extended codes are used to clear, write to and move the cursor on the screen.
 
-### Curses
+#### Curses
 
 The Curses module is used to create a screen buffer and display it on the screen. It is used by the `NimbleIDE` and `TestNimbleIDE` applications.
 
 Curses supports not only the screen display and handling, but also windows and input handling.
 
-### ErrorHandling
+#### ErrorHandling
 
 This static class handles all errors that occur in the application. It can be used to log errors to a file or to the screen.
 
-### Utilities
+#### IDE
+
+This module contains the core functionality to allow editing and display of information.
+Editing is via a IDEEditor class and IDEEditBox class
+IDEDialog is the generic dialog class, allowing the display of error messages.
+
+#### Utilities
 
 Functionality that is used by multiple modules is placed in the Utilities module.
 
@@ -72,19 +87,25 @@ This module will handle the framework for the hardware.
 
 The main IDE, linked with NimbleLIB. It currently tests the development of the NimbleLIB modules.
 
+<img title="NimbleIDE Image" alt="NimbleIDE image" src="Content/NimbleIDE003.png">
 
-## TestNimbleIDE
+This is currently in development.
 
-Tests the modules developed in NimbleIDE and NimbleLIB.
+## NimbleCalc
 
-## TestNimbleLIB
+This is in early development, currently used to prove development of the ongoing project. 
 
-Complete tests for the NimbleLIB modules.
-Currently only tests the Screen and ErrorHandling modules.
+<img title="NimbleCalc Image" alt="NimbleCalc image" src="Content/NimbleCalc001.png">
+
+
+The end result will be a console based programmers calculator that will work with binary, octal, decimal and hexadecimal.
 
 ## NimbleMenu
 
 ##### Found in NimbleUtils directory
+
+<img title="NimbleMenu Image" alt="NimbleMenu image" src="Content/NimbleMenu1.png">
+
 This utility allows quick selection of actions from a menu.
 Setup to allow for easy integration into other applications.
 The menu is a simple list of options, with a title and a prompt.
@@ -94,14 +115,11 @@ Configuration file is called `NimbleMenu.cfg`
 Items are numbered from 0 to 9, and are displayed in the order they are in the file.
 Each item has a title and a command to run.
 Please note 'cd' commands are supported, 'cd' is stripped and also the '\n' is stripped.
-Each command is sperated by either of the following:
+Each command is separated by either of the following:
 * ` & ` - run the command and continue
 * ` && ` - runs the next command if no errors are reported by the previous command
 
-The following is a working example of the configuration file
-<img title="NimbleMenu Image" alt="NimbleMenu image" src="Content/NimbleMenu1.png">
-
-And it is created by the following configuration - called `NimbeMenu.cfg`.
+The following is a working example of the configuration file - called `NimbeMenu.cfg`.
 
 ```
 // Nimble Menu Items -
@@ -116,6 +134,19 @@ Items = 9
 8^Far Manager at this location^"c:\Program Files\Far Manager\Far.exe" .
 9^Lazygit at this location^lazygit.exe
 ```
+
+
+## Testing the IDE and the Library core functionality
+The following applications unit test the Nimbe IDE and more importantly the modules within NimbleLIB
+
+### TestNimbleIDE
+
+Tests the modules developed in NimbleIDE and NimbleLIB.
+
+### TestNimbleLIB
+
+Complete tests for the NimbleLIB modules.
+Currently only tests the Screen and ErrorHandling modules.
 
 
 ## Pre-requisites
@@ -140,7 +171,10 @@ Please follow the instructions below to install the application.
 Retrieve the source code from GitHub:
 
 ```bash
-    git clone https://github.com/MadFly-Team/NimbleIDE.git NimbleIDE
+    git clone https://github.com/MadFly-Team/NimbleIDE.git NimbleIDE 
+    cd  NimbleIDE
+    git submodule init
+    git submodule update
 ```
 
 ## Building the applications

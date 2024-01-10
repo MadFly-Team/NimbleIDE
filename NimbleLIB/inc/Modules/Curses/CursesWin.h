@@ -56,6 +56,7 @@ class CursesWin
     uint32_t getY() const noexcept;
     uint32_t getInkColour() const noexcept;
     uint32_t getPaperColour() const noexcept;
+    WINDOW*  getWindow() const noexcept;
     // Setters ------------------------------------------------------------------
     void setWidth( uint32_t width );
     void setHeight( uint32_t height );

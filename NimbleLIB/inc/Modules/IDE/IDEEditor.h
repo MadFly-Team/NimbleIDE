@@ -67,6 +67,9 @@ class IDEEditor : protected IDEFileHandler
     uint32_t getCurrentLine() const;
     uint32_t getCurrentColumn() const;
     uint32_t getTotalLines() const;
+    uint32_t getCursorX() const;
+    uint32_t getCursorY() const;
+
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
     // control functions -------------------------------------------------------

@@ -25,6 +25,9 @@ Notes:
 #include <string>
 #include <format>
 // #include <conio.h>
+#include <chrono>  // chrono::system_clock
+#include <ctime>   // localtime
+#include <iomanip> // put_time
 
 extern "C"
 {
@@ -74,9 +77,11 @@ typedef struct
 // Forward declarations
 //-----------------------------------------------------------------------------
 
-void display_menu( int old_option, int new_option );
-void colorbox( WINDOW* win, chtype color, int hasbox );
-void setcolor( WINDOW* win, chtype color );
+std::string return_current_time_and_date();
+
+void        display_menu( int old_option, int new_option );
+void        colorbox( WINDOW* win, chtype color, int hasbox );
+void        setcolor( WINDOW* win, chtype color );
 
 // menu functions
 void TerminateProgram();
@@ -99,6 +104,7 @@ MENUCOMMAND menuItems[ MAX_OPTIONS ] = {
 
 std::unique_ptr<CursesWin> winTitle;
 std::unique_ptr<CursesWin> winStatus;
+std::unique_ptr<CursesWin> winProject;
 
 WINDOW*                    winMenu;
 WINDOW*                    winBody;
@@ -121,20 +127,26 @@ int main( int argc, char* argv[] )
 
     CursesColour::getInstance().init();
 
-    winStatus = std::make_unique<CursesWin>( COLS, 1, 0, LINES - 1, COLOR_BLACK, COLOR_WHITE );
-    winTitle  = std::make_unique<CursesWin>( COLS, 1, 0, 0, COLOR_WHITE, COLOR_YELLOW );
-    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), 0 );
+    winStatus  = std::make_unique<CursesWin>( COLS, 3, 0, LINES - 3, COLOR_BLACK, COLOR_WHITE );
+    winTitle   = std::make_unique<CursesWin>( COLS, 3, 0, 0, COLOR_WHITE, COLOR_YELLOW );
+    winProject = std::make_unique<CursesWin>( 30, LINES - 6, COLS - 30, 3, COLOR_WHITE, COLOR_YELLOW );
+    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
     winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), 0 );
+    winTitle->drawVerticalLine( COLS - 22, 1, 1 );
+    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
     winStatus->print( 2, 0, "Status Bar : Press 'q' to quit" );
+    winStatus->drawVerticalLine( COLS - 37, 1, 1 );
+    winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
+    winProject->print( 2, 0, "Project Window" );
+    winProject->drawHorizontalLine( 1, 3, 30 - 2 );
 
     IDEEditBox winLineNumbers;
     IDEEditor  winEditor;
-    winEditor.init( COLS - 8, LINES - 4, 8, 2 );
+    winEditor.init( COLS - 38, LINES - 8, 8, 4 );
     std::string filename = "test.txt";
     winEditor.start( filename );
 
-    winLineNumbers.initBox( 0, 1, 7, LINES - 2, COLOR_WHITE, COLOR_BLACK );
+    winLineNumbers.initBox( 0, 3, 7, LINES - 6, COLOR_WHITE, COLOR_BLACK );
     winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
     winLineNumbers.setLineInkColour( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ) );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
@@ -189,6 +201,18 @@ int main( int argc, char* argv[] )
             winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
         }
         winEditor.processDisplay();
+        // display the time and date...
+        std::string streamString = return_current_time_and_date();
+        winTitle->print( COLS - 1 - streamString.length(), 1, streamString );
+        mvwchgat( winTitle->getWindow(), 1, COLS - 1 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ), nullptr );
+        winTitle->draw();
+        // display the number of lines and cursor position...
+        std::string linesString = std::format( "Lines: {:5d} Cursor: {},{}", winEditor.getTotalLines(), winEditor.getCursorX(), winEditor.getCursorY() );
+        linesString.resize( 34, ' ' );
+        mvwprintw( winStatus->getWindow(), 1, COLS - 35, linesString.c_str() );
+        mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
+        mvwchgat( winStatus->getWindow(), 1, COLS - 14, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
+        winStatus->draw();
     }
     curs_set( 1 );
 
@@ -384,6 +408,21 @@ void ResetScreenToMenu()
     refresh();
 
     attrset( COLOR_PAIR( 8 ) );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleIDE Nimble IDE
+    @brief      Function to return the current time and date as a string
+    @return     std::string
+ *----------------------------------------------------------------------------*/
+std::string return_current_time_and_date()
+{
+    auto              now       = std::chrono::system_clock::now();
+    auto              in_time_t = std::chrono::system_clock::to_time_t( now );
+
+    std::stringstream ss;
+    ss << std::put_time( std::localtime( &in_time_t ), "%Y-%m-%d %X" );
+    return ss.str();
 }
 
 //-----------------------------------------------------------------------------
