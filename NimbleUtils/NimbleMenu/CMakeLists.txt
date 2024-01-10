@@ -19,8 +19,11 @@ if(MSVC)
 endif()
 
 # link libraries
-target_link_libraries(NimbleMenu PRIVATE NimbleLIB pdcurses.dll)
-                                                             	
+if (LINUX)
+    target_link_libraries(NimbleMenu PRIVATE NimbleLIB ncurses)
+else()
+    target_link_libraries(NimbleMenu PRIVATE NimbleLIB pdcurses.dll)
+endif()
 # include path for libraries
 target_include_directories(NimbleMenu PUBLIC NimbleLIB)
 
@@ -49,5 +52,5 @@ endif (DOXYGEN_FOUND)
 if (MSVC)
     file( COPY "./Content/" DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 else()
-	file( COPY "./Content/" DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug )
+    file( COPY "./content/" DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug )
 endif()

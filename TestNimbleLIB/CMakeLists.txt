@@ -11,7 +11,7 @@ link_directories("${CMAKE_SOURCE_DIR}/ExternalLibraries/PDcurses")
 # add the main executable folder
 file(GLOB_RECURSE  SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp" "inc/*.h" )
 
-# tells cmake that it will be creating an executable 
+# tells cmake that it will be creating an executable
 add_executable(TestNimbleLIB ${SOURCE_FILES})
 
 # Add /NODEFAULTLIB:Library flag
@@ -20,8 +20,11 @@ if(MSVC)
 endif()
 
 # link libraries
-target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB pdcurses.dll)
-
+if (LINUX)
+    target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB ncurses)
+else()
+    target_link_libraries(TestNimbleLIB PRIVATE NimbleLIB pdcurses.dll)
+endif()
 # include path for libraries
 target_include_directories(TestNimbleLIB PUBLIC NimbleLIB)
 
@@ -43,7 +46,7 @@ if (DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM )
 else (DOXYGEN_FOUND)
-  message("Doxygen need to be installed to generate the doxygen documentation")
+    message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 
 

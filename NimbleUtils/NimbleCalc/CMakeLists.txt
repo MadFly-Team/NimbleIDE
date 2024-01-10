@@ -19,8 +19,11 @@ if(MSVC)
 endif()
 
 # link libraries
-target_link_libraries(NimbleCalc PRIVATE NimbleLIB pdcurses.dll)
-                                                             	
+if (LINUX)
+    target_link_libraries(NimbleCalc PRIVATE NimbleLIB ncurses)
+else()
+    target_link_libraries(NimbleCalc PRIVATE NimbleLIB pdcurses.dll)
+endif()
 # include path for libraries
 target_include_directories(NimbleCalc PUBLIC NimbleLIB)
 

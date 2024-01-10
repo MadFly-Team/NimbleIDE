@@ -15,9 +15,11 @@ Notes:
 //-----------------------------------------------------------------------------
 
 // #include <windows.h>
+#if defined( _WIN32 )
 #include <windows.h>
-#include <stdio.h>
 #include <tchar.h>
+#endif
+#include <stdio.h>
 #include <cstddef>
 #include <functional>
 #include <stdint.h>

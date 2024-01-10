@@ -16,8 +16,8 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
-#include "..\..\..\inc\Modules\ErrorHandling\ErrorHandler.h"
-#include "..\..\..\inc\Modules\IDE\IDEDialog.h"
+#include "../../../inc/Modules/ErrorHandling/ErrorHandler.h"
+#include "../../../inc/Modules/IDE/IDEDialog.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
