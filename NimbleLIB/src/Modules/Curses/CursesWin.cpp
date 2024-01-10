@@ -382,6 +382,16 @@ uint32_t CursesWin::getPaperColour() const noexcept
     return winPaperColour;
 }
 
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Gets the curses window
+    @return     The curses window
+  --------------------------------------------------------------------------*/
+WINDOW* CursesWin::getWindow() const noexcept
+{
+    return win;
+}
+
 // Setters ---------------------------------------------------------------------
 
 /**---------------------------------------------------------------------------

@@ -210,6 +210,26 @@ uint32_t IDEEditor::getTotalLines() const
     return m_editlines.size();
 }
 
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      get the cursor X position
+    @return     uint32_t    cursor X position
+------------------------------------------------------------------------------*/
+uint32_t IDEEditor::getCursorX() const
+{
+    return m_cursorX + m_currentColumn + 1;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      get the cursor Y position
+    @return     uint32_t    cursor Y position
+------------------------------------------------------------------------------*/
+uint32_t IDEEditor::getCursorY() const
+{
+    return m_cursorY + m_currentLine + 1;
+}
+
 // control functions ----------------------------------------------------------
 
 /**-----------------------------------------------------------------------------
@@ -736,8 +756,8 @@ void IDEEditor::moveTextRight()
 ------------------------------------------------------------------------------*/
 void IDEEditor::updateHighlighting( uint32_t curline )
 {
-    int32_t nStart  = (int32_t)m_editlineAttributes[ curline ].MarkStart - m_currentColumn;
-    int32_t nEnd    = (int32_t)m_editlineAttributes[ curline ].MarkEnd - m_currentColumn;
+    int32_t nStart = (int32_t)m_editlineAttributes[ curline ].MarkStart - m_currentColumn;
+    int32_t nEnd   = (int32_t)m_editlineAttributes[ curline ].MarkEnd - m_currentColumn;
 
     if ( nStart < 0 )
     {
