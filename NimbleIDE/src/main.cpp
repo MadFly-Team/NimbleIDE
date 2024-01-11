@@ -48,7 +48,7 @@ using namespace Nimble::Screen;
 //-----------------------------------------------------------------------------
 
 #if ( __linux__ )
-#define DELAYSIZE ( 1000 )
+#define DELAYSIZE ( 10 )
 #else
 #define DELAYSIZE ( 1 )
 #endif
