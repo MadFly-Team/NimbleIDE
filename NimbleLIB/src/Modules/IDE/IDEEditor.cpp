@@ -412,7 +412,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
             }
             else
             {
-                if ( m_currentLine <= m_editlines.size() - 1 )
+                if ( m_currentLine + m_cursorY < m_editlines.size() - 1 )
                 {
                     m_currentLine++;
                     if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
