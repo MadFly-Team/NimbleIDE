@@ -382,7 +382,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
             if ( m_cursorY > 0 )
             {
                 m_cursorY--;
-                if ( m_cursorX + m_currentLine > m_editlines[ m_currentLine + m_cursorY ].length() )
+                if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
                     placeCursorinLine( m_currentLine );
                 displayChanged = true;
             }
@@ -391,7 +391,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
                 if ( m_currentLine > 0 )
                 {
                     m_currentLine--;
-                    if ( m_cursorX + m_currentLine > m_editlines[ m_currentLine + m_cursorY ].length() )
+                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
                         placeCursorinLine( m_currentLine );
                     displayChanged = true;
                 }
@@ -402,9 +402,12 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
         {
             if ( m_cursorY < m_height - 1 )
             {
-                m_cursorY++;
-                if ( m_cursorX + m_currentLine > m_editlines[ m_currentLine + m_cursorY ].length() )
-                    placeCursorinLine( m_currentLine );
+                if ( m_cursorY + m_currentLine < m_editlines.size() - 1 )
+                {
+                    m_cursorY++;
+                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+                        placeCursorinLine( m_currentLine );
+                }
                 displayChanged = true;
             }
             else
@@ -412,7 +415,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
                 if ( m_currentLine <= m_editlines.size() - 1 )
                 {
                     m_currentLine++;
-                    if ( m_cursorX + m_currentLine > m_editlines[ m_currentLine + m_cursorY ].length() )
+                    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
                         placeCursorinLine( m_currentLine );
                     displayChanged = true;
                 }
@@ -547,12 +550,11 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         case 338: // page down
         {
             m_currentLine += m_height;
-            if ( m_currentLine > m_editlines.size() - 1 )
+            if ( m_currentLine + m_cursorY > m_editlines.size() - 1 )
             {
-                m_currentLine = m_editlines.size() - 1;
-                m_cursorY     = 0;
+                m_currentLine = m_editlines.size() - 1 - m_cursorY;
             }
-            placeCursorinLine( m_currentLine );
+            placeCursorinLine( m_currentLine + m_cursorY );
             displayChanged = true;
             break;
         }
@@ -563,7 +565,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
             {
                 m_currentLine = 0;
             }
-            placeCursorinLine( m_currentLine );
+            placeCursorinLine( m_currentLine + m_cursorY );
             displayChanged = true;
             break;
         }
@@ -686,15 +688,12 @@ void IDEEditor::eraseCharFromEditor( uint32_t x, uint32_t y )
 void IDEEditor::insertLineIntoEditor( uint32_t y )
 {
     y += m_currentLine;
-    if ( y < m_editlines.size() )
-    {
-        std::string newText = m_editlines[ y - 1 ].substr( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
-        m_editlines[ y - 1 ].erase( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
-        m_editlines.insert( m_editlines.begin() + y, newText );
-        EditLineAttributes attr;
-        attr.clear();
-        m_editlineAttributes.insert( m_editlineAttributes.begin() + y, attr );
-    }
+    std::string newText = m_editlines[ y - 1 ].substr( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
+    m_editlines[ y - 1 ].erase( m_cursorX, m_editlines[ y - 1 ].length() - m_cursorX );
+    m_editlines.insert( m_editlines.begin() + y, newText );
+    EditLineAttributes attr;
+    attr.clear();
+    m_editlineAttributes.insert( m_editlineAttributes.begin() + y, attr );
 }
 
 /**-----------------------------------------------------------------------------
