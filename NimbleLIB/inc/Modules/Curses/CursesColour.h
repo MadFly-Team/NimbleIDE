@@ -40,23 +40,41 @@ namespace Nimble
 // Please use the colours and macro when using the curses module
 
 #define COLOUR_INDEX( ink, paper ) ( ( ink ) + ( ( paper ) << 3 ) ) //!< Macro to calculate colour index
-#define IDE_COL_FG_WHITE           7                                //!< White foreground colour for the IDE
-#define IDE_COL_FG_YELLOW          6                                //!< Yellow foreground colour for the IDE
-#define IDE_COL_FG_MAGENTA         5                                //!< Magenta foreground colour for the IDE
-#define IDE_COL_FG_RED             4                                //!< Red foreground colour for the IDE
-#define IDE_COL_FG_CYAN            3                                //!< Cyan foreground colour for the IDE
-#define IDE_COL_FG_GREEN           2                                //!< Green foreground colour for the IDE
-#define IDE_COL_FG_BLUE            1                                //!< Blue foreground colour for the IDE
-#define IDE_COL_FG_BLACK           0                                //!< Black foreground colour for the IDE
-#define IDE_COL_BG_WHITE           7                                //!< White background colour for the IDE
-#define IDE_COL_BG_YELLOW          6                                //!< Yellow background colour for the IDE
-#define IDE_COL_BG_MAGENTA         5                                //!< Magenta background colour for the IDE
-#define IDE_COL_BG_RED             4                                //!< Red background colour for the IDE
-#define IDE_COL_BG_CYAN            3                                //!< Cyan background colour for the IDE
-#define IDE_COL_BG_GREEN           2                                //!< Green background colour for the IDE
-#define IDE_COL_BG_BLUE            1                                //!< Blue background colour for the IDE
-#define IDE_COL_BG_BLACK           0                                //!< Black background colour for the IDE
-
+#if ( __linux__ )
+#define IDE_COL_FG_WHITE   7 //!< White foreground colour for the IDE
+#define IDE_COL_FG_YELLOW  6 //!< Yellow foreground colour for the IDE
+#define IDE_COL_FG_MAGENTA 5 //!< Magenta foreground colour for the IDE
+#define IDE_COL_FG_RED     1 //!< Red foreground colour for the IDE
+#define IDE_COL_FG_CYAN    3 //!< Cyan foreground colour for the IDE
+#define IDE_COL_FG_GREEN   2 //!< Green foreground colour for the IDE
+#define IDE_COL_FG_BLUE    4 //!< Blue foreground colour for the IDE
+#define IDE_COL_FG_BLACK   0 //!< Black foreground colour for the IDE
+#define IDE_COL_BG_WHITE   7 //!< White background colour for the IDE
+#define IDE_COL_BG_YELLOW  6 //!< Yellow background colour for the IDE
+#define IDE_COL_BG_MAGENTA 5 //!< Magenta background colour for the IDE
+#define IDE_COL_BG_RED     1 //!< Red background colour for the IDE
+#define IDE_COL_BG_CYAN    3 //!< Cyan background colour for the IDE
+#define IDE_COL_BG_GREEN   2 //!< Green background colour for the IDE
+#define IDE_COL_BG_BLUE    4 //!< Blue background colour for the IDE
+#define IDE_COL_BG_BLACK   0 //!< Black background colour for the IDE
+#else
+#define IDE_COL_FG_WHITE   7 //!< White foreground colour for the IDE
+#define IDE_COL_FG_YELLOW  6 //!< Yellow foreground colour for the IDE
+#define IDE_COL_FG_MAGENTA 5 //!< Magenta foreground colour for the IDE
+#define IDE_COL_FG_RED     4 //!< Red foreground colour for the IDE
+#define IDE_COL_FG_CYAN    3 //!< Cyan foreground colour for the IDE
+#define IDE_COL_FG_GREEN   2 //!< Green foreground colour for the IDE
+#define IDE_COL_FG_BLUE    1 //!< Blue foreground colour for the IDE
+#define IDE_COL_FG_BLACK   0 //!< Black foreground colour for the IDE
+#define IDE_COL_BG_WHITE   7 //!< White background colour for the IDE
+#define IDE_COL_BG_YELLOW  6 //!< Yellow background colour for the IDE
+#define IDE_COL_BG_MAGENTA 5 //!< Magenta background colour for the IDE
+#define IDE_COL_BG_RED     4 //!< Red background colour for the IDE
+#define IDE_COL_BG_CYAN    3 //!< Cyan background colour for the IDE
+#define IDE_COL_BG_GREEN   2 //!< Green background colour for the IDE
+#define IDE_COL_BG_BLUE    1 //!< Blue background colour for the IDE
+#define IDE_COL_BG_BLACK   0 //!< Black background colour for the IDE
+#endif
 //-----------------------------------------------------------------------------
 // Class definitions
 // ----------------------------------------------------------------------------
