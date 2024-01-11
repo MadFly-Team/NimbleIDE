@@ -88,8 +88,7 @@ LibraryError IDEEditor::init( uint32_t width, uint32_t height, uint32_t x, uint3
         m_yStart = y;
 
         // create the curses window
-        m_editorWin  = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
-        m_overlayWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
+        m_editorWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
         setInitialized();
     }
 
@@ -355,14 +354,12 @@ bool IDEEditor::processDisplay()
         m_cursorDrawn = m_cursorDrawn ? false : true;
     }
 
-    charStr[ 0 ] = getCharFromEditor( m_oldCursorX, m_oldCursorY );
-    m_overlayWin->print( m_oldCursorX, m_oldCursorY, charStr );
-
+    mvwchgat( m_editorWin->getWindow(), m_oldCursorY, m_oldCursorX, 1, A_NORMAL, 0, nullptr );
     if ( m_cursorDrawn )
     {
-        m_overlayWin->print( m_cursorX, m_cursorY, "\xDB" );
+        mvwchgat( m_editorWin->getWindow(), m_cursorY, m_cursorX, 1, A_REVERSE, 0, nullptr );
     }
-    m_overlayWin->draw();
+    m_editorWin->draw();
     return displayChanged;
 }
 
@@ -502,6 +499,11 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         {
             m_cursorY++;
             insertLineIntoEditor( m_cursorY );
+            if ( m_cursorY > m_height - 1 )
+            {
+                m_cursorY = m_height - 1;
+                m_currentLine++;
+            }
             m_cursorX      = 0;
             displayChanged = true;
             break;

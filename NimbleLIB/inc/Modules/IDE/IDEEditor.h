@@ -92,7 +92,6 @@ class IDEEditor : protected IDEFileHandler
     bool                       m_cursorDrawn;   //!< flag to indicate if the cursor has been drawn
     uint32_t                   m_frameCount;    //!< frame count for the IDEEditor
     std::unique_ptr<CursesWin> m_editorWin;     //!< editor window
-    std::unique_ptr<CursesWin> m_overlayWin;    //!< editor overlay window
     // private functions -------------------------------------------------------
     bool    checkCursorKeys( uint32_t key );
     bool    checkEditKeys( uint32_t key );
