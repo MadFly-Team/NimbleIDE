@@ -47,9 +47,13 @@ using namespace Nimble::Screen;
 // Defines
 //-----------------------------------------------------------------------------
 
-#define DELAYSIZE        1
-#define MAX_OPTIONS      7
-#define TITLECOLOR       57 /* color pair indices */
+#if ( __linux__ )
+#define DELAYSIZE ( 1000 )
+#else
+#define DELAYSIZE ( 1 )
+#endif
+#define MAX_OPTIONS      ( 7 )
+#define TITLECOLOR       ( 57 ) /* color pair indices */
 #define MAINMENUCOLOR    ( 2 | A_BOLD )
 #define MAINMENUREVCOLOR ( 3 | A_BOLD | A_REVERSE )
 #define SUBMENUCOLOR     ( 4 | A_BOLD )
