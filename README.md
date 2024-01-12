@@ -198,5 +198,5 @@ Run the tests:
 
 ```bash
     cd NimbleIDE
-    ./build/NimbleIDE/TestNimbleIDE/Debug/TestNimbleIDE.exe
+    ./build/NimbleIDE/TestNimbleLIB/Debug/TestNimbleLIB.exe
 ```
