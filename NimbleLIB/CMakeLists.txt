@@ -1,4 +1,7 @@
 project(NimbleLIB)
+# set C Make to use the C++20 Language version
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 20)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "inc/*.h" "src/*.c" "src/*.cpp" )
 

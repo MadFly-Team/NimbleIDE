@@ -37,7 +37,7 @@ namespace Nimble
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Basic Dialog, including Title, status and buttons
 ------------------------------------------------------------------------------*/
-class IDEDialog : public CursesWin, StatusCtrl
+class IDEDialog : public CursesWin, public StatusCtrl
 {
   public:
     // Eenums ------------------------------------------------------------------
