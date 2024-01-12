@@ -13,7 +13,9 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
+#include <iomanip>
 #include "../../../inc/Modules/IDE/IDEEditBox.h"
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -202,7 +204,9 @@ LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLine
         uint32_t nAmount = getHeight() - 2;
         for ( uint32_t i = 0; i < nAmount; i++ )
         {
-            std::string line = std::format( "{:5}", nLine + i );
+            std::stringstream strStream;
+            strStream << std::setw( 5 ) << std::setfill( ' ' ) << nLine + i;
+            std::string line = strStream.str();
             if ( nLine + i > nTotalLines )
             {
                 line = "     ";
