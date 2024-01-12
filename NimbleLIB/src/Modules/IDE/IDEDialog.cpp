@@ -64,7 +64,7 @@ IDEDialog::~IDEDialog()
 LibraryError IDEDialog::initDialog( int16_t x, int16_t y, int16_t width, int16_t height, int16_t ink, int16_t paper )
 {
     // initialise the window
-    LibraryError eError = CursesWin::init( x, y, width, height, ink, paper );
+    LibraryError eError = CursesWin::init( width, height, x, y, ink, paper );
     if ( eError != LibraryError::No_Error )
     {
         return eError;

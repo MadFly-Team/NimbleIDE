@@ -16,6 +16,7 @@ Notes:
 
 // #include <windows.h>
 #include <cstddef>
+#include <filesystem>
 #include <functional>
 #include <stdint.h>
 #include <iostream>
@@ -121,6 +122,15 @@ int                        old_option = -1, new_option = 0, ch;
 
 int main( int argc, char* argv[] )
 {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    std::cout << "Contents of current directory: " << currentPath << "\n";
+
+    for ( const auto& entry : std::filesystem::directory_iterator( currentPath ) )
+    {
+        std::cout << entry.path() << "\n";
+    }
+
     setlocale( LC_ALL, "" );
     initscr();
 
@@ -159,10 +169,9 @@ int main( int argc, char* argv[] )
         // test the dialog...
         IDEDialog   winDialog;
         std::string dialogString = "Test Dialog";
-        uint32_t    colour       = 0;
-        winDialog.initDialog( 50, 15, 15, 5, COLOR_BLACK, COLOR_WHITE );
+        winDialog.initDialog( 15, 5, 50, 15, COLOR_BLACK, COLOR_WHITE );
 
-        winDialog.colourWindow( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_MAGENTA ), true );
+        winDialog.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_YELLOW ), true );
         winDialog.print( 3, 4, "Test Dialog" );
         winDialog.print( 3, 5, "Press 'q' to continue" );
         winDialog.title( dialogString );
@@ -177,20 +186,34 @@ int main( int argc, char* argv[] )
         {
             key = getch();
             delay_output( DELAYSIZE );
-
-            if ( key == 'a' || key == 'A' )
-            {
-                winDialog.colourWindow( colour, true );
-                winDialog.drawDialog();
-                colour++;
-                if ( colour > 64 )
-                {
-                    colour = 0;
-                }
-            }
         }
     }
 
+    {
+        IDEFileDialog winFileDialog;
+        winFileDialog.initLoader( "./", "TEST.TXT", "Load a file to edit" );
+        uint32_t colour = COLOUR_INDEX( winFileDialog.getInkColour(), winFileDialog.getPaperColour() );
+        winFileDialog.colourWindow( colour, true );
+        winFileDialog.drawDialog();
+
+        winFileDialog.refresh();
+
+        uint32_t key = 0;
+        while ( key != 'q' )
+        {
+            key = getch();
+            delay_output( DELAYSIZE );
+        }
+    }
+    touchwin( stdscr );
+    touchwin( winTitle->getWindow() );
+    touchwin( winStatus->getWindow() );
+    wrefresh( stdscr );
+    wrefresh( winTitle->getWindow() );
+    wrefresh( winStatus->getWindow() );
+
+    winTitle->draw();
+    winStatus->draw();
     winEditor.displayEditor();
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 

@@ -27,6 +27,7 @@
 #include "Modules/IDE/IDEEditBox.h"               // IDEEditBox class
 #include "Modules/IDE/IDEEditor.h"                // IDEEditor class
 #include "Modules/IDE/IDEDialog.h"                // IDEDialog class
+#include "Modules/IDE/IDEFileDialog.h"            // IDEFileDialog class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h
