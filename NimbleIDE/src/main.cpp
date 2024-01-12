@@ -235,7 +235,9 @@ int main( int argc, char* argv[] )
         mvwchgat( winTitle->getWindow(), 1, COLS - 1 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ), nullptr );
         winTitle->draw();
         // display the number of lines and cursor position...
-        std::string linesString = std::format( "Lines: {:5d} Cursor: {},{}", winEditor.getTotalLines(), winEditor.getCursorX(), winEditor.getCursorY() );
+        std::stringstream strStream = std::stringstream();
+        strStream << "Lines: " << winEditor.getTotalLines() << " Cursor: " << winEditor.getCursorX() << "," << winEditor.getCursorY();
+        std::string linesString = strStream.str();
         linesString.resize( 34, ' ' );
         mvwprintw( winStatus->getWindow(), 1, COLS - 35, linesString.c_str() );
         mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
