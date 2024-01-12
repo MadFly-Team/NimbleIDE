@@ -16,6 +16,7 @@
 
 #include <cinttypes>
 #include <vector>
+#include <memory>
 
 extern "C"
 {

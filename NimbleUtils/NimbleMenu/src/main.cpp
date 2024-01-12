@@ -19,6 +19,7 @@ Notes:
 #include <windows.h>
 #include <tchar.h>
 #endif
+#include <memory>
 #include <stdio.h>
 #include <cstddef>
 #include <functional>

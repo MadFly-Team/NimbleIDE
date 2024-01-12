@@ -21,6 +21,7 @@ Notes:
 #include <stdint.h>
 #include <iostream>
 #include <sstream>
+#include <memory>
 #include <fstream>
 #include <vector>
 #include <string>
