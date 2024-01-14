@@ -69,9 +69,10 @@ class IDEEditor : protected IDEFileHandler
     uint32_t getTotalLines() const;
     uint32_t getCursorX() const;
     uint32_t getCursorY() const;
-
+    WINDOW*  getWindow() const;
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
+    LibraryError print( uint32_t x, uint32_t y, const std::string& text );
     // control functions -------------------------------------------------------
     bool processKeyViewOnly( uint32_t key );
     bool processKeyEdit( uint32_t key );

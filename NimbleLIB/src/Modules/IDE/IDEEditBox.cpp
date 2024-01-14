@@ -205,11 +205,11 @@ LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLine
         for ( uint32_t i = 0; i < nAmount; i++ )
         {
             std::stringstream strStream;
-            strStream << std::setw( 5 ) << std::setfill( ' ' ) << nLine + i;
+            strStream << std::setw( 6 ) << std::setfill( ' ' ) << nLine + i;
             std::string line = strStream.str();
             if ( nLine + i > nTotalLines )
             {
-                line = "     ";
+                line = "      ";
             }
             print( 1, i + 1, line );
         }

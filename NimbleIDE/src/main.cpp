@@ -121,6 +121,19 @@ int                        old_option = -1, new_option = 0, ch;
 // External Functionality
 //-----------------------------------------------------------------------------
 
+void UpdateIDEScreen()
+{
+    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
+    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1 " );
+    winTitle->drawVerticalLine( COLS - 23, 1, 1 );
+    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
+    winStatus->print( 2, 0, "Status Bar : Press 'q' to quit " );
+    winStatus->drawVerticalLine( COLS - 37, 1, 1 );
+    winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
+    winProject->print( 2, 0, "Project Window " );
+    winProject->drawHorizontalLine( 1, 3, 30 - 2 );
+}
+
 int main( int argc, char* argv[] )
 {
     std::filesystem::path currentPath = std::filesystem::current_path();
@@ -145,27 +158,20 @@ int main( int argc, char* argv[] )
     winStatus  = std::make_unique<CursesWin>( COLS, 3, 0, LINES - 3, COLOR_BLACK, COLOR_WHITE );
     winTitle   = std::make_unique<CursesWin>( COLS, 3, 0, 0, COLOR_WHITE, COLOR_YELLOW );
     winProject = std::make_unique<CursesWin>( 30, LINES - 6, COLS - 30, 3, COLOR_WHITE, COLOR_YELLOW );
-    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winTitle->drawVerticalLine( COLS - 22, 1, 1 );
-    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winStatus->print( 2, 0, "Status Bar : Press 'q' to quit" );
-    winStatus->drawVerticalLine( COLS - 37, 1, 1 );
-    winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winProject->print( 2, 0, "Project Window" );
-    winProject->drawHorizontalLine( 1, 3, 30 - 2 );
+
+    UpdateIDEScreen();
 
     IDEEditBox winLineNumbers;
     IDEEditor  winEditor;
-    winEditor.init( COLS - 38, LINES - 8, 8, 4 );
+    winEditor.init( COLS - 39, LINES - 7, 9, 3 );
     std::string filename = "test.txt";
     winEditor.start( filename );
-
-    winLineNumbers.initBox( 0, 3, 7, LINES - 6, COLOR_WHITE, COLOR_BLACK );
-    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winLineNumbers.setLineInkColour( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ) );
+    winTitle->print( 2, 1, "EDITING MODE: ./Test.txt " );
+    winLineNumbers.initBox( 0, 3, 9, LINES - 6, IDE_COL_FG_BLACK, IDE_COL_BG_WHITE );
+    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
+    if ( false )
     {
         // test the dialog...
         IDEDialog   winDialog;
@@ -190,6 +196,7 @@ int main( int argc, char* argv[] )
         }
     }
 
+    if ( false )
     {
         IDEFileDialog winFileDialog;
         winFileDialog.initLoader( "./", "TEST.TXT", "Load a file to edit" );
@@ -205,17 +212,14 @@ int main( int argc, char* argv[] )
             key = getch();
             delay_output( DELAYSIZE );
         }
+        UpdateIDEScreen();
+        refresh();
     }
-    touchwin( stdscr );
-    touchwin( winTitle->getWindow() );
-    touchwin( winStatus->getWindow() );
-    wrefresh( stdscr );
-    wrefresh( winTitle->getWindow() );
-    wrefresh( winStatus->getWindow() );
 
     winTitle->draw();
     winStatus->draw();
     winEditor.displayEditor();
+    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     uint32_t key = 0;
@@ -229,19 +233,21 @@ int main( int argc, char* argv[] )
             winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
         }
         winEditor.processDisplay();
+
         // display the time and date...
         std::string streamString = return_current_time_and_date();
-        winTitle->print( COLS - 1 - streamString.length(), 1, streamString );
-        mvwchgat( winTitle->getWindow(), 1, COLS - 1 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ), nullptr );
+        winTitle->print( COLS - 2 - streamString.length(), 1, streamString );
+        mvwchgat( winTitle->getWindow(), 1, COLS - 2 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_WHITE ), nullptr );
         winTitle->draw();
+
         // display the number of lines and cursor position...
         std::stringstream strStream = std::stringstream();
         strStream << "Lines: " << winEditor.getTotalLines() << " Cursor: " << winEditor.getCursorX() << "," << winEditor.getCursorY();
         std::string linesString = strStream.str();
         linesString.resize( 34, ' ' );
         mvwprintw( winStatus->getWindow(), 1, COLS - 35, linesString.c_str() );
-        mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
-        mvwchgat( winStatus->getWindow(), 1, COLS - 14, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
+        mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
+        mvwchgat( winStatus->getWindow(), 1, COLS - 15, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
         winStatus->draw();
     }
     curs_set( 1 );
