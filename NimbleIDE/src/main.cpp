@@ -85,28 +85,9 @@ typedef struct
 
 std::string return_current_time_and_date();
 
-void        display_menu( int old_option, int new_option );
-void        colorbox( WINDOW* win, chtype color, int hasbox );
-void        setcolor( WINDOW* win, chtype color );
-
-// menu functions
-void TerminateProgram();
-void LoadProgramAndDisplay();
-void ResetScreenToMenu();
-
 //-----------------------------------------------------------------------------
 // Variables
 //-----------------------------------------------------------------------------
-
-MENUCOMMAND menuItems[ MAX_OPTIONS ] = {
-    {"New Project",      LoadProgramAndDisplay},
-    { "Open Project",    nullptr              },
-    { "Save Project",    nullptr              },
-    { "Save Project As", nullptr              },
-    { "Build Project",   nullptr              },
-    { "Run Project",     nullptr              },
-    { "Exit",            TerminateProgram     }
-};
 
 std::unique_ptr<CursesWin> winTitle;
 std::unique_ptr<CursesWin> winStatus;
@@ -115,8 +96,6 @@ std::unique_ptr<CursesWin> winProject;
 WINDOW*                    winMenu;
 WINDOW*                    winBody;
 
-int                        old_option = -1, new_option = 0, ch;
-
 //-----------------------------------------------------------------------------
 // External Functionality
 //-----------------------------------------------------------------------------
@@ -124,13 +103,13 @@ int                        old_option = -1, new_option = 0, ch;
 void UpdateIDEScreen()
 {
     winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
-    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1 " );
-    winTitle->drawVerticalLine( COLS - 23, 1, 1 );
+    winTitle->print( 2, 0, " Nimble IDE : Version 0.0.1 " );
+    winTitle->drawVerticalLine( COLS - 23, 1, 2 );
     winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
-    winStatus->print( 2, 0, "Status Bar : Press 'q' to quit " );
-    winStatus->drawVerticalLine( COLS - 37, 1, 1 );
+    winStatus->print( 2, 0, " Status Bar : Press 'q' to quit " );
+    winStatus->drawVerticalLine( COLS - 37, 1, 2 );
     winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
-    winProject->print( 2, 0, "Project Window " );
+    winProject->print( 2, 0, " Project Window " );
     winProject->drawHorizontalLine( 1, 3, 30 - 2 );
 }
 
@@ -152,22 +131,23 @@ int main( int argc, char* argv[] )
     nodelay( stdscr, TRUE );
     noecho();
     curs_set( 0 );
+    mousemask( ALL_MOUSE_EVENTS, nullptr );
 
     CursesColour::getInstance().init();
 
-    winStatus  = std::make_unique<CursesWin>( COLS, 3, 0, LINES - 3, COLOR_BLACK, COLOR_WHITE );
-    winTitle   = std::make_unique<CursesWin>( COLS, 3, 0, 0, COLOR_WHITE, COLOR_YELLOW );
-    winProject = std::make_unique<CursesWin>( 30, LINES - 6, COLS - 30, 3, COLOR_WHITE, COLOR_YELLOW );
+    winStatus  = std::make_unique<CursesWin>( COLS, 4, 0, LINES - 4, COLOR_BLACK, COLOR_WHITE );
+    winTitle   = std::make_unique<CursesWin>( COLS, 4, 0, 0, COLOR_WHITE, COLOR_YELLOW );
+    winProject = std::make_unique<CursesWin>( 30, LINES - 8, COLS - 30, 4, COLOR_WHITE, COLOR_YELLOW );
 
     UpdateIDEScreen();
 
     IDEEditBox winLineNumbers;
     IDEEditor  winEditor;
-    winEditor.init( COLS - 39, LINES - 7, 9, 3 );
+    winEditor.init( COLS - 39, LINES - 9, 9, 4 );
     std::string filename = "test.txt";
     winEditor.start( filename );
     winTitle->print( 2, 1, "EDITING MODE: ./Test.txt " );
-    winLineNumbers.initBox( 0, 3, 9, LINES - 6, IDE_COL_FG_BLACK, IDE_COL_BG_WHITE );
+    winLineNumbers.initBox( 0, 4, 9, LINES - 8, IDE_COL_FG_BLACK, IDE_COL_BG_WHITE );
     winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
@@ -223,11 +203,32 @@ int main( int argc, char* argv[] )
     winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     uint32_t key = 0;
+    MEVENT   event;
+
     while ( key != 'q' )
     {
-        key = getch();
+        bool forceUpdate = false;
+        key              = getch();
         delay_output( DELAYSIZE );
-        if ( winEditor.processKeyEdit( key ) == true )
+        if ( nc_getmouse( &event ) == OK )
+        {
+            mvwprintw( winStatus->getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", event.x, event.y );
+            if ( event.bstate & BUTTON1_CLICKED )
+            {
+                winEditor.setCursorPosition( event.x, event.y );
+            }
+            if ( event.bstate & BUTTON4_PRESSED )
+            {
+                winEditor.scrollEditor( true );
+                forceUpdate = true;
+            }
+            if ( event.bstate & BUTTON5_PRESSED )
+            {
+                winEditor.scrollEditor( false );
+                forceUpdate = true;
+            }
+        }
+        if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
         {
             winEditor.displayEditor();
             winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
@@ -290,162 +291,6 @@ int main( int argc, char* argv[] )
     // Return success
     return EXIT_SUCCESS;
 }
-
-//-----------------------------------------------------------------------------
-// Internal Functionality
-//-----------------------------------------------------------------------------
-void setcolor( WINDOW* win, chtype color )
-{
-    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
-
-    attr &= ~A_REVERSE; /* ignore reverse, use colors instead! */
-    wattrset( win, COLOR_PAIR( color & A_CHARTEXT ) | attr );
-}
-
-void colorbox( WINDOW* win, chtype color, int hasbox )
-{
-    int    maxy;
-    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
-
-    setcolor( win, color );
-
-    wbkgd( win, COLOR_PAIR( color & A_CHARTEXT ) | ( attr & ~A_REVERSE ) );
-
-    werase( win );
-
-    maxy = getmaxy( win );
-    if ( hasbox && ( maxy > 2 ) )
-        box( win, 0, 0 );
-
-    touchwin( win );
-    wrefresh( win );
-}
-
-void display_menu( int old_option, int new_option )
-{
-    int lmarg = ( COLS - 14 ) / 2, tmarg = ( LINES - ( MAX_OPTIONS + 2 ) ) / 2;
-
-    if ( old_option == -1 )
-    {
-        int i;
-
-        attrset( A_BOLD );
-        attrset( COLOR_PAIR( 6 ) );
-        mvaddstr( tmarg - 3, lmarg - 5, "PDCurses Test Program" );
-        attrset( A_NORMAL );
-        attrset( COLOR_PAIR( 8 ) );
-
-        for ( i = 0; i < MAX_OPTIONS; i++ ) mvaddstr( tmarg + i, lmarg, menuItems[ i ].text.c_str() );
-    }
-    else
-        mvaddstr( tmarg + old_option, lmarg, menuItems[ old_option ].text.c_str() );
-
-    attrset( A_REVERSE );
-    mvaddstr( tmarg + new_option, lmarg, menuItems[ new_option ].text.c_str() );
-    attrset( A_NORMAL );
-    attrset( COLOR_PAIR( 7 ) );
-    mvaddstr( tmarg + MAX_OPTIONS + 2, lmarg - 23, "Use Up and Down Arrows to select - Enter to run - Q to quit" );
-    attrset( COLOR_PAIR( 8 ) );
-    refresh();
-}
-
-//-----------------------------------------------------------------------------
-// Menu Functions
-//-----------------------------------------------------------------------------
-
-void TerminateProgram()
-{
-    endwin();
-    exit( EXIT_SUCCESS );
-}
-
-void LoadProgramAndDisplay()
-{
-    // Open a file for reading
-    std::ifstream inputFile( "story.txt" );
-
-    // Check if the file is opened successfully
-    if ( !inputFile.is_open() )
-    {
-        std::cerr << "Unable to open the file." << std::endl;
-        return;
-    }
-
-    // Read the contents of the file into a vector of strings
-    std::vector<std::string> lines;
-    std::string              line;
-    while ( std::getline( inputFile, line ) )
-    {
-        lines.push_back( line );
-    }
-
-    // Close the file
-    inputFile.close();
-
-    // display a full screen of the example text
-    int nFileLine = 0;
-    int nLine     = 0;
-
-    attrset( COLOR_PAIR( 7 ) );
-    clear();
-    nLine = 0;
-    while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
-    {
-        mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
-        nLine++;
-    }
-
-    while ( true )
-    {
-        int ch = wgetch( stdscr );
-
-        if ( ch != ERR )
-        {
-
-            if ( ch == 'q' || ch == 'Q' )
-            {
-                break;
-            }
-
-            if ( ch == KEY_UP )
-            {
-                nFileLine = ( nFileLine == 0 ) ? 0 : nFileLine - 1;
-            }
-            else if ( ch == KEY_DOWN )
-            {
-                nFileLine = ( nFileLine == lines.size() - 1 ) ? lines.size() - 1 : nFileLine + 1;
-            }
-
-            clear();
-            nLine = 0;
-            while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
-            {
-                mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
-                nLine++;
-            }
-        }
-        // napms( DELAYSIZE );
-        refresh();
-    }
-
-    ResetScreenToMenu();
-}
-
-void ResetScreenToMenu()
-{
-    clear();
-    old_option = -1;
-    new_option = 0;
-    winTitle->colourWindow( TITLECOLOR, false );
-    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winStatus->colourWindow( STATUSCOLOR, 0 );
-    winStatus->print( 2, 0, "Status Bar : " );
-    display_menu( old_option, new_option );
-    refresh();
-
-    attrset( COLOR_PAIR( 8 ) );
-}
-
 /**----------------------------------------------------------------------------
     @ingroup    NimbleIDE Nimble IDE
     @brief      Function to return the current time and date as a string

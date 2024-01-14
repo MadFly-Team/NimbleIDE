@@ -263,6 +263,46 @@ WINDOW* IDEEditor::getWindow() const
     return m_editorWin->getWindow();
 }
 
+// setters --------------------------------------------------------------------
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      set the cursor position from x,y
+    @param      x     x position
+    @param      y     y position
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::setCursorPosition( uint32_t x, uint32_t y )
+{
+    if ( x > m_xStart && x < m_xStart + m_width && y > m_yStart && y < m_yStart + m_height )
+    {
+        m_cursorX = x - m_xStart - 1;
+        m_cursorY = y - m_yStart - 1;
+
+        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+            placeCursorinLine( m_currentLine );
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Scrool the winodow up or down one line
+    @param      upIfTrue     true if up, false if down
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::scrollEditor( bool upIfTrue )
+{
+    m_currentLine += ( upIfTrue ) ? -1 : 1;
+
+    if ( m_currentLine < 0 )
+        m_currentLine = 0;
+    if ( m_currentLine > m_editlines.size() )
+        m_currentLine = m_editlines.size();
+
+    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+        placeCursorinLine( m_currentLine );
+}
+
 // control functions ----------------------------------------------------------
 
 /**-----------------------------------------------------------------------------

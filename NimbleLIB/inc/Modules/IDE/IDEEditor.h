@@ -69,7 +69,11 @@ class IDEEditor : protected IDEFileHandler
     uint32_t getTotalLines() const;
     uint32_t getCursorX() const;
     uint32_t getCursorY() const;
+
     WINDOW*  getWindow() const;
+    // setters -----------------------------------------------------------------
+    void setCursorPosition( uint32_t x, uint32_t y );
+    void scrollEditor( bool upIfTrue );
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
     LibraryError print( uint32_t x, uint32_t y, const std::string& text );
