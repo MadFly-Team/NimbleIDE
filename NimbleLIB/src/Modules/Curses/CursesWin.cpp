@@ -253,6 +253,11 @@ LibraryError CursesWin::draw()
 {
     LibraryError error = LibraryError::No_Error;
 
+    // update the mouse
+    processMouse();
+    drawMouse( win );
+
+    // update the window.
     touchwin( win );
     wrefresh( win );
 

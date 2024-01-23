@@ -70,8 +70,6 @@ class IDEEditor : protected IDEFileHandler, public CursesMouse
     uint32_t getTotalLines() const;
     uint32_t getCursorX() const;
     uint32_t getCursorY() const;
-    uint32_t getMouseX() const;
-    uint32_t getMouseY() const;
     WINDOW*  getWindow() const;
     // setters -----------------------------------------------------------------
     void setCursorPosition( uint32_t x, uint32_t y );

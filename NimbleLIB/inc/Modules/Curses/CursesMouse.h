@@ -62,6 +62,9 @@ class CursesMouse
     uint32_t getMouseY() const;
 
   private:
+    // private constants ------------------------------------------------------
+    const uint32_t LEFT_BORDER      = 1;
+    const uint32_t WIDTH_ADJ_BORDER = 2;
     // Private variables ------------------------------------------------------
     MEVENT   mouseEvent;       //!< Mouse event structure
     bool     mouseEnabled;     //!< Mouse enabled flag

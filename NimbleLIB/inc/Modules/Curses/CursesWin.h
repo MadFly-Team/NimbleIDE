@@ -22,6 +22,7 @@ extern "C"
 }
 
 #include "../ErrorHandling/ErrorHandler.h"
+#include "CursesMouse.h"
 
 //-----------------------------------------------------------------------------
 // Define constants
@@ -40,7 +41,7 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-class CursesWin
+class CursesWin : public CursesMouse
 {
   public:
     // Constructors and destructors ---------------------------------------------

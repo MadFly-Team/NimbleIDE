@@ -264,26 +264,6 @@ WINDOW* IDEEditor::getWindow() const
     return m_editorWin->getWindow();
 }
 
-/**-----------------------------------------------------------------------------
-    @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      returns the mouse x position
-    @return     uint32_t mouse x position
-------------------------------------------------------------------------------*/
-uint32_t IDEEditor::getMouseX() const
-{
-    return m_xStart;
-}
-
-/**-----------------------------------------------------------------------------
-    @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      returns the mouse y position
-    @return     uint32_t mouse y position
-------------------------------------------------------------------------------*/
-uint32_t IDEEditor::getMouseY() const
-{
-    return m_yStart;
-}
-
 // setters --------------------------------------------------------------------
 
 /**-----------------------------------------------------------------------------

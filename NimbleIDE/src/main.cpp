@@ -104,13 +104,10 @@ void UpdateIDEScreen()
 {
     winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winTitle->print( 2, 0, " Nimble IDE : Version 0.0.1 " );
-    winTitle->drawVerticalLine( COLS - 23, 1, 2 );
     winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winStatus->print( 2, 0, " Status Bar : Press 'q' to quit " );
-    winStatus->drawVerticalLine( COLS - 37, 1, 2 );
     winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
     winProject->print( 2, 0, " Project Window " );
-    winProject->drawHorizontalLine( 1, 3, 30 - 2 );
 }
 
 int main( int argc, char* argv[] )
@@ -138,6 +135,9 @@ int main( int argc, char* argv[] )
     winStatus  = std::make_unique<CursesWin>( COLS, 4, 0, LINES - 4, COLOR_BLACK, COLOR_WHITE );
     winTitle   = std::make_unique<CursesWin>( COLS, 4, 0, 0, COLOR_WHITE, COLOR_YELLOW );
     winProject = std::make_unique<CursesWin>( 30, LINES - 8, COLS - 30, 4, COLOR_WHITE, COLOR_YELLOW );
+    winStatus->enableMouse();
+    winTitle->enableMouse();
+    winProject->enableMouse();
 
     UpdateIDEScreen();
 
@@ -210,7 +210,6 @@ int main( int argc, char* argv[] )
         bool forceUpdate = false;
         key              = getch();
         delay_output( DELAYSIZE );
-        mvwprintw( winStatus->getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", winEditor.getMouseX(), winEditor.getMouseY() );
         /*if ( event.bstate & BUTTON1_CLICKED )
         {
             winEditor.setCursorPosition( event.x, event.y );
@@ -234,6 +233,7 @@ int main( int argc, char* argv[] )
         winEditor.processDisplay();
 
         // display the time and date...
+
         std::string streamString = return_current_time_and_date();
         winTitle->print( COLS - 2 - streamString.length(), 1, streamString );
         mvwchgat( winTitle->getWindow(), 1, COLS - 2 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_WHITE ), nullptr );
@@ -247,7 +247,11 @@ int main( int argc, char* argv[] )
         mvwprintw( winStatus->getWindow(), 1, COLS - 35, linesString.c_str() );
         mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
         mvwchgat( winStatus->getWindow(), 1, COLS - 15, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
+        mvwprintw( winStatus->getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", winEditor.getMouseX(), winEditor.getMouseY() );
         winStatus->draw();
+
+        // display the project window...
+        winProject->draw();
     }
     curs_set( 1 );
 

@@ -101,14 +101,14 @@ void CursesMouse::drawMouse( WINDOW* win )
     uint32_t maxY = win->_begy + win->_maxy;
     if ( mouseOldX != mouseX || mouseOldY != mouseY )
     {
-        if ( mouseOldX >= xAdj + 2 && mouseOldX <= maxX - 2 && mouseOldY >= yAdj + 2 && mouseOldY <= maxY - 2 )
+        if ( mouseOldX >= xAdj + LEFT_BORDER && mouseOldX <= maxX - WIDTH_ADJ_BORDER && mouseOldY >= yAdj + LEFT_BORDER && mouseOldY <= maxY - WIDTH_ADJ_BORDER )
         {
             mvwchgat( win, mouseOldY - yAdj, mouseOldX - xAdj, 1, A_REVERSE, 0, nullptr );
         }
         mouseOldX = mouseX;
         mouseOldY = mouseY;
     }
-    if ( mouseX >= xAdj + 2 && mouseX <= maxX - 2 && mouseY >= yAdj + 2 && mouseY <= maxY - 2 )
+    if ( mouseX >= xAdj + LEFT_BORDER && mouseX <= maxX - WIDTH_ADJ_BORDER && mouseY >= yAdj + LEFT_BORDER && mouseY <= maxY - WIDTH_ADJ_BORDER )
     {
         mvwchgat( win, mouseY - yAdj, mouseX - xAdj, 1, A_REVERSE, 5, nullptr );
     }
