@@ -31,6 +31,8 @@ Defined by this header:
 
 **man-end****************************************************************/
 
+#define P
+
 #define PDCURSES      1
 #define PDC_BUILD     3907
 #define PDC_VER_MAJOR 3
@@ -87,7 +89,7 @@ extern "C"
 #undef OK
 #define OK      0
 
-#define PDC_RGB 1 /* RGB color model instead of BGR (default) */
+#define PDC_RGB 0 /* RGB color model instead of BGR (default) */
 
 #if !defined( PDC_PP98 ) && !defined( __bool_true_false_are_defined )
     typedef unsigned char bool;
@@ -1440,7 +1442,6 @@ typedef unsigned long mmask_t;
 #endif
 }
 #endif
-
 //---------------------------------------------------------------------------
 
 #endif // Check for PDCurses or non widows system

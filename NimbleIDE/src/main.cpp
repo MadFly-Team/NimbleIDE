@@ -210,29 +210,27 @@ int main( int argc, char* argv[] )
         bool forceUpdate = false;
         key              = getch();
         delay_output( DELAYSIZE );
-        if ( nc_getmouse( &event ) == OK )
+        mvwprintw( winStatus->getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", winEditor.getMouseX(), winEditor.getMouseY() );
+        /*if ( event.bstate & BUTTON1_CLICKED )
         {
-            mvwprintw( winStatus->getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", event.x, event.y );
-            if ( event.bstate & BUTTON1_CLICKED )
-            {
-                winEditor.setCursorPosition( event.x, event.y );
-            }
-            if ( event.bstate & BUTTON4_PRESSED )
-            {
-                winEditor.scrollEditor( true );
-                forceUpdate = true;
-            }
-            if ( event.bstate & BUTTON5_PRESSED )
-            {
-                winEditor.scrollEditor( false );
-                forceUpdate = true;
-            }
+            winEditor.setCursorPosition( event.x, event.y );
         }
+        if ( event.bstate & BUTTON4_PRESSED )
+        {
+            winEditor.scrollEditor( true );
+            forceUpdate = true;
+        }
+        if ( event.bstate & BUTTON5_PRESSED )
+        {
+            winEditor.scrollEditor( false );
+            forceUpdate = true;
+        }*/
         if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
         {
             winEditor.displayEditor();
             winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
         }
+        winEditor.processMouse();
         winEditor.processDisplay();
 
         // display the time and date...
