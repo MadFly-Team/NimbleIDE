@@ -80,6 +80,8 @@ class CursesWin : public CursesMouse
     LibraryError displayHighlight( uint32_t x, uint32_t y, uint32_t markStart, uint32_t markEnd );
     LibraryError colourWindow( uint32_t colour, bool hasBox );
     LibraryError eraseChar( uint32_t x, uint32_t y );
+    LibraryError hideWindow();
+    LibraryError showWindow();
     // Helper
   private:
     // Constants ----------------------------------------------------------------

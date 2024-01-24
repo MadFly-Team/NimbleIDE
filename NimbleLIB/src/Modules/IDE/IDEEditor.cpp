@@ -203,6 +203,18 @@ LibraryError IDEEditor::print( uint32_t x, uint32_t y, const std::string& text )
     return error;
 }
 
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      redraws the background and also the border
+    @return     void
+-----------------------------------------------------------------------------*/
+void IDEEditor::redrawBackground()
+{
+    m_editorWin->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
+    displayEditor();
+    m_editorWin->draw();
+}
+
 // getters --------------------------------------------------------------------
 
 /**-----------------------------------------------------------------------------
@@ -441,6 +453,31 @@ bool IDEEditor::processDisplay()
     drawMouse( m_editorWin->getWindow() );
     m_editorWin->draw();
     return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      show the curses window
+    @return     LibraryError    error code
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditor::showWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    m_editorWin->showWindow();
+    redrawBackground();
+    return error;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      hide the curses window
+    @return     LibraryError    error code
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditor::hideWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    m_editorWin->hideWindow();
+    return error;
 }
 
 // private functions ----------------------------------------------------------

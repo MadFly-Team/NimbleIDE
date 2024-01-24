@@ -220,6 +220,17 @@ LibraryError IDEEditBox::displayLineNumbers( uint32_t nLine, uint32_t nTotalLine
     return error;
 }
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      special function - redraws the background
+    @return     void
+-----------------------------------------------------------------------------*/
+void IDEEditBox::redrawBackground()
+{
+    colourWindow( CursesWin::getPaperColour(), true );
+    draw();
+}
+
 //-----------------------------------------------------------------------------
 
 } // namespace Nimble

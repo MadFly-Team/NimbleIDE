@@ -59,6 +59,14 @@ class EditorStatusWin : public IDEWindow
     void display();
 
   private:
+    // Private constants ------------------------------------------------------
+    const uint32_t STATUS_EDITORLINE         = 1;                         //!< line number for editor status
+    const uint32_t STATUS_EDITORMOUSE        = 2;                         //!< mouse status for editor status
+    const uint32_t STATUS_EDITORXOFFSET      = 35;                        //!< x offset for editor status
+    const uint32_t STATUS_EDITORCOLOFFSET1   = STATUS_EDITORXOFFSET - 7;  //!< colour offset for editor lines
+    const uint32_t STATUS_EDITORCOLOFFSET1SZ = 5;                         //!< colour offset size for editor lines
+    const uint32_t STATUS_EDITORCOLOFFSET2   = STATUS_EDITORXOFFSET - 20; //!< colour offset for editor cursor position
+    const uint32_t STATUS_EDITORCOLOFFSET2SZ = 13;                        //!< colour offset size for editor cursor position
     // Private functions ------------------------------------------------------
     // Private members --------------------------------------------------------
     IDEEditor* m_editor = nullptr; //!< refernece to the editor/IDE

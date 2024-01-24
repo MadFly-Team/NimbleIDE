@@ -53,18 +53,25 @@ EditorStatusWin::~EditorStatusWin()
 
 // display --------------------------------------------------------------------
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Display the status window
+----------------------------------------------------------------------------*/
 void EditorStatusWin::display()
 {
     if ( m_editor != nullptr )
     {
+        // display the line position and total lines, also the mosue position
         std::stringstream strStream = std::stringstream();
         strStream << "Lines: " << m_editor->getTotalLines() << " Cursor: " << m_editor->getCursorX() << "," << m_editor->getCursorY();
         std::string linesString = strStream.str();
-        linesString.resize( 34, ' ' );
-        mvwprintw( getWindow(), 1, COLS - 35, linesString.c_str() );
-        mvwchgat( getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
-        mvwchgat( getWindow(), 1, COLS - 15, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
-        mvwprintw( getWindow(), 2, COLS - 35, "Mouse: %d, %d    ", m_editor->getMouseX(), m_editor->getMouseY() );
+        linesString.resize( STATUS_EDITORXOFFSET - 1, ' ' );
+        mvwprintw( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORXOFFSET, linesString.c_str() );
+        mvwchgat( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORCOLOFFSET1, STATUS_EDITORCOLOFFSET1SZ, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
+        mvwchgat( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORCOLOFFSET2, STATUS_EDITORCOLOFFSET2SZ, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
+        mvwprintw( getWindow(), STATUS_EDITORMOUSE, COLS - STATUS_EDITORXOFFSET, "Mouse: %d, %d    ", m_editor->getMouseX(), m_editor->getMouseY() );
+
+        // display the window
         draw();
     }
 }

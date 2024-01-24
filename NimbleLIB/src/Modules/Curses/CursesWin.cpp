@@ -326,6 +326,30 @@ LibraryError CursesWin::refresh()
     return error;
 }
 
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Hides the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::hideWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    mvwin( win, -1, -1 );
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Shows the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::showWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    mvwin( win, winY, winX );
+    return error;
+}
+
 // Getters ---------------------------------------------------------------------
 
 /**---------------------------------------------------------------------------

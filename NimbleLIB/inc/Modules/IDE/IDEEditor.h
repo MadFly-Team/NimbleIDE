@@ -77,6 +77,9 @@ class IDEEditor : protected IDEFileHandler, public CursesMouse
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
     LibraryError print( uint32_t x, uint32_t y, const std::string& text );
+    LibraryError showWindow();
+    LibraryError hideWindow();
+    void         redrawBackground();
     // control functions -------------------------------------------------------
     bool processKeyViewOnly( uint32_t key );
     bool processKeyEdit( uint32_t key );
