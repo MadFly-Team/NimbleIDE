@@ -45,6 +45,7 @@ class IDEEditBox : public IDEEditline, public CursesWin
     LibraryError process( uint32_t key );
     // special functions --------------------------------------------------------
     LibraryError displayLineNumbers( uint32_t nLine, uint32_t nTotalLines );
+    void         redrawBackground();
 
   private:
     // private vairables --------------------------------------------------------
@@ -59,4 +60,3 @@ class IDEEditBox : public IDEEditline, public CursesWin
 //-----------------------------------------------------------------------------
 // End of file: IDEEditBox.h
 // ----------------------------------------------------------------------------
-

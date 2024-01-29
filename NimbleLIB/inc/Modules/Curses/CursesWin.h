@@ -22,6 +22,7 @@ extern "C"
 }
 
 #include "../ErrorHandling/ErrorHandler.h"
+#include "CursesMouse.h"
 
 //-----------------------------------------------------------------------------
 // Define constants
@@ -40,7 +41,7 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-class CursesWin
+class CursesWin : public CursesMouse
 {
   public:
     // Constructors and destructors ---------------------------------------------
@@ -79,6 +80,8 @@ class CursesWin
     LibraryError displayHighlight( uint32_t x, uint32_t y, uint32_t markStart, uint32_t markEnd );
     LibraryError colourWindow( uint32_t colour, bool hasBox );
     LibraryError eraseChar( uint32_t x, uint32_t y );
+    LibraryError hideWindow();
+    LibraryError showWindow();
     // Helper
   private:
     // Constants ----------------------------------------------------------------

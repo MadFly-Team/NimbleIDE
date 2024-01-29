@@ -80,92 +80,52 @@ typedef struct
 } MENUCOMMAND, *PMENUCOMMAND;
 
 //-----------------------------------------------------------------------------
-// Forward declarations
-//-----------------------------------------------------------------------------
-
-std::string return_current_time_and_date();
-
-void        display_menu( int old_option, int new_option );
-void        colorbox( WINDOW* win, chtype color, int hasbox );
-void        setcolor( WINDOW* win, chtype color );
-
-// menu functions
-void TerminateProgram();
-void LoadProgramAndDisplay();
-void ResetScreenToMenu();
-
-//-----------------------------------------------------------------------------
-// Variables
-//-----------------------------------------------------------------------------
-
-MENUCOMMAND menuItems[ MAX_OPTIONS ] = {
-    {"New Project",      LoadProgramAndDisplay},
-    { "Open Project",    nullptr              },
-    { "Save Project",    nullptr              },
-    { "Save Project As", nullptr              },
-    { "Build Project",   nullptr              },
-    { "Run Project",     nullptr              },
-    { "Exit",            TerminateProgram     }
-};
-
-std::unique_ptr<CursesWin> winTitle;
-std::unique_ptr<CursesWin> winStatus;
-std::unique_ptr<CursesWin> winProject;
-
-WINDOW*                    winMenu;
-WINDOW*                    winBody;
-
-int                        old_option = -1, new_option = 0, ch;
-
-//-----------------------------------------------------------------------------
 // External Functionality
 //-----------------------------------------------------------------------------
 
 int main( int argc, char* argv[] )
 {
+#if 0
     std::filesystem::path currentPath = std::filesystem::current_path();
-
     std::cout << "Contents of current directory: " << currentPath << "\n";
-
     for ( const auto& entry : std::filesystem::directory_iterator( currentPath ) )
     {
         std::cout << entry.path() << "\n";
     }
-
+#endif
+    // initialise the Curses screen and control
     setlocale( LC_ALL, "" );
     initscr();
-
     keypad( stdscr, TRUE );
     nodelay( stdscr, TRUE );
     noecho();
     curs_set( 0 );
+    mousemask( ALL_MOUSE_EVENTS, nullptr );
 
+    // initialise the colours
     CursesColour::getInstance().init();
 
-    winStatus  = std::make_unique<CursesWin>( COLS, 3, 0, LINES - 3, COLOR_BLACK, COLOR_WHITE );
-    winTitle   = std::make_unique<CursesWin>( COLS, 3, 0, 0, COLOR_WHITE, COLOR_YELLOW );
-    winProject = std::make_unique<CursesWin>( 30, LINES - 6, COLS - 30, 3, COLOR_WHITE, COLOR_YELLOW );
-    winTitle->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winTitle->drawVerticalLine( COLS - 22, 1, 1 );
-    winStatus->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winStatus->print( 2, 0, "Status Bar : Press 'q' to quit" );
-    winStatus->drawVerticalLine( COLS - 37, 1, 1 );
-    winProject->colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winProject->print( 2, 0, "Project Window" );
-    winProject->drawHorizontalLine( 1, 3, 30 - 2 );
+    // main editor windows
+    IDEEditor            winEditor;
+    EditorStatusWin      winEditorStatus;
+    EditorProjectWin     winEditorProject;
+    EditorTitleWin       winEditorTitle;
+    EditorHexWin         winEditorHex;
+    EditorLineNumbersWin winLineNumbers;
 
-    IDEEditBox winLineNumbers;
-    IDEEditor  winEditor;
-    winEditor.init( COLS - 38, LINES - 8, 8, 4 );
+    // setup the editor
+    winEditor.init( COLS - 39, LINES - 9, 9, 4 );
     std::string filename = "test.txt";
     winEditor.start( filename );
 
-    winLineNumbers.initBox( 0, 3, 7, LINES - 6, COLOR_WHITE, COLOR_BLACK );
-    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLUE ), true );
-    winLineNumbers.setLineInkColour( COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ) );
-    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+    // setup the other windoews
+    winEditorStatus.setIDEEditor( &winEditor );
+    winEditorProject.setIDEEditor( &winEditor );
+    winEditorTitle.setIDEEditor( &winEditor );
+    winEditorHex.setIDEEditor( &winEditor );
+    winLineNumbers.setIDEEditor( &winEditor );
 
+    if ( false )
     {
         // test the dialog...
         IDEDialog   winDialog;
@@ -190,6 +150,7 @@ int main( int argc, char* argv[] )
         }
     }
 
+    if ( false )
     {
         IDEFileDialog winFileDialog;
         winFileDialog.initLoader( "./", "TEST.TXT", "Load a file to edit" );
@@ -205,44 +166,79 @@ int main( int argc, char* argv[] )
             key = getch();
             delay_output( DELAYSIZE );
         }
+        refresh();
     }
-    touchwin( stdscr );
-    touchwin( winTitle->getWindow() );
-    touchwin( winStatus->getWindow() );
-    wrefresh( stdscr );
-    wrefresh( winTitle->getWindow() );
-    wrefresh( winStatus->getWindow() );
 
-    winTitle->draw();
-    winStatus->draw();
+    winEditorStatus.display();
+    winEditorProject.display();
+    winEditorTitle.display();
+    winLineNumbers.display();
     winEditor.displayEditor();
-    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+    winEditorHex.display();
+    wrefresh( winEditorHex.getWindow() );
 
-    uint32_t key = 0;
+    bool     bHexWindow = false;
+    uint32_t key        = 0;
+    MEVENT   event;
+
     while ( key != 'q' )
     {
-        key = getch();
+        bool forceUpdate = false;
+        key              = getch();
         delay_output( DELAYSIZE );
-        if ( winEditor.processKeyEdit( key ) == true )
+
+        if ( key == KEY_F( 1 ) )
         {
-            winEditor.displayEditor();
-            winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+            bHexWindow = !bHexWindow;
+            if ( bHexWindow == true )
+            {
+                winEditor.hideWindow();
+                winLineNumbers.hideWindow();
+                winEditorHex.showWindow();
+                winEditorHex.redrawBackground();
+            }
+            else
+            {
+                winEditor.showWindow();
+
+                winLineNumbers.showWindow();
+                winEditorHex.hideWindow();
+                winLineNumbers.redrawBackground();
+            }
         }
-        winEditor.processDisplay();
-        // display the time and date...
-        std::string streamString = return_current_time_and_date();
-        winTitle->print( COLS - 1 - streamString.length(), 1, streamString );
-        mvwchgat( winTitle->getWindow(), 1, COLS - 1 - streamString.length(), streamString.length(), A_NORMAL, COLOUR_INDEX( IDE_COL_FG_YELLOW, IDE_COL_BG_BLUE ), nullptr );
-        winTitle->draw();
-        // display the number of lines and cursor position...
-        std::stringstream strStream = std::stringstream();
-        strStream << "Lines: " << winEditor.getTotalLines() << " Cursor: " << winEditor.getCursorX() << "," << winEditor.getCursorY();
-        std::string linesString = strStream.str();
-        linesString.resize( 34, ' ' );
-        mvwprintw( winStatus->getWindow(), 1, COLS - 35, linesString.c_str() );
-        mvwchgat( winStatus->getWindow(), 1, COLS - 28, 5, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
-        mvwchgat( winStatus->getWindow(), 1, COLS - 14, 13, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_BLUE ), nullptr );
-        winStatus->draw();
+        if ( bHexWindow == true )
+        {
+            winEditorHex.display();
+        }
+        else
+        {
+            /*if ( event.bstate & BUTTON0_CLICKED )
+            {
+                winEditor.setCursorPosition( event.x, event.y );
+            }
+            if ( event.bstate & BUTTON3_PRESSED )
+            {
+                winEditor.scrollEditor( true );
+                forceUpdate = true;
+            }
+            if ( event.bstate & BUTTON4_PRESSED )
+            {
+                winEditor.scrollEditor( false );
+                forceUpdate = true;
+            }*/
+            if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
+            {
+                winEditor.displayEditor();
+                winLineNumbers.display();
+            }
+            winEditor.processMouse();
+            winEditor.processDisplay();
+        }
+
+        // display the other windows...
+        winEditorTitle.display();
+        winEditorStatus.display();
+        winEditorProject.display();
     }
     curs_set( 1 );
 
@@ -283,176 +279,6 @@ int main( int argc, char* argv[] )
 #endif
     // Return success
     return EXIT_SUCCESS;
-}
-
-//-----------------------------------------------------------------------------
-// Internal Functionality
-//-----------------------------------------------------------------------------
-void setcolor( WINDOW* win, chtype color )
-{
-    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
-
-    attr &= ~A_REVERSE; /* ignore reverse, use colors instead! */
-    wattrset( win, COLOR_PAIR( color & A_CHARTEXT ) | attr );
-}
-
-void colorbox( WINDOW* win, chtype color, int hasbox )
-{
-    int    maxy;
-    chtype attr = color & A_ATTR; /* extract Bold, Reverse, Blink bits */
-
-    setcolor( win, color );
-
-    wbkgd( win, COLOR_PAIR( color & A_CHARTEXT ) | ( attr & ~A_REVERSE ) );
-
-    werase( win );
-
-    maxy = getmaxy( win );
-    if ( hasbox && ( maxy > 2 ) )
-        box( win, 0, 0 );
-
-    touchwin( win );
-    wrefresh( win );
-}
-
-void display_menu( int old_option, int new_option )
-{
-    int lmarg = ( COLS - 14 ) / 2, tmarg = ( LINES - ( MAX_OPTIONS + 2 ) ) / 2;
-
-    if ( old_option == -1 )
-    {
-        int i;
-
-        attrset( A_BOLD );
-        attrset( COLOR_PAIR( 6 ) );
-        mvaddstr( tmarg - 3, lmarg - 5, "PDCurses Test Program" );
-        attrset( A_NORMAL );
-        attrset( COLOR_PAIR( 8 ) );
-
-        for ( i = 0; i < MAX_OPTIONS; i++ ) mvaddstr( tmarg + i, lmarg, menuItems[ i ].text.c_str() );
-    }
-    else
-        mvaddstr( tmarg + old_option, lmarg, menuItems[ old_option ].text.c_str() );
-
-    attrset( A_REVERSE );
-    mvaddstr( tmarg + new_option, lmarg, menuItems[ new_option ].text.c_str() );
-    attrset( A_NORMAL );
-    attrset( COLOR_PAIR( 7 ) );
-    mvaddstr( tmarg + MAX_OPTIONS + 2, lmarg - 23, "Use Up and Down Arrows to select - Enter to run - Q to quit" );
-    attrset( COLOR_PAIR( 8 ) );
-    refresh();
-}
-
-//-----------------------------------------------------------------------------
-// Menu Functions
-//-----------------------------------------------------------------------------
-
-void TerminateProgram()
-{
-    endwin();
-    exit( EXIT_SUCCESS );
-}
-
-void LoadProgramAndDisplay()
-{
-    // Open a file for reading
-    std::ifstream inputFile( "story.txt" );
-
-    // Check if the file is opened successfully
-    if ( !inputFile.is_open() )
-    {
-        std::cerr << "Unable to open the file." << std::endl;
-        return;
-    }
-
-    // Read the contents of the file into a vector of strings
-    std::vector<std::string> lines;
-    std::string              line;
-    while ( std::getline( inputFile, line ) )
-    {
-        lines.push_back( line );
-    }
-
-    // Close the file
-    inputFile.close();
-
-    // display a full screen of the example text
-    int nFileLine = 0;
-    int nLine     = 0;
-
-    attrset( COLOR_PAIR( 7 ) );
-    clear();
-    nLine = 0;
-    while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
-    {
-        mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
-        nLine++;
-    }
-
-    while ( true )
-    {
-        int ch = wgetch( stdscr );
-
-        if ( ch != ERR )
-        {
-
-            if ( ch == 'q' || ch == 'Q' )
-            {
-                break;
-            }
-
-            if ( ch == KEY_UP )
-            {
-                nFileLine = ( nFileLine == 0 ) ? 0 : nFileLine - 1;
-            }
-            else if ( ch == KEY_DOWN )
-            {
-                nFileLine = ( nFileLine == lines.size() - 1 ) ? lines.size() - 1 : nFileLine + 1;
-            }
-
-            clear();
-            nLine = 0;
-            while ( ( nLine < LINES ) && ( nLine + nFileLine < lines.size() ) )
-            {
-                mvaddstr( nLine, 1, lines[ nLine + nFileLine ].c_str() );
-                nLine++;
-            }
-        }
-        // napms( DELAYSIZE );
-        refresh();
-    }
-
-    ResetScreenToMenu();
-}
-
-void ResetScreenToMenu()
-{
-    clear();
-    old_option = -1;
-    new_option = 0;
-    winTitle->colourWindow( TITLECOLOR, false );
-    winTitle->print( 2, 0, "Nimble IDE : Version 0.0.1" );
-    winStatus->colourWindow( STATUSCOLOR, 0 );
-    winStatus->print( 2, 0, "Status Bar : " );
-    display_menu( old_option, new_option );
-    refresh();
-
-    attrset( COLOR_PAIR( 8 ) );
-}
-
-/**----------------------------------------------------------------------------
-    @ingroup    NimbleIDE Nimble IDE
-    @brief      Function to return the current time and date as a string
-    @return     std::string
- *----------------------------------------------------------------------------*/
-std::string return_current_time_and_date()
-{
-    auto              now       = std::chrono::system_clock::now();
-    auto              in_time_t = std::chrono::system_clock::to_time_t( now );
-
-    std::stringstream ss;
-    ss << std::put_time( std::localtime( &in_time_t ), "%Y-%m-%d %X" );
-    return ss.str();
 }
 
 //-----------------------------------------------------------------------------

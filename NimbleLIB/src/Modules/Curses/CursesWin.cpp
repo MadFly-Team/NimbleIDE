@@ -253,6 +253,11 @@ LibraryError CursesWin::draw()
 {
     LibraryError error = LibraryError::No_Error;
 
+    // update the mouse
+    processMouse();
+    drawMouse( win );
+
+    // update the window.
     touchwin( win );
     wrefresh( win );
 
@@ -318,6 +323,30 @@ LibraryError CursesWin::refresh()
 {
     LibraryError error = LibraryError::No_Error;
 
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Hides the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::hideWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    mvwin( win, -1, -1 );
+    return error;
+}
+
+/**---------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Shows the curses window
+    @return     The error code
+  --------------------------------------------------------------------------*/
+LibraryError CursesWin::showWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    mvwin( win, winY, winX );
     return error;
 }
 

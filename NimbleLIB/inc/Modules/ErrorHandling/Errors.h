@@ -21,6 +21,11 @@ Notes:
     Supported Modules:
     - Logger
 
+
+Version:
+
+        0.0.1.0     First Release, development phase. Draft copy
+
 -----------------------------------------------------------------------------*/
 
 #pragma once
@@ -95,9 +100,13 @@ enum class LibraryError
     IDEEditor_NotInitialized,                                               //!< 0x1000700B Dialog not initialized
     IDEDialog_AlreadyInitialized,                                           //!< 0x1000700C Dialog already initialized
     IDEDialog_InitNotCalled,                                                //!< 0x1000700D Dialog init not called
+    IDEButton_NotInitialised,                                               //!< 0x1000700E Button not initialised
+    IDEButtin_WindowNotInitialised,                                         //!< 0x1000700F Button window not initialised
+    IDEWindow_InitNotCalled,                                                //!< 0x10007010 Window not initialised
+    IDEWindow_FailedToCreateWindow,                                         //!< 0x10007011 Failed to create window
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 } // end namespace Nimble
 

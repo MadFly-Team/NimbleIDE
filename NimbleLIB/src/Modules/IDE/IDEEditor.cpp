@@ -16,6 +16,8 @@ Notes:
 // ----------------------------------------------------------------------------
 
 #include "../../../inc/Modules/IDE/IDEEditor.h"
+#include "../../../inc/Modules/Curses/CursesColour.h"
+#include "../../../inc/Modules/Global/Globals.h"
 #include <cstdint>
 #include <memory>
 
@@ -88,7 +90,8 @@ LibraryError IDEEditor::init( uint32_t width, uint32_t height, uint32_t x, uint3
         m_yStart = y;
 
         // create the curses window
-        m_editorWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, COLOR_WHITE, COLOR_BLACK );
+        m_editorWin = std::make_unique<CursesWin>( m_width, m_height + 1, m_xStart, m_yStart, IDE_COL_FG_BLACK, IDE_COL_BG_WHITE );
+        m_editorWin->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
         setInitialized();
     }
 
@@ -113,7 +116,13 @@ LibraryError IDEEditor::start( std::string& filename )
         error = openFile( filename );
         if ( error == LibraryError::No_Error )
         {
+            // TODO: sort out settins properly
+            Screen::sEditorSettings* pSettings = Screen::Globals::getInstance().getEditorSettings();
+            pSettings->Theme                   = Screen::eEditorTheme::Dark;
+            pSettings->LineNumbers             = true;
+
             displayEditor();
+            enableMouse();
         }
     }
     return error;
@@ -128,14 +137,16 @@ LibraryError IDEEditor::start( std::string& filename )
 -----------------------------------------------------------------------------*/
 LibraryError IDEEditor::displayEditor()
 {
-    LibraryError error   = LibraryError::No_Error;
+    LibraryError error         = LibraryError::No_Error;
 
-    uint32_t     curline = 0;
-    uint32_t     curcol  = m_currentColumn;
+    uint32_t     curline       = 0;
+    uint32_t     curcol        = m_currentColumn;
+    uint32_t     displayWidth  = m_width - 2;
+    uint32_t     displayHeight = m_height - 1;
 
-    std::string  blankline( m_width, ' ' );
+    std::string  blankline( displayWidth, ' ' );
 
-    while ( curline < ( m_height ) && ( curline < ( m_height + m_editlines.size() - 1 ) ) )
+    while ( curline < ( displayHeight ) && ( curline < ( displayHeight + m_editlines.size() - 1 ) ) )
     {
         std::string line;
 
@@ -148,23 +159,23 @@ LibraryError IDEEditor::displayEditor()
         // move to the current column, blanking if off screen
         if ( line.length() > 0 && line.length() >= curcol )
         {
-            line = line.substr( curcol, m_width );
+            line = line.substr( curcol, displayWidth );
         }
         else
         {
             line = "¬";
         }
 
-        if ( line.length() > m_width )
+        if ( line.length() > displayWidth )
         {
-            line = line.substr( 0, m_width );
+            line = line.substr( 0, displayWidth );
         }
 
         // print the line, blanking first
-        m_editorWin->print( 0, curline, blankline );
+        m_editorWin->print( 1, curline + 1, blankline );
         if ( line != "¬" )
         {
-            m_editorWin->print( 0, curline, line );
+            m_editorWin->print( 1, curline + 1, line );
         }
 
         // attribute the line
@@ -175,6 +186,39 @@ LibraryError IDEEditor::displayEditor()
     m_editorWin->draw();
 
     return error;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      print to the editor window
+    @param      x     x position
+    @param      y     y position
+    @param      text  text to print
+    @return     LibraryError    error code
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditor::print( uint32_t x, uint32_t y, const std::string& text )
+{
+    LibraryError error = LibraryError::IDEEditor_NotInitialized;
+
+    if ( isInitialized() )
+    {
+        m_editorWin->print( x, y, text );
+        m_editorWin->draw();
+        error = LibraryError::No_Error;
+    }
+    return error;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      redraws the background and also the border
+    @return     void
+-----------------------------------------------------------------------------*/
+void IDEEditor::redrawBackground()
+{
+    m_editorWin->colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
+    displayEditor();
+    m_editorWin->draw();
 }
 
 // getters --------------------------------------------------------------------
@@ -228,6 +272,55 @@ uint32_t IDEEditor::getCursorY() const
 {
     return m_cursorY + m_currentLine + 1;
 }
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      returns the curses window
+    @return     WINDOW* Curses window.
+------------------------------------------------------------------------------*/
+WINDOW* IDEEditor::getWindow() const
+{
+    return m_editorWin->getWindow();
+}
+
+// setters --------------------------------------------------------------------
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      set the cursor position from x,y
+    @param      x     x position
+    @param      y     y position
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::setCursorPosition( uint32_t x, uint32_t y )
+{
+    if ( x > m_xStart && x < m_xStart + m_width && y > m_yStart && y < m_yStart + m_height )
+    {
+        m_cursorX = x - m_xStart - 1;
+        m_cursorY = y - m_yStart - 1;
+
+        if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+            placeCursorinLine( m_currentLine );
+    }
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Scrool the winodow up or down one line
+    @param      upIfTrue     true if up, false if down
+    @return     void
+------------------------------------------------------------------------------*/
+void IDEEditor::scrollEditor( bool upIfTrue )
+{
+    m_currentLine += ( upIfTrue ) ? -1 : 1;
+
+    if ( m_currentLine < 0 )
+        m_currentLine = 0;
+    if ( m_currentLine > m_editlines.size() )
+        m_currentLine = m_editlines.size();
+
+    if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
+        placeCursorinLine( m_currentLine );
+}
 
 // control functions ----------------------------------------------------------
 
@@ -242,12 +335,11 @@ bool IDEEditor::processKeyEdit( uint32_t key )
     bool displayChanged = false;
 
     // save the old cursor position
-    m_oldCursorX = m_cursorX;
-    m_oldCursorY = m_cursorY;
+    // m_oldCursorX = m_cursorX;
+    // m_oldCursorY = m_cursorY;
 
     if ( key != ERR )
     {
-
         displayChanged = checkCursorKeys( key );
         if ( displayChanged == false )
         {
@@ -354,13 +446,44 @@ bool IDEEditor::processDisplay()
         m_cursorDrawn = m_cursorDrawn ? false : true;
     }
 
-    mvwchgat( m_editorWin->getWindow(), m_oldCursorY, m_oldCursorX, 1, A_NORMAL, 0, nullptr );
+    mvwchgat( m_editorWin->getWindow(), m_oldCursorY + 1, m_oldCursorX + 1, 1, A_REVERSE, 0, nullptr );
+
+    m_oldCursorX = m_cursorX;
+    m_oldCursorY = m_cursorY;
+
     if ( m_cursorDrawn )
     {
-        mvwchgat( m_editorWin->getWindow(), m_cursorY, m_cursorX, 1, A_REVERSE, 0, nullptr );
+        mvwchgat( m_editorWin->getWindow(), m_cursorY + 1, m_cursorX + 1, 1, A_NORMAL, 0, nullptr );
     }
+
+    drawMouse( m_editorWin->getWindow() );
     m_editorWin->draw();
     return displayChanged;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      show the curses window
+    @return     LibraryError    error code
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditor::showWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    m_editorWin->showWindow();
+    redrawBackground();
+    return error;
+}
+
+/**-----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      hide the curses window
+    @return     LibraryError    error code
+-----------------------------------------------------------------------------*/
+LibraryError IDEEditor::hideWindow()
+{
+    LibraryError error = LibraryError::No_Error;
+    m_editorWin->hideWindow();
+    return error;
 }
 
 // private functions ----------------------------------------------------------
@@ -400,7 +523,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
         }
         case 258: // down
         {
-            if ( m_cursorY < m_height - 1 )
+            if ( m_cursorY < m_height - 2 )
             {
                 if ( m_cursorY + m_currentLine < m_editlines.size() - 1 )
                 {
@@ -443,7 +566,7 @@ bool IDEEditor::checkCursorKeys( uint32_t key )
         }
         case 261: // right
         {
-            if ( m_cursorX < m_width - 1 )
+            if ( m_cursorX < m_width - 3 )
             {
                 if ( m_cursorX < m_editlines[ m_currentLine + m_cursorY ].length() )
                 {
@@ -502,9 +625,9 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         {
             m_cursorY++;
             insertLineIntoEditor( m_cursorY );
-            if ( m_cursorY > m_height - 1 )
+            if ( m_cursorY > m_height - 3 )
             {
-                m_cursorY = m_height - 1;
+                m_cursorY = m_height - 3;
                 m_currentLine++;
             }
             m_cursorX      = 0;
@@ -521,7 +644,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
             }
             m_cursorX += spaces;
 
-            if ( m_cursorX > m_width - 1 )
+            if ( m_cursorX > m_width - 3 )
             {
                 moveTextRight();
             }
@@ -549,7 +672,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         }
         case 338: // page down
         {
-            m_currentLine += m_height;
+            m_currentLine += m_height - 2;
             if ( m_currentLine + m_cursorY > m_editlines.size() - 1 )
             {
                 m_currentLine = m_editlines.size() - 1 - m_cursorY;
@@ -560,7 +683,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         }
         case 339: // page up
         {
-            m_currentLine -= m_height;
+            m_currentLine -= m_height - 2;
             if ( m_currentLine < 0 )
             {
                 m_currentLine = 0;
@@ -578,7 +701,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
         }
         case 358: // endKey:
         {
-            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
+            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 3;
             if ( m_currentColumn < 0 )
             {
                 m_currentColumn = 0;
@@ -595,7 +718,7 @@ bool IDEEditor::checkEditKeys( uint32_t key )
                 insertCharIntoEditor( m_cursorX, m_cursorY, key );
                 m_cursorX++;
                 // check if we need to move the text right
-                if ( m_cursorX >= m_width )
+                if ( m_cursorX >= m_width - 2 )
                 {
                     moveTextRight();
                 }
@@ -712,7 +835,7 @@ void IDEEditor::placeCursorinLine( uint32_t y )
         {
             m_cursorX = m_editlines[ y ].length();
         }
-        m_currentColumn = m_editlines[ y ].length() - m_width + 1;
+        m_currentColumn = m_editlines[ y ].length() - m_width + 3;
         if ( m_currentColumn < 0 )
         {
             m_currentColumn = 0;
@@ -730,9 +853,9 @@ void IDEEditor::moveTextRight()
     // if ( m_cursorX != m_editlines[ m_currentLine + m_cursorY ].length() - m_currentColumn )
     {
         m_currentColumn += 16;
-        if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1 )
+        if ( m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 3 )
         {
-            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 1;
+            m_currentColumn = m_editlines[ m_currentLine + m_cursorY ].length() - m_width + 3;
         }
         if ( m_cursorX + m_currentColumn > m_editlines[ m_currentLine + m_cursorY ].length() )
         {

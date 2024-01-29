@@ -26,6 +26,7 @@ extern "C"
 }
 
 #include "../Curses/CursesWin.h"
+#include "../Curses/CursesMouse.h"
 #include "../ErrorHandling/ErrorHandler.h"
 #include "../Utilities/StatusCtrl.h"
 #include "IDEEditline.h"
@@ -42,7 +43,7 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-class IDEEditor : protected IDEFileHandler
+class IDEEditor : protected IDEFileHandler, public CursesMouse
 {
   public:
     // enums --------------------------------------------------------------------
@@ -69,9 +70,16 @@ class IDEEditor : protected IDEFileHandler
     uint32_t getTotalLines() const;
     uint32_t getCursorX() const;
     uint32_t getCursorY() const;
-
+    WINDOW*  getWindow() const;
+    // setters -----------------------------------------------------------------
+    void setCursorPosition( uint32_t x, uint32_t y );
+    void scrollEditor( bool upIfTrue );
     // display functions -------------------------------------------------------
     LibraryError displayEditor();
+    LibraryError print( uint32_t x, uint32_t y, const std::string& text );
+    LibraryError showWindow();
+    LibraryError hideWindow();
+    void         redrawBackground();
     // control functions -------------------------------------------------------
     bool processKeyViewOnly( uint32_t key );
     bool processKeyEdit( uint32_t key );
