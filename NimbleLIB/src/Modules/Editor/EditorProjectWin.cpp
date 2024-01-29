@@ -43,10 +43,10 @@ EditorProjectWin::EditorProjectWin()
     print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
 
     // update the buttons
-    m_button.initButton( 3, 10, 10, 3, IDE_COL_FG_WHITE, IDE_COL_BG_BLUE );
+    m_button.initButton( 3, 1, 24, 3, IDE_COL_FG_BLUE, IDE_COL_BG_WHITE );
     m_button.setButtonText( "Button" );
     m_button.setWindowHandle( getWindow() );
-    m_button2.initButton( 3, 14, 20, 7, IDE_COL_FG_BLACK, IDE_COL_BG_GREEN );
+    m_button2.initButton( 3, 4, 24, 7, IDE_COL_FG_GREEN, IDE_COL_BG_WHITE );
     m_button2.setButtonText( "Big Button" );
     m_button2.setWindowHandle( getWindow() );
 }
