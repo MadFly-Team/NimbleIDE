@@ -1,8 +1,8 @@
 /**----------------------------------------------------------------------------
 
-    @file       EditorProjectWin.cpp
+    @file       EditorLineNumbersWin.cpp
     @defgroup   NimbleLIBIDE Nimble Library IDE Module
-    @brief      EditorProjectWin class for the Nimble Library
+    @brief      EditorLineNumbersWin class for the Nimble Library
 
     @copyright  Neil Bereford 2023
 
@@ -16,7 +16,7 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
-#include "../../../inc/Modules/Editor/EditorProjectWin.h"
+#include "../../../inc/Modules/Editor/EditorLineNumbersWin.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -33,29 +33,20 @@ namespace Nimble
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      Constructor for EditorProjectWin class
+    @brief      Constructor for EditorLineNumbersWin class
 ----------------------------------------------------------------------------*/
-EditorProjectWin::EditorProjectWin()
+EditorLineNumbersWin::EditorLineNumbersWin()
 {
     // create the status window
     CursesWin::init( WIN_WIDTH, WIN_HEIGHT, WIN_X, WIN_Y, WIN_INK_COLOUR, WIN_PAPER_COLOUR );
     colourWindow( COLOUR_INDEX( WIN_INK_COLOUR, WIN_PAPER_COLOUR ), true );
-    print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
-
-    // update the buttons
-    m_button.initButton( 3, 10, 10, 3, IDE_COL_FG_WHITE, IDE_COL_BG_BLUE );
-    m_button.setButtonText( "Button" );
-    m_button.setWindowHandle( getWindow() );
-    m_button2.initButton( 3, 14, 20, 7, IDE_COL_FG_BLACK, IDE_COL_BG_GREEN );
-    m_button2.setButtonText( "Big Button" );
-    m_button2.setWindowHandle( getWindow() );
 }
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      Destructor for EditorProjectWin class
+    @brief      Destructor for EditorLineNumbersWin class
 ----------------------------------------------------------------------------*/
-EditorProjectWin::~EditorProjectWin()
+EditorLineNumbersWin::~EditorLineNumbersWin()
 {
 }
 
@@ -65,16 +56,59 @@ EditorProjectWin::~EditorProjectWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorProjectWin::display()
+void EditorLineNumbersWin::display()
 {
     if ( m_editor != nullptr )
     {
+        displayLineNumbers( m_editor->getCurrentLine() + 1, m_editor->getTotalLines() );
         // display the window
         draw();
-        m_button.drawButton();
-        m_button.processClick( m_editor->getMouseX(), m_editor->getMouseY() );
-        m_button2.drawButton();
-        m_button2.processClick( m_editor->getMouseX(), m_editor->getMouseY() );
+    }
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Display the line numbers
+    @param      nLine       current line number
+    @param      nTotalLines total number of lines
+    @return     LibraryError enum
+----------------------------------------------------------------------------*/
+LibraryError EditorLineNumbersWin::displayLineNumbers( uint32_t nLine, uint32_t nTotalLines )
+{
+    LibraryError error = LibraryError::IDEWindow_InitNotCalled;
+
+    if ( m_editor != nullptr )
+    {
+        uint32_t nAmount = getHeight() - 2;
+        for ( uint32_t i = 0; i < nAmount; i++ )
+        {
+            std::stringstream strStream;
+            strStream << std::setw( 6 ) << std::setfill( ' ' ) << nLine + i;
+            std::string line = strStream.str();
+            if ( nLine + i > nTotalLines )
+            {
+                line = "      ";
+            }
+            print( 1, i + 1, line );
+        }
+        draw();
+        error = LibraryError::No_Error;
+    }
+
+    return error;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Display the status window
+----------------------------------------------------------------------------*/
+void EditorLineNumbersWin::redrawBackground()
+{
+    if ( m_editor != nullptr )
+    {
+        colourWindow( COLOUR_INDEX( WIN_INK_COLOUR, WIN_PAPER_COLOUR ), true );
+        // display the window
+        display();
     }
 }
 
@@ -85,7 +119,7 @@ void EditorProjectWin::display()
     @brief      Store the reference to the IDEEditor class
     @param      editor      pointer to the IDEEditor class
 ----------------------------------------------------------------------------*/
-void EditorProjectWin::setIDEEditor( IDEEditor* editor )
+void EditorLineNumbersWin::setIDEEditor( IDEEditor* editor )
 {
     m_editor = editor;
 }
@@ -95,5 +129,5 @@ void EditorProjectWin::setIDEEditor( IDEEditor* editor )
 } // namespace Nimble
 
 //-----------------------------------------------------------------------------
-// End of file: EditorProjectWin.cpp
+// End of file: EditorLineNumbersWin.cpp
 // ----------------------------------------------------------------------------

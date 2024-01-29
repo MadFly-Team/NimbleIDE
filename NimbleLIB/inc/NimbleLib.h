@@ -33,6 +33,7 @@
 #include "Modules/Editor/EditorStatusWin.h"       // EditorStatusWin class
 #include "Modules/Editor/EditorTitleWin.h"        // EditorTitleWin class
 #include "Modules/Editor/EditorProjectWin.h"      // EditorProjectWin class
+#include "Modules/Editor/EditorLineNumbersWin.h"  // EditorProjectWin class
 
 //-----------------------------------------------------------------------------
 // End of file: NimbleLib.h

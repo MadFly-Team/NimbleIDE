@@ -17,6 +17,7 @@ Notes:
 
 #include "../../../inc/Modules/IDE/IDEEditor.h"
 #include "../../../inc/Modules/Curses/CursesColour.h"
+#include "../../../inc/Modules/Global/Globals.h"
 #include <cstdint>
 #include <memory>
 
@@ -115,6 +116,11 @@ LibraryError IDEEditor::start( std::string& filename )
         error = openFile( filename );
         if ( error == LibraryError::No_Error )
         {
+            // TODO: sort out settins properly
+            Screen::sEditorSettings* pSettings = Screen::Globals::getInstance().getEditorSettings();
+            pSettings->Theme                   = Screen::eEditorTheme::Dark;
+            pSettings->LineNumbers             = true;
+
             displayEditor();
             enableMouse();
         }

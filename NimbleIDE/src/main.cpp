@@ -80,64 +80,50 @@ typedef struct
 } MENUCOMMAND, *PMENUCOMMAND;
 
 //-----------------------------------------------------------------------------
-// Forward declarations
-//-----------------------------------------------------------------------------
-
-std::string return_current_time_and_date();
-
-//-----------------------------------------------------------------------------
-// Variables
-//-----------------------------------------------------------------------------
-
-WINDOW* winMenu;
-WINDOW* winBody;
-
-//-----------------------------------------------------------------------------
 // External Functionality
 //-----------------------------------------------------------------------------
 
 int main( int argc, char* argv[] )
 {
+#if 0
     std::filesystem::path currentPath = std::filesystem::current_path();
-
     std::cout << "Contents of current directory: " << currentPath << "\n";
-
     for ( const auto& entry : std::filesystem::directory_iterator( currentPath ) )
     {
         std::cout << entry.path() << "\n";
     }
-
+#endif
+    // initialise the Curses screen and control
     setlocale( LC_ALL, "" );
     initscr();
-
     keypad( stdscr, TRUE );
     nodelay( stdscr, TRUE );
     noecho();
     curs_set( 0 );
     mousemask( ALL_MOUSE_EVENTS, nullptr );
 
+    // initialise the colours
     CursesColour::getInstance().init();
 
-    IDEEditBox       winLineNumbers;
-    IDEEditor        winEditor;
-    EditorStatusWin  winEditorStatus;
-    EditorProjectWin winEditorProject;
-    EditorTitleWin   winEditorTitle;
-    EditorHexWin     winEditorHex;
-    // setup the editor
+    // main editor windows
+    IDEEditor            winEditor;
+    EditorStatusWin      winEditorStatus;
+    EditorProjectWin     winEditorProject;
+    EditorTitleWin       winEditorTitle;
+    EditorHexWin         winEditorHex;
+    EditorLineNumbersWin winLineNumbers;
 
+    // setup the editor
     winEditor.init( COLS - 39, LINES - 9, 9, 4 );
     std::string filename = "test.txt";
     winEditor.start( filename );
-    winLineNumbers.initBox( 0, 4, 9, LINES - 8, IDE_COL_FG_BLACK, IDE_COL_BG_WHITE );
-    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
-    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
 
     // setup the other windoews
     winEditorStatus.setIDEEditor( &winEditor );
     winEditorProject.setIDEEditor( &winEditor );
     winEditorTitle.setIDEEditor( &winEditor );
     winEditorHex.setIDEEditor( &winEditor );
+    winLineNumbers.setIDEEditor( &winEditor );
 
     if ( false )
     {
@@ -186,9 +172,8 @@ int main( int argc, char* argv[] )
     winEditorStatus.display();
     winEditorProject.display();
     winEditorTitle.display();
+    winLineNumbers.display();
     winEditor.displayEditor();
-    winLineNumbers.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), true );
-    winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
     winEditorHex.display();
     wrefresh( winEditorHex.getWindow() );
 
@@ -211,16 +196,14 @@ int main( int argc, char* argv[] )
                 winLineNumbers.hideWindow();
                 winEditorHex.showWindow();
                 winEditorHex.redrawBackground();
-                            
             }
             else
             {
                 winEditor.showWindow();
-                
+
                 winLineNumbers.showWindow();
                 winEditorHex.hideWindow();
                 winLineNumbers.redrawBackground();
-                winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
             }
         }
         if ( bHexWindow == true )
@@ -246,7 +229,7 @@ int main( int argc, char* argv[] )
             if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
             {
                 winEditor.displayEditor();
-                winLineNumbers.displayLineNumbers( winEditor.getCurrentLine() + 1, winEditor.getTotalLines() );
+                winLineNumbers.display();
             }
             winEditor.processMouse();
             winEditor.processDisplay();

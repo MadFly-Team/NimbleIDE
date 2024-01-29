@@ -16,6 +16,7 @@
 
 #include <cinttypes>
 #include <cstdint>
+#include <functional>
 
 #include "../ErrorHandling/ErrorHandler.h"
 #include "../Utilities/StatusCtrl.h"
@@ -32,6 +33,8 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
+using pButtonCallback = std::function<void( uint32_t, uint32_t )>; //!< Keymap Function pointer type
+
 class IDEButton : public StatusCtrl
 {
   public:
@@ -40,6 +43,8 @@ class IDEButton : public StatusCtrl
     {
         ButtonLeft = 0,
         ButtonRight,
+        Pressed,
+        Processed,
     };
     // constructors & destructors --------------------------------------------
     IDEButton();
@@ -48,19 +53,28 @@ class IDEButton : public StatusCtrl
     LibraryError initButton( int16_t x, int16_t y, int16_t width, int16_t height, int16_t ink, int16_t paper );
     LibraryError setButtonText( const std::string& inText );
     // process and control -----------------------------------------------------
-    LibraryError process( uint32_t key );
+    LibraryError processClick( uint32_t mouseX, uint32_t mouseY );
     LibraryError drawButton();
+    // general access ----------------------------------------------------------
+    void setFlag( ButtonFlags flag );
+    void clearFlag( ButtonFlags flag );
+    bool checkFlag( ButtonFlags flag );
+    void setCallback( pButtonCallback callback );
+    void setWindowHandle( WINDOW* windowHandle );
 
   private:
     // variables ---------------------------------------------------------------
-    std::string mButtonText;
-    uint32_t    mButtonFlags;
-    uint32_t    mButtonX;
-    uint32_t    mButtonY;
-    uint32_t    mButtonWidth;
-    uint32_t    mButtonHeight;
-    uint32_t    mButtonInk;
-    uint32_t    mButtonPaper;
+    std::string     mButtonText;     //!< button text
+    uint32_t        mButtonFlags;    //!< button flags
+    uint32_t        mButtonX;        //!< button x position
+    uint32_t        mButtonY;        //!< button y position
+    uint32_t        mButtonWidth;    //!< button width
+    uint32_t        mButtonHeight;   //!< button height
+    uint32_t        mButtonInk;      //!< button ink colour
+    uint32_t        mButtonPaper;    //!< button paper colour
+    pButtonCallback mButtonCallback; //!< button callback function
+    WINDOW*         mWinParent;      //!< window handle
+    WINDOW*         mWin;            //!< window handle
     // functions ---------------------------------------------------------------
 };
 

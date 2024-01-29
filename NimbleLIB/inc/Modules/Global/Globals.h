@@ -35,6 +35,27 @@ namespace Screen
 // GLass definitions
 //-----------------------------------------------------------------------------
 
+enum class eEditorTheme
+{
+    Dark,  //!< Dark theme
+    Light, //!< Light theme
+    Total  //!< Total number of themes
+};
+
+enum class eEditorSettings
+{
+    LineNumbers, //!< Show line numbers
+    Theme,       //!< Theme selected
+
+    Total //!< Total number of settings
+};
+
+struct sEditorSettings
+{
+    bool         LineNumbers;
+    eEditorTheme Theme;
+};
+
 /**---------------------------------------------------------------------------
     @ingroup    NimbleLIBScreen Nimble Library Screen Module
     @brief      Global Singleton class for the Nimble Library
@@ -105,6 +126,21 @@ class Globals
     {
         m_screenHeight = height;
     }
+
+    // Editor Settings -----------------------------------------------------------
+
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Get the editor settings
+
+        TODO: This needs complete rework to protect the settings
+
+        @return     sEditorSettings - editor settings
+      --------------------------------------------------------------------------*/
+    sEditorSettings* getEditorSettings()
+    {
+        return &m_editorSettings;
+    }
     //-----------------------------------------------------------------------------
 
   private:
@@ -119,9 +155,10 @@ class Globals
 
     //-----------------------------------------------------------------------------
     // GLobal variables
-    uint32_t    m_screenWidth  = 0; //!< Screen width
-    uint32_t    m_screenHeight = 0; //!< Screen height
-    ScreenPrint m_print;            //!< Screen print class
+    uint32_t        m_screenWidth  = 0; //!< Screen width
+    uint32_t        m_screenHeight = 0; //!< Screen height
+    ScreenPrint     m_print;            //!< Screen print class
+    sEditorSettings m_editorSettings;   //!< Editor settings
     //-----------------------------------------------------------------------------
 };
 
