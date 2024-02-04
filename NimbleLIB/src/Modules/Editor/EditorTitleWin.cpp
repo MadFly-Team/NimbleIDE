@@ -70,7 +70,7 @@ void EditorTitleWin::display()
 
         // display the file name
         print( 2, 1, "EDITING MODE: ./Test.txt " );
-
+        print( 2, 2, "[F1] Hex Editor" );
         // display the window
         draw();
     }

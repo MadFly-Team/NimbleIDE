@@ -43,6 +43,10 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      IDEEditor class for the Nimble Library
+-----------------------------------------------------------------------------*/
 class IDEEditor : protected IDEFileHandler, public CursesMouse
 {
   public:

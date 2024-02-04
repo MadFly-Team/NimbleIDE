@@ -72,6 +72,7 @@ class CursesKeyboard
     uint32_t getLastKey() const noexcept;
     uint32_t getKey() const noexcept;
     // Setters ------------------------------------------------------------------
+    void setKey( uint32_t key ) noexcept;
     // Other --------------------------------------------------------------------
     void addKeyMap( const std::string& name, const std::vector<uint32_t>& keys, pKeyFunction function );
     void addKeyMapArray( const std::vector<KeyMap>& keyMapArray );

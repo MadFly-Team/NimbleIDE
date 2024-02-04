@@ -16,6 +16,7 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
+#include <cstdint>
 #include <iomanip>
 #include "../../../inc/Modules/Editor/EditorHexWin.h"
 
@@ -62,6 +63,30 @@ void EditorHexWin::display()
 {
     if ( m_editor != nullptr )
     {
+        // clear the window
+        clear();
+        // display the title
+        print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
+        // display the data
+        int      line   = 1;
+        int      col    = 0;
+        uint8_t* offset = (uint8_t*)getWindow();
+
+        while ( line < WIN_HEIGHT - 1 )
+        {
+            // display the offset
+            mvwprintw( getWindow(), line, 2, "%08X", offset );
+            // display the data
+            col = 0;
+            while ( col < 16 )
+            {
+                mvwprintw( getWindow(), line, 13 + ( col * 3 ), "%02X", offset[ line * 16 + col ] );
+                col++;
+                offset++;
+            }
+            line++;
+        }
+
         // display the window
         draw();
     }

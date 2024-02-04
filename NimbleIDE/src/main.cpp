@@ -150,21 +150,24 @@ int main( int argc, char* argv[] )
         }
     }
 
-    if ( false )
+    if ( true )
     {
         IDEFileDialog winFileDialog;
-        winFileDialog.initLoader( "./", "TEST.TXT", "Load a file to edit" );
+        winFileDialog.initLoader( "./", "TEST.TXT", "File Loader" );
         uint32_t colour = COLOUR_INDEX( winFileDialog.getInkColour(), winFileDialog.getPaperColour() );
         winFileDialog.colourWindow( colour, true );
-        winFileDialog.drawDialog();
+        winFileDialog.setVerticalScroll();
+        winFileDialog.drawLoader();
 
-        winFileDialog.refresh();
+        // winFileDialog.refresh();
 
         uint32_t key = 0;
         while ( key != 'q' )
         {
             key = getch();
             delay_output( DELAYSIZE );
+            winFileDialog.drawLoader();
+            // winFileDialog.refresh();
         }
         refresh();
     }
@@ -172,10 +175,10 @@ int main( int argc, char* argv[] )
     winEditorStatus.display();
     winEditorProject.display();
     winEditorTitle.display();
-    winLineNumbers.display();
+    // winLineNumbers.display();
     winEditor.displayEditor();
-    winEditorHex.display();
-    wrefresh( winEditorHex.getWindow() );
+    // winEditorHex.display();
+    // wrefresh( winEditorHex.getWindow() );
 
     bool     bHexWindow = false;
     uint32_t key        = 0;

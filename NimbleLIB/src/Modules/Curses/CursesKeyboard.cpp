@@ -127,6 +127,14 @@ uint32_t CursesKeyboard::getKey() const noexcept
     return ( key );
 }
 
+// Setters ------------------------------------------------------------------
+
+void CursesKeyboard::setKey( uint32_t inKey ) noexcept
+{
+    lastKey = key;
+    key     = inKey;
+}
+
 // Others ------------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -179,18 +187,22 @@ void CursesKeyboard::clearKeyMaps()
     --------------------------------------------------------------------------*/
 void CursesKeyboard::processKeyMaps()
 {
-    for ( auto& keyMap : keyMaps )
+    if ( key != 0 )
     {
-        for ( auto keyToTest : keyMap.keys )
+        for ( auto& keyMap : keyMaps )
         {
-            if ( key == keyToTest )
+            for ( auto keyToTest : keyMap.keys )
             {
-                if ( keyMap.function != nullptr )
+                if ( key == keyToTest )
                 {
-                    keyMap.function( key );
+                    if ( keyMap.function != nullptr )
+                    {
+                        keyMap.function( key );
+                    }
+                    lastKey = key;
+                    key     = 0;
+                    break;
                 }
-                lastKey = key;
-                break;
             }
         }
     }
