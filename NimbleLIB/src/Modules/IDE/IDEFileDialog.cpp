@@ -307,7 +307,7 @@ LibraryError IDEFileDialog::readDirectory( const std::string& path )
 #if ( _WIN32_ )
     std::filesystem::path currentPath = "c:/";
 #else
-    std::filesystem::path currentPath = "~";
+    std::filesystem::path currentPath = "/";
 #endif
     m_filesInDirectory.clear();
     m_filesInDirectory.push_back( fileData );
