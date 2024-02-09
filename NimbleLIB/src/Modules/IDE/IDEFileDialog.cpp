@@ -301,9 +301,14 @@ LibraryError IDEFileDialog::readDirectory( const std::string& path )
 {
     LibraryError error = LibraryError::No_Error;
     FileData     fileData;
-    fileData.type                     = FileType::Directory;
-    fileData.name                     = "..";
+    fileData.type = FileType::Directory;
+    fileData.name = "..";
+
+#if ( _WIN32_ )
     std::filesystem::path currentPath = "c:/";
+#else
+    std::filesystem::path currentPath = "~";
+#endif
     m_filesInDirectory.clear();
     m_filesInDirectory.push_back( fileData );
 
