@@ -158,6 +158,17 @@ void CursesKeyboard::addKeyMap( const std::string& name, const std::vector<uint3
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Add a key map
+    @param      keyMap     Key map
+    @return     void
+-----------------------------------------------------------------------------*/
+void CursesKeyboard::addKeyMap( const KeyMap& keyMap )
+{
+    keyMaps.push_back( keyMap );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
     @brief      Add a key map array
     @param      keyMapArray     Key map array
     @return     void

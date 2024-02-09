@@ -75,7 +75,11 @@ bool CursesMouse::processMouse( void )
     if ( mouseEnabled == true )
     {
         // get mouse event
+#if defined( _WIN32 )
         if ( nc_getmouse( &mouseEvent ) == OK )
+#else
+        if ( getmouse( &mouseEvent ) == OK )
+#endif
         {
             // check if left button pressed
             bProcessMouse    = true;

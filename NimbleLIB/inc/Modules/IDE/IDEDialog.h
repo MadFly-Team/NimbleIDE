@@ -57,8 +57,8 @@ class IDEDialog : public CursesWin, public CursesKeyboard, public StatusCtrl
     // initialisation ----------------------------------------------------------
     LibraryError initDialog( int16_t x, int16_t y, int16_t width, int16_t height, int16_t ink, int16_t paper );
     // process and control -----------------------------------------------------
-    LibraryError processDialog();
-    LibraryError processControls( uint32_t key, uint32_t mouseX, uint32_t mouseY, uint32_t mouseButton );
+    LibraryError processDialog( uint32_t key );
+    LibraryError processControls( uint32_t key, uint32_t mouseX, uint32_t mouseY, bool leftMouseButton );
     // setup -------------------------------------------------------------------
     LibraryError title( const std::string& inTitle );
     LibraryError status( const std::string& inStatus );
@@ -66,18 +66,27 @@ class IDEDialog : public CursesWin, public CursesKeyboard, public StatusCtrl
     LibraryError setVerticalScroll();
     // draw --------------------------------------------------------------------
     LibraryError drawDialog();
+    // setters -----------------------------------------------------------------
+    void setVerticalScrollPos( uint32_t inPos );
 
   private:
     // private vairables --------------------------------------------------------
-    uint32_t    nFrameCount;  //!< frame count for the IDEEditBox
-    std::string sTitle;       //!< title of the dialog
-    std::string sStatus;      //!< status of the dialog
-    std::string sButtonLeft;  //!< button text
-    std::string sButtonRight; //!< button text
-    IDEButton   leftButton;   //!< button left
-    IDEButton   rightButton;  //!< button right
-
-}; // class IDEDialog
+    uint32_t                           nFrameCount;        //!< frame count for the IDEEditBox
+    uint32_t                           nScrollPos;         //!< vertical scroll position
+    uint32_t                           nOldScrollPos;      //!< lasat drawn vertical scroll position
+    std::string                        sTitle;             //!< title of the dialog
+    std::string                        sStatus;            //!< status of the dialog
+    std::string                        sButtonLeft;        //!< button text
+    std::string                        sButtonRight;       //!< button text
+    IDEButton                          leftButton;         //!< button left
+    IDEButton                          rightButton;        //!< button right
+    bool                               leftButtonPressed;  //!< left button pressed
+    bool                               rightButtonPressed; //!< right button pressed
+    std::vector<std::function<void()>> callbacks;
+    //  private functions --------------------------------------------------------
+    void leftButtonCB() noexcept;
+    void rightButtonCB();
+};
 
 //-----------------------------------------------------------------------------
 

@@ -33,7 +33,7 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-using pButtonCallback = std::function<void( uint32_t, uint32_t )>; //!< Keymap Function pointer type
+using pButtonCallback = std::function<void( uint32_t, uint32_t )>; //!< Function pointer type
 
 class IDEButton : public StatusCtrl
 {
@@ -59,22 +59,22 @@ class IDEButton : public StatusCtrl
     void setFlag( ButtonFlags flag );
     void clearFlag( ButtonFlags flag );
     bool checkFlag( ButtonFlags flag );
-    void setCallback( pButtonCallback callback );
+    void setCallback( std::function<void()> callback ) noexcept;
     void setWindowHandle( WINDOW* windowHandle );
 
   private:
     // variables ---------------------------------------------------------------
-    std::string     mButtonText;     //!< button text
-    uint32_t        mButtonFlags;    //!< button flags
-    uint32_t        mButtonX;        //!< button x position
-    uint32_t        mButtonY;        //!< button y position
-    uint32_t        mButtonWidth;    //!< button width
-    uint32_t        mButtonHeight;   //!< button height
-    uint32_t        mButtonInk;      //!< button ink colour
-    uint32_t        mButtonPaper;    //!< button paper colour
-    pButtonCallback mButtonCallback; //!< button callback function
-    WINDOW*         mWinParent;      //!< window handle
-    WINDOW*         mWin;            //!< window handle
+    std::string           mButtonText;     //!< button text
+    uint32_t              mButtonFlags;    //!< button flags
+    uint32_t              mButtonX;        //!< button x position
+    uint32_t              mButtonY;        //!< button y position
+    uint32_t              mButtonWidth;    //!< button width
+    uint32_t              mButtonHeight;   //!< button height
+    uint32_t              mButtonInk;      //!< button ink colour
+    uint32_t              mButtonPaper;    //!< button paper colour
+    std::function<void()> mButtonCallback; //!< button callback function
+    WINDOW*               mWinParent;      //!< window handle
+    WINDOW*               mWin;            //!< window handle
     // functions ---------------------------------------------------------------
 };
 

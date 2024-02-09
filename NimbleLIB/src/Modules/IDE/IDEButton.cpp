@@ -116,7 +116,7 @@ LibraryError IDEButton::processClick( uint32_t mouseX, uint32_t mouseY )
             // call button function
             if ( mButtonCallback != nullptr )
             {
-                mButtonCallback( mouseX, mouseY );
+                // mButtonCallback( mouseX, mouseY );
             }
             error = LibraryError::No_Error;
         }
@@ -205,7 +205,7 @@ bool IDEButton::checkFlag( ButtonFlags flag )
     @param     callback     callback function
     @return    void
 -----------------------------------------------------------------------------*/
-void IDEButton::setCallback( pButtonCallback callback )
+void IDEButton::setCallback( std::function<void()> callback ) noexcept
 {
     mButtonCallback = callback;
 }

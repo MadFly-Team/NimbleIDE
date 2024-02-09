@@ -166,6 +166,7 @@ int main( int argc, char* argv[] )
         {
             key = getch();
             delay_output( DELAYSIZE );
+            winFileDialog.processKeyPress( key );
             winFileDialog.drawLoader();
             // winFileDialog.refresh();
         }

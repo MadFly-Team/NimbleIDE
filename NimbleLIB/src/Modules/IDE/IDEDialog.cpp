@@ -14,6 +14,7 @@ Notes:
 // ----------------------------------------------------------------------------
 
 #include "../../../inc/Modules/ErrorHandling/ErrorHandler.h"
+#include <functional>
 #include "../../../inc/Modules/IDE/IDEDialog.h"
 
 //-----------------------------------------------------------------------------
@@ -37,6 +38,8 @@ namespace Nimble
 IDEDialog::IDEDialog()
 {
     setInitialized();
+    nScrollPos    = 0;
+    nOldScrollPos = 0;
 }
 
 /**----------------------------------------------------------------------------
@@ -148,6 +151,8 @@ LibraryError IDEDialog::buttons( WINDOW* inWin, const std::string& inButtonLeft,
             leftButton.initButton( 2, getHeight() - 4, 10, 3, getInkColour(), getPaperColour() );
             leftButton.setButtonText( sButtonLeft );
             leftButton.setWindowHandle( inWin );
+            // callbacks.push_back( leftButtonCB );
+            // leftButton.setCallback( std::bind( &IDEDialog::leftButtonCB, &leftButton, std::placeholders::_2 ) );
         }
         if ( inButtonRight.length() > 0 )
         {
@@ -187,21 +192,39 @@ LibraryError IDEDialog::setVerticalScroll()
     return ( eError );
 }
 
+// setters --------------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Set the vertical scroll position
+    @param      inPos     0-100 vertical scroll position
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEDialog::setVerticalScrollPos( uint32_t inPos )
+{
+    nScrollPos = inPos;
+}
+
 // Drawing and Control --------------------------------------------------------
 
-LibraryError IDEDialog::processDialog()
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      process the dialog conrols ( key and mouse )
+    @param      key     Key press
+    @return     LibraryError enum
+----------------------------------------------------------------------------*/
+LibraryError IDEDialog::processDialog( uint32_t key )
 {
     LibraryError eError = LibraryError::No_Error;
+
     if ( isReady() )
     {
         // monotor key and mouse presses
-        uint32_t key = getch();
         if ( key != ERR )
-        {
             setKey( key );
-        }
         processMouse();
         processKeyMaps();
+        processControls( key, getMouseX(), getMouseY(), getLeftButtonState() );
     }
     else
     {
@@ -220,7 +243,7 @@ LibraryError IDEDialog::processDialog()
     @param      mouseButton Mouse button press
     @return     LibraryError enum
 ----------------------------------------------------------------------------*/
-LibraryError IDEDialog::processControls( uint32_t inKey, uint32_t mouseX, uint32_t mouseY, uint32_t mouseButton )
+LibraryError IDEDialog::processControls( uint32_t inKey, uint32_t mouseX, uint32_t mouseY, bool leftMouseButton )
 {
     LibraryError eError = LibraryError::No_Error;
 
@@ -229,6 +252,7 @@ LibraryError IDEDialog::processControls( uint32_t inKey, uint32_t mouseX, uint32
         // process the dialog
         if ( isUserFlagSet( DialogFlags::ButtonLeft ) )
         {
+            leftButton.processClick( mouseX, mouseY );
         }
     }
     else
@@ -279,7 +303,12 @@ LibraryError IDEDialog::drawDialog()
         if ( isUserFlagSet( DialogFlags::VerticalScroll ) )
         {
             drawVerticalLine( getWidth() - 3, 3, getHeight() - 9 );
-            print( getWidth() - 2, 3, "\xDB" );
+            // calculate the scroll position
+            uint32_t nScrollHeight = getHeight() - 9;
+            uint32_t nPos          = ( nScrollHeight * nScrollPos ) / 100;
+            print( getWidth() - 2, nOldScrollPos + 3, " " );
+            print( getWidth() - 2, nPos + 3, "\xDB" );
+            nOldScrollPos = nPos;
         }
         // draw the window
         draw();
@@ -291,6 +320,30 @@ LibraryError IDEDialog::drawDialog()
     }
     // return state of initialisation
     return ( LibraryError::No_Error );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      left button callback
+    @param      mX      Mouse x position
+    @param      mY      Mouse y position
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEDialog::leftButtonCB() noexcept
+{
+    leftButtonPressed = true;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      right button callback
+    @param      mX      Mouse x position
+    @param      mY      Mouse y position
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEDialog::rightButtonCB()
+{
+    leftButtonPressed = true;
 }
 
 //-----------------------------------------------------------------------------

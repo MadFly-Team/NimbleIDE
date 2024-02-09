@@ -31,6 +31,12 @@ extern "C"
 #include "../Utilities/StatusCtrl.h"
 
 //-----------------------------------------------------------------------------
+// Definitions
+// ----------------------------------------------------------------------------
+
+constexpr uint32_t KEY_ESC = 27; //!< Escape key code
+
+//-----------------------------------------------------------------------------
 // Namespace
 // ----------------------------------------------------------------------------
 
@@ -67,6 +73,7 @@ class CursesKeyboard
     CursesKeyboard( const CursesKeyboard& other );
     CursesKeyboard( const std::string name, const std::vector<uint32_t> keys, pKeyFunction function );
     ~CursesKeyboard();
+
     // Member functions ---------------------------------------------------------
     // Getters ------------------------------------------------------------------
     uint32_t getLastKey() const noexcept;
@@ -75,6 +82,7 @@ class CursesKeyboard
     void setKey( uint32_t key ) noexcept;
     // Other --------------------------------------------------------------------
     void addKeyMap( const std::string& name, const std::vector<uint32_t>& keys, pKeyFunction function );
+    void addKeyMap( const KeyMap& keyMap );
     void addKeyMapArray( const std::vector<KeyMap>& keyMapArray );
     void clearKeyMaps();
     void processKeyMaps();

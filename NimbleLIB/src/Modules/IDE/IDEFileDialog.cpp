@@ -15,8 +15,10 @@ Notes:
 
 #include <cstdint>
 #include <filesystem>
+#include <algorithm>
 #include "../../../inc/Modules/ErrorHandling/ErrorHandler.h"
 #include "../../../inc/Modules/Curses/CursesColour.h"
+#include "../../../inc/Modules/Curses/CursesKeyboard.h"
 #include "../../../inc/Modules/IDE/IDEFileDialog.h"
 
 //-----------------------------------------------------------------------------
@@ -78,6 +80,8 @@ LibraryError IDEFileDialog::initLoader( const std::string& path, const std::stri
     title( m_titleDialog );
     status( statusString );
 
+    addKeyMap( m_keyMapCursorControl );
+
     buttons( getWindow(), "Cancel", "Load" );
     return error;
 }
@@ -95,26 +99,33 @@ LibraryError IDEFileDialog::drawLoader()
     // Draw the dialog
     drawDialog();
     // Draw the files in the directory
-    uint32_t yPos = 3;
+    uint32_t    yPos      = 3;
+    uint32_t    fileCount = 0;
+    std::string nameStr   = "";
     for ( const auto& entry : m_filesInDirectory )
     {
+        if ( fileCount++ < m_fileStartPos )
+            continue;
+
         if ( yPos < ( getHeight() - 6 ) )
         {
+            nameStr = entry.name;
+            nameStr.resize( 52, ' ' );
+
+            mvwaddstr( getWindow(), yPos, 3, nameStr.c_str() );
+
             if ( entry.name == ".." )
             {
-                mvwaddnstr( getWindow(), yPos, 3, entry.name.c_str(), 52 );
                 mvwchgat( getWindow(), yPos, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLUE, IDE_COL_BG_WHITE ), nullptr );
             }
             else
             {
                 if ( entry.type == FileType::Directory )
                 {
-                    mvwaddnstr( getWindow(), yPos, 3, entry.name.c_str(), 52 );
                     mvwchgat( getWindow(), yPos, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLUE, IDE_COL_BG_WHITE ), nullptr );
                 }
                 else
                 {
-                    mvwaddnstr( getWindow(), yPos, 3, entry.name.c_str(), 52 );
                     mvwchgat( getWindow(), yPos, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), nullptr );
                 }
             }
@@ -132,55 +143,16 @@ LibraryError IDEFileDialog::drawLoader()
 }
 
 /**----------------------------------------------------------------------------
-    @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      Process the File Dialog
-    @return     LibraryError
+    @ingroup   NimbleLIBIDE Nimble Library IDE Module
+    @brief     Process the File Dialog
+    @param     ch      Key pressed returned or ERR
+    @return    LibraryError
 ----------------------------------------------------------------------------*/
-LibraryError IDEFileDialog::process()
+LibraryError IDEFileDialog::processKeyPress( uint32_t ch )
 {
-    LibraryError error  = LibraryError::No_Error;
-    uint32_t     ch     = 0;
-    bool         m_done = false;
+    LibraryError error = LibraryError::No_Error;
 
-    processDialog();
-    if ( ch != ERR )
-    {
-        switch ( ch )
-        {
-            case KEY_UP:
-                if ( m_cursorPos > 0 )
-                {
-                    mvwchgat( getWindow(), m_cursorPos + 3, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), nullptr );
-                    m_cursorPos--;
-                    drawCursor();
-                }
-                break;
-            case KEY_DOWN:
-                if ( m_cursorPos < ( getHeight() - 6 ) )
-                {
-                    mvwchgat( getWindow(), m_cursorPos + 3, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), nullptr );
-                    m_cursorPos++;
-                    drawCursor();
-                }
-                break;
-            case 10:
-                if ( m_cursorPos == 0 )
-                {
-                }
-                else
-                {
-                    m_filename  = m_filesInDirectory.at( m_cursorPos ).name;
-                    m_path      = m_filesInDirectory.at( m_cursorPos ).name;
-                    m_completed = true;
-                }
-                break;
-            case 27:
-                m_cancelled = true;
-                break;
-            default:
-                break;
-        }
-    }
+    processDialog( ch );
 
     return error;
 }
@@ -195,7 +167,87 @@ void IDEFileDialog::drawCursor()
     mvwchgat( getWindow(), m_cursorPos + 3, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_WHITE, IDE_COL_BG_BLACK ), nullptr );
 }
 
-// Getters ------------------------------------------------------------------
+// Control --------------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Control the File Dialog
+    @param      ch  Character to process
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEFileDialog::cursorControl( uint32_t ch )
+{
+    switch ( ch )
+    {
+        case KEY_UP:
+        {
+
+            if ( m_cursorPos == 0 && m_fileStartPos > 0 )
+            {
+                m_fileStartPos--;
+            }
+            else if ( m_cursorPos > 0 )
+            {
+                mvwchgat( getWindow(), m_cursorPos + 3, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), nullptr );
+                m_cursorPos--;
+                drawCursor();
+            }
+            setVerticalScrollPos( ( (float)( m_fileStartPos + m_cursorPos ) / (float)m_filesInDirectory.size() ) * 100 );
+            break;
+        }
+        case KEY_DOWN:
+        {
+            if ( m_cursorPos < ( getHeight() - 10 ) )
+            {
+                mvwchgat( getWindow(), m_cursorPos + 3, 3, 52, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_WHITE ), nullptr );
+                if ( m_cursorPos < m_filesInDirectory.size() )
+                    m_cursorPos++;
+                drawCursor();
+            }
+            else
+            {
+                if ( m_cursorPos + m_fileStartPos < m_filesInDirectory.size() - 1 )
+                    m_fileStartPos++;
+            }
+            setVerticalScrollPos( ( (float)( m_fileStartPos + m_cursorPos ) / (float)m_filesInDirectory.size() ) * 100 );
+            break;
+        }
+        default:
+        {
+
+            break;
+        }
+    }
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Process the File Dialog
+    @param      ch  Character to process
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEFileDialog::dialogControl( uint32_t ch )
+{
+    switch ( ch )
+    {
+        case KEY_ESC:
+        {
+            m_cancelled = true;
+            break;
+        }
+        case KEY_ENTER:
+        {
+            m_completed = true;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
+
+// Getters --------------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
@@ -241,7 +293,7 @@ const bool IDEFileDialog::isCancelled() const
 
 /**----------------------------------------------------------------------------
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
-    @brief      Read the directory
+    @brief      Read the directory, sorting the results alphabetically
     @param      path    Path to the file
     @return     LibraryError
 ----------------------------------------------------------------------------*/
@@ -254,8 +306,15 @@ LibraryError IDEFileDialog::readDirectory( const std::string& path )
     std::filesystem::path currentPath = "c:/";
     m_filesInDirectory.clear();
     m_filesInDirectory.push_back( fileData );
+
+    // Read the directory, storing the files and directories
     for ( const auto& entry : std::filesystem::directory_iterator( currentPath ) )
     {
+        // special case for system files and directories that mess up the sort, and are not needed.
+        if ( entry.path().filename().string()[ 0 ] == '$' )
+        {
+            continue;
+        }
         if ( entry.is_directory() )
         {
             fileData.type = FileType::Directory;
@@ -268,6 +327,20 @@ LibraryError IDEFileDialog::readDirectory( const std::string& path )
         m_filesInDirectory.push_back( fileData );
     }
 
+    // Sort the filles and directories alphabetically (directories first)
+    std::sort( m_filesInDirectory.begin(), m_filesInDirectory.end(),
+               []( const FileData& a, const FileData& b ) -> bool
+               {
+                   if ( a.type != b.type )
+                   {
+                       return a.type < b.type;
+                   }
+                   return a.name < b.name;
+               } );
+
+    // setup the dialog, with new file list
+    m_cursorPos    = 0;
+    m_fileStartPos = 0;
     return error;
 }
 

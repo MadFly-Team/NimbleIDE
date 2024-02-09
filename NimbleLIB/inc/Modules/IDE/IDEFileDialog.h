@@ -52,7 +52,7 @@ class IDEFileDialog : public IDEDialog
     const bool         isCompleted() const;
     const bool         isCancelled() const;
     // Process ----------------------------------------------------------------
-    LibraryError process();
+    LibraryError processKeyPress( uint32_t ch );
     // File Management --------------------------------------------------------
     LibraryError readDirectory( const std::string& path );
     // Draw -------------------------------------------------------------------
@@ -73,17 +73,30 @@ class IDEFileDialog : public IDEDialog
         std::string name;
     };
 
+    // cursor control ---------------------------------------------------------
+    KeyMap m_keyMapCursorControl = {
+        "CursorControl", {KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT},
+         std::bind( &IDEFileDialog::cursorControl, this, std::placeholders::_1 )
+    };
+
+    KeyMap m_keyMapDialogControl = {
+        "DialogControl", {KEY_ESC, KEY_ENTER},
+         std::bind( &IDEFileDialog::dialogControl, this, std::placeholders::_1 )
+    };
+
     // private member variables -----------------------------------------------
     std::string           m_path;             // !< Path
     std::string           m_filename;         //!< Filename
     std::string           m_titleDialog;      //!< Title of the dialog
     std::vector<FileData> m_filesInDirectory; //!< Files in the directory
     uint32_t              m_cursorPos;        //!< Cursor position
+    uint32_t              m_fileStartPos;     //!< start of first shown file
     bool                  m_completed;        //!< Completed
     bool                  m_cancelled;        //!< Cancelled
     // private functions -------------------------------------------------------
     void drawCursor();
-
+    void cursorControl( uint32_t key );
+    void dialogControl( uint32_t key );
     //-------------------------------------------------------------------------
 };
 
