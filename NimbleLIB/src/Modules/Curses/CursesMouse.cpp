@@ -22,7 +22,7 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
-#include "..\..\..\inc\Modules\Curses\CursesMouse.h"
+#include "../../../inc/Modules/Curses/CursesMouse.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
