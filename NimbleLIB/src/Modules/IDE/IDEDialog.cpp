@@ -77,6 +77,7 @@ LibraryError IDEDialog::initDialog( int16_t x, int16_t y, int16_t width, int16_t
         sButtonLeft  = "";
         sButtonRight = "";
 
+        enableMouse();
         setReady();
     }
     // return state of initialisation
@@ -152,7 +153,7 @@ LibraryError IDEDialog::buttons( WINDOW* inWin, const std::string& inButtonLeft,
             leftButton.setButtonText( sButtonLeft );
             leftButton.setWindowHandle( inWin );
             // callbacks.push_back( leftButtonCB );
-            // leftButton.setCallback( std::bind( &IDEDialog::leftButtonCB, &leftButton, std::placeholders::_2 ) );
+            leftButton.setCallback( [ this ]() { this->leftButtonCB(); } );
         }
         if ( inButtonRight.length() > 0 )
         {
@@ -161,6 +162,7 @@ LibraryError IDEDialog::buttons( WINDOW* inWin, const std::string& inButtonLeft,
             rightButton.initButton( getWidth() - 12, getHeight() - 4, 10, 3, getInkColour(), getPaperColour() );
             rightButton.setButtonText( sButtonRight );
             rightButton.setWindowHandle( inWin );
+            rightButton.setCallback( [ this ]() { this->rightButtonCB(); } );
         }
     }
     else
@@ -250,9 +252,16 @@ LibraryError IDEDialog::processControls( uint32_t inKey, uint32_t mouseX, uint32
     if ( isReady() )
     {
         // process the dialog
-        if ( isUserFlagSet( DialogFlags::ButtonLeft ) )
+        if ( leftMouseButton )
         {
-            leftButton.processClick( mouseX, mouseY );
+            if ( isUserFlagSet( DialogFlags::ButtonLeft ) )
+            {
+                leftButton.processClick( mouseX, mouseY );
+            }
+            if ( isUserFlagSet( DialogFlags::ButtonRight ) )
+            {
+                rightButton.processClick( mouseX, mouseY );
+            }
         }
     }
     else
@@ -343,7 +352,7 @@ void IDEDialog::leftButtonCB() noexcept
 ----------------------------------------------------------------------------*/
 void IDEDialog::rightButtonCB()
 {
-    leftButtonPressed = true;
+    rightButtonPressed = true;
 }
 
 //-----------------------------------------------------------------------------

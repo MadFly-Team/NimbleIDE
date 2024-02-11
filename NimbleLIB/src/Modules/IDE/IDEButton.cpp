@@ -105,6 +105,7 @@ LibraryError IDEButton::processClick( uint32_t mouseX, uint32_t mouseY )
 
     if ( mWin != nullptr )
     {
+
         // check if mouse is in button area, exclude the border
         uint32_t x = ( mWinParent->_begx + mButtonX + 1 );
         uint32_t y = ( mWinParent->_begy + mButtonY + 1 );
@@ -116,7 +117,7 @@ LibraryError IDEButton::processClick( uint32_t mouseX, uint32_t mouseY )
             // call button function
             if ( mButtonCallback != nullptr )
             {
-                // mButtonCallback( mouseX, mouseY );
+                mButtonCallback();
             }
             error = LibraryError::No_Error;
         }
