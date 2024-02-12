@@ -81,6 +81,7 @@ LibraryError IDEFileDialog::initLoader( const std::string& path, const std::stri
     status( statusString );
 
     addKeyMap( m_keyMapCursorControl );
+    addKeyMap( m_keyMapDialogControl );
 
     buttons( getWindow(), "Cancel", "Load" );
     return error;

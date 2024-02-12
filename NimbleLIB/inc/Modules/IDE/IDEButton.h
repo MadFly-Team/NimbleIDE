@@ -35,6 +35,10 @@ namespace Nimble
 
 using pButtonCallback = std::function<void()>; //!< Function pointer type
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief     IDEButton class
+-----------------------------------------------------------------------------*/
 class IDEButton : public StatusCtrl
 {
   public:

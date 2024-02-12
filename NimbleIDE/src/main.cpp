@@ -112,6 +112,7 @@ int main( int argc, char* argv[] )
     EditorTitleWin       winEditorTitle;
     EditorHexWin         winEditorHex;
     EditorLineNumbersWin winLineNumbers;
+    IDEManager           dialogManager;
 
     // setup the editor
     winEditor.init( COLS - 39, LINES - 9, 9, 4 );
@@ -150,7 +151,7 @@ int main( int argc, char* argv[] )
         }
     }
 
-    if ( true )
+    if ( false )
     {
         IDEFileDialog winFileDialog;
         winFileDialog.initLoader( "./", "TEST.TXT", "File Loader" );
@@ -173,6 +174,7 @@ int main( int argc, char* argv[] )
         refresh();
     }
 
+    dialogManager.addControl( ManagerControlID::ID_LoadFile );
     winEditorStatus.display();
     winEditorProject.display();
     winEditorTitle.display();
@@ -188,57 +190,65 @@ int main( int argc, char* argv[] )
     while ( key != 'q' )
     {
         bool forceUpdate = false;
-        key              = getch();
         delay_output( DELAYSIZE );
-
-        if ( key == KEY_F( 1 ) )
+        if ( dialogManager.areControlsActive() == true )
         {
-            bHexWindow = !bHexWindow;
-            if ( bHexWindow == true )
-            {
-                winEditor.hideWindow();
-                winLineNumbers.hideWindow();
-                winEditorHex.showWindow();
-                winEditorHex.redrawBackground();
-            }
-            else
-            {
-                winEditor.showWindow();
-
-                winLineNumbers.showWindow();
-                winEditorHex.hideWindow();
-                winLineNumbers.redrawBackground();
-            }
-        }
-        if ( bHexWindow == true )
-        {
-            winEditorHex.display();
+            dialogManager.process();
+            winEditor.processMouse();
+            winEditor.processDisplay();
+            refresh();
         }
         else
         {
-            /*if ( event.bstate & BUTTON0_CLICKED )
+            key = getch();
+            if ( key == KEY_F( 1 ) )
             {
-                winEditor.setCursorPosition( event.x, event.y );
-            }
-            if ( event.bstate & BUTTON3_PRESSED )
-            {
-                winEditor.scrollEditor( true );
-                forceUpdate = true;
-            }
-            if ( event.bstate & BUTTON4_PRESSED )
-            {
-                winEditor.scrollEditor( false );
-                forceUpdate = true;
-            }*/
-            if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
-            {
-                winEditor.displayEditor();
-                winLineNumbers.display();
-            }
-            winEditor.processMouse();
-            winEditor.processDisplay();
-        }
+                bHexWindow = !bHexWindow;
+                if ( bHexWindow == true )
+                {
+                    winEditor.hideWindow();
+                    winLineNumbers.hideWindow();
+                    winEditorHex.showWindow();
+                    winEditorHex.redrawBackground();
+                }
+                else
+                {
+                    winEditor.showWindow();
 
+                    winLineNumbers.showWindow();
+                    winEditorHex.hideWindow();
+                    winLineNumbers.redrawBackground();
+                }
+            }
+            if ( bHexWindow == true )
+            {
+                winEditorHex.display();
+            }
+            else
+            {
+                /*if ( event.bstate & BUTTON0_CLICKED )
+                {
+                    winEditor.setCursorPosition( event.x, event.y );
+                }
+                if ( event.bstate & BUTTON3_PRESSED )
+                {
+                    winEditor.scrollEditor( true );
+                    forceUpdate = true;
+                }
+                if ( event.bstate & BUTTON4_PRESSED )
+                {
+                    winEditor.scrollEditor( false );
+                    forceUpdate = true;
+                }*/
+                if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
+                {
+                    winEditor.displayEditor();
+                    winLineNumbers.display();
+                }
+                winEditor.processMouse();
+                winEditor.processDisplay();
+            }
+        }
         // display the other windows...
         winEditorTitle.display();
         winEditorStatus.display();
