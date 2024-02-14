@@ -58,10 +58,16 @@ EditorTitleWin::~EditorTitleWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorTitleWin::display()
+void EditorTitleWin::display( bool bRedraw /*= false*/ )
 {
     if ( m_editor != nullptr )
     {
+        if ( bRedraw == true )
+        {
+            colourWindow( COLOUR_INDEX( WIN_INK_COLOUR, WIN_PAPER_COLOUR ), true );
+            print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
+        }
+
         // display the time and  date
         std::string streamString = returnTimeDate();
         print( COLS - 2 - streamString.length(), 1, streamString );
@@ -69,8 +75,8 @@ void EditorTitleWin::display()
         draw();
 
         // display the file name
-        print( 2, 1, "EDITING MODE: ./Test.txt " );
-
+        print( 2, 1, "EDITING MODE: ./Test.txt  (Still in development)" );
+        print( 2, 2, "[F1] Hex Editor  [F2] Load File   [F3] Save File   " );
         // display the window
         draw();
     }

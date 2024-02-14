@@ -33,6 +33,10 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      IDEEditBox class for the Nimble Library
+-----------------------------------------------------------------------------*/
 class IDEEditBox : public IDEEditline, public CursesWin
 {
   public:

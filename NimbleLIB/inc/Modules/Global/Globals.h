@@ -14,13 +14,24 @@
 //  includes
 //-----------------------------------------------------------------------------
 
+#include <cstdint>
 #include <stdint.h>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <vector>
+extern "C"
+{
+#include "../../../../ExternalLibraries/PDCurses/curses.h"
+}
 #include "../../../inc/Modules/Screen/ScreenWord.h"
 #include "../../../inc/Modules/Screen/ScreenPrint.h"
+
+//-----------------------------------------------------------------------------
+// Defines
+// -----------------------------------------------------------------------------
+
+#define GControl Nimble::Screen::Globals::getInstance()
 
 //-----------------------------------------------------------------------------
 // Namespace access
@@ -127,7 +138,25 @@ class Globals
         m_screenHeight = height;
     }
 
-    // Editor Settings -----------------------------------------------------------
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Set the number of manager components
+        @param      uint32_t - number of manager components
+    --------------------------------------------------------------------------*/
+    void setManagerComponents( uint32_t nDialogs )
+    {
+        m_managerComponents = nDialogs;
+    }
+
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Get the number of manager components
+        @return     uint32_t - number of manager components
+    --------------------------------------------------------------------------*/
+    uint32_t getManagerComponents()
+    {
+        return m_managerComponents;
+    }
 
     /**---------------------------------------------------------------------------
         @ingroup    NimbleLIBScreen Nimble Library Screen Module
@@ -136,11 +165,52 @@ class Globals
         TODO: This needs complete rework to protect the settings
 
         @return     sEditorSettings - editor settings
-      --------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------*/
     sEditorSettings* getEditorSettings()
     {
         return &m_editorSettings;
     }
+
+    // Editor Settings -----------------------------------------------------------
+    void ProcessMouse()
+    {
+        if ( getmouse( &mouseEvent ) == OK )
+        {
+            m_mouseX            = mouseEvent.x;
+            m_mouseY            = mouseEvent.y;
+            m_mouseButtonStates = mouseEvent.bstate;
+        }
+    }
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Get the mouse y position
+        @return     uint32_t - mouse y position
+    ---------------------------------------------------------------------------*/
+    uint32_t getMouseY()
+    {
+        return ( m_mouseY );
+    }
+
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Get the mouse x position
+        @return     uint32_t - mouse x position
+    ----------------------------------------------------------------------------*/
+    uint32_t getMouseX()
+    {
+        return ( m_mouseX );
+    }
+
+    /**---------------------------------------------------------------------------
+        @ingroup    NimbleLIBScreen Nimble Library Screen Module
+        @brief      Get the mouse button states
+        @return     uint32_t - mouse button states
+    ----------------------------------------------------------------------------*/
+    uint32_t getMouseButtonStates()
+    {
+        return ( m_mouseButtonStates );
+    }
+
     //-----------------------------------------------------------------------------
 
   private:
@@ -155,10 +225,15 @@ class Globals
 
     //-----------------------------------------------------------------------------
     // GLobal variables
-    uint32_t        m_screenWidth  = 0; //!< Screen width
-    uint32_t        m_screenHeight = 0; //!< Screen height
-    ScreenPrint     m_print;            //!< Screen print class
-    sEditorSettings m_editorSettings;   //!< Editor settings
+    uint32_t        m_screenWidth       = 0; //!< Screen width
+    uint32_t        m_screenHeight      = 0; //!< Screen height
+    uint32_t        m_managerComponents = 0; //!< Number of manager components
+    ScreenPrint     m_print;                 //!< Screen print class
+    sEditorSettings m_editorSettings;        //!< Editor settings
+    uint32_t        m_mouseX            = 0; //!< Mouse x position
+    uint32_t        m_mouseY            = 0; //!< Mouse y position
+    uint32_t        m_mouseButtonStates = 0; //!< Mouse button
+    MEVENT          mouseEvent;              //!< Mouse event
     //-----------------------------------------------------------------------------
 };
 

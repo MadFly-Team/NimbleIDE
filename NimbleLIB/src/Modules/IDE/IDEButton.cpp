@@ -105,18 +105,19 @@ LibraryError IDEButton::processClick( uint32_t mouseX, uint32_t mouseY )
 
     if ( mWin != nullptr )
     {
+
         // check if mouse is in button area, exclude the border
         uint32_t x = ( mWinParent->_begx + mButtonX + 1 );
         uint32_t y = ( mWinParent->_begy + mButtonY + 1 );
         uint32_t w = ( mButtonWidth - 3 );
         uint32_t h = ( mButtonHeight - 3 );
 
-        if ( mouseX >= x && ( mouseX <= x + w ) && mouseY >= y && ( mouseY <= y + h ) )
+        if ( mouseX >= x && ( mouseX <= ( x + w ) ) && mouseY >= y && ( mouseY <= ( y + h ) ) )
         {
             // call button function
             if ( mButtonCallback != nullptr )
             {
-                mButtonCallback( mouseX, mouseY );
+                mButtonCallback();
             }
             error = LibraryError::No_Error;
         }
@@ -205,7 +206,7 @@ bool IDEButton::checkFlag( ButtonFlags flag )
     @param     callback     callback function
     @return    void
 -----------------------------------------------------------------------------*/
-void IDEButton::setCallback( pButtonCallback callback )
+void IDEButton::setCallback( std::function<void()> callback ) noexcept
 {
     mButtonCallback = callback;
 }

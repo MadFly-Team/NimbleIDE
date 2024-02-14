@@ -85,14 +85,9 @@ typedef struct
 
 int main( int argc, char* argv[] )
 {
-#if 0
-    std::filesystem::path currentPath = std::filesystem::current_path();
-    std::cout << "Contents of current directory: " << currentPath << "\n";
-    for ( const auto& entry : std::filesystem::directory_iterator( currentPath ) )
-    {
-        std::cout << entry.path() << "\n";
-    }
-#endif
+    bool     bHexWindow = false;
+    uint32_t key        = 0;
+
     // initialise the Curses screen and control
     setlocale( LC_ALL, "" );
     initscr();
@@ -112,6 +107,7 @@ int main( int argc, char* argv[] )
     EditorTitleWin       winEditorTitle;
     EditorHexWin         winEditorHex;
     EditorLineNumbersWin winLineNumbers;
+    IDEManager           dialogManager;
 
     // setup the editor
     winEditor.init( COLS - 39, LINES - 9, 9, 4 );
@@ -125,158 +121,83 @@ int main( int argc, char* argv[] )
     winEditorHex.setIDEEditor( &winEditor );
     winLineNumbers.setIDEEditor( &winEditor );
 
-    if ( false )
-    {
-        // test the dialog...
-        IDEDialog   winDialog;
-        std::string dialogString = "Test Dialog";
-        winDialog.initDialog( 15, 5, 50, 15, COLOR_BLACK, COLOR_WHITE );
-
-        winDialog.colourWindow( COLOUR_INDEX( IDE_COL_FG_BLACK, IDE_COL_BG_YELLOW ), true );
-        winDialog.print( 3, 4, "Test Dialog" );
-        winDialog.print( 3, 5, "Press 'q' to continue" );
-        winDialog.title( dialogString );
-        winDialog.status( "Status Bar Text" );
-        winDialog.setVerticalScroll();
-        winDialog.drawDialog();
-
-        winDialog.refresh();
-
-        uint32_t key = 0;
-        while ( key != 'q' )
-        {
-            key = getch();
-            delay_output( DELAYSIZE );
-        }
-    }
-
-    if ( false )
-    {
-        IDEFileDialog winFileDialog;
-        winFileDialog.initLoader( "./", "TEST.TXT", "Load a file to edit" );
-        uint32_t colour = COLOUR_INDEX( winFileDialog.getInkColour(), winFileDialog.getPaperColour() );
-        winFileDialog.colourWindow( colour, true );
-        winFileDialog.drawDialog();
-
-        winFileDialog.refresh();
-
-        uint32_t key = 0;
-        while ( key != 'q' )
-        {
-            key = getch();
-            delay_output( DELAYSIZE );
-        }
-        refresh();
-    }
-
     winEditorStatus.display();
     winEditorProject.display();
     winEditorTitle.display();
     winLineNumbers.display();
     winEditor.displayEditor();
-    winEditorHex.display();
-    wrefresh( winEditorHex.getWindow() );
-
-    bool     bHexWindow = false;
-    uint32_t key        = 0;
-    MEVENT   event;
 
     while ( key != 'q' )
     {
         bool forceUpdate = false;
-        key              = getch();
         delay_output( DELAYSIZE );
-
-        if ( key == KEY_F( 1 ) )
-        {
-            bHexWindow = !bHexWindow;
-            if ( bHexWindow == true )
-            {
-                winEditor.hideWindow();
-                winLineNumbers.hideWindow();
-                winEditorHex.showWindow();
-                winEditorHex.redrawBackground();
-            }
-            else
-            {
-                winEditor.showWindow();
-
-                winLineNumbers.showWindow();
-                winEditorHex.hideWindow();
-                winLineNumbers.redrawBackground();
-            }
-        }
-        if ( bHexWindow == true )
-        {
-            winEditorHex.display();
-        }
-        else
-        {
-            /*if ( event.bstate & BUTTON0_CLICKED )
-            {
-                winEditor.setCursorPosition( event.x, event.y );
-            }
-            if ( event.bstate & BUTTON3_PRESSED )
-            {
-                winEditor.scrollEditor( true );
-                forceUpdate = true;
-            }
-            if ( event.bstate & BUTTON4_PRESSED )
-            {
-                winEditor.scrollEditor( false );
-                forceUpdate = true;
-            }*/
-            if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
-            {
-                winEditor.displayEditor();
-                winLineNumbers.display();
-            }
-            winEditor.processMouse();
-            winEditor.processDisplay();
-        }
 
         // display the other windows...
         winEditorTitle.display();
         winEditorStatus.display();
         winEditorProject.display();
+
+        GControl.ProcessMouse();
+
+        key = getch();
+        if ( dialogManager.areControlsActive() == true )
+        {
+            dialogManager.process( key );
+            if ( dialogManager.redrawNeeded() )
+            {
+                winEditorStatus.display( true );
+                winEditorProject.display( true );
+                winEditorTitle.display( true );
+                winLineNumbers.display( true );
+                winEditor.redrawBackground();
+                winEditor.displayEditor();
+                dialogManager.clearRedrawNeeded();
+            }
+        }
+        else
+        {
+            if ( key == KEY_F( 1 ) )
+            {
+                bHexWindow = !bHexWindow;
+                if ( bHexWindow == true )
+                {
+                    winEditor.hideWindow();
+                    winLineNumbers.hideWindow();
+                    winEditorHex.showWindow();
+                    winEditorHex.redrawBackground();
+                }
+                else
+                {
+                    winEditor.showWindow();
+
+                    winLineNumbers.showWindow();
+                    winEditorHex.hideWindow();
+                    winLineNumbers.redrawBackground();
+                }
+            }
+            if ( key == KEY_F( 2 ) || key == KEY_F( 3 ) )
+            {
+                ManagerControlID dialogID = ( key == KEY_F( 2 ) ) ? ManagerControlID::ID_LoadFile : ManagerControlID::ID_LoadFile;
+                dialogManager.addControl( dialogID );
+            }
+            if ( bHexWindow == true )
+            {
+                winEditorHex.display();
+            }
+            else
+            {
+                if ( winEditor.processKeyEdit( key ) == true || forceUpdate == true )
+                {
+                    winEditor.displayEditor();
+                    winLineNumbers.display();
+                }
+                winEditor.processMouse();
+                winEditor.processDisplay();
+            }
+        }
     }
     curs_set( 1 );
 
-#if 0
-
-    CursesMenu menu;
-
-    // setup the menu text...
-    std::string menuTitle    = "Nimble IDE : Version 0.0.1";
-    std::string menuFooter   = "Navigation: Arrow Keys, Enter to Select, Q to Quit";
-    std::string menuSubTitle = "Main Menu";
-    menu.setMenuTitle( menuTitle );
-    menu.setMenuFooter( menuFooter );
-    menu.setMenuSubTitle( menuSubTitle );
-
-    // setup  and run the menu options...
-    std::vector<std::string> meniItems = { "New Project", "Open Project", "Save Project", "Save Project As", "Build Project", "Run Project", "Exit" };
-    menu.setMenuOptions( meniItems );
-
-    // check that menu only quits on Exit
-    int32_t optionSelected = menu.processMenu();
-    switch ( optionSelected )
-    {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        {
-            std::stringstream message;
-            message << "User selected Exit from the menu with " << optionSelected + 1;
-            ErrorHandler::getInstance().LogMessage( message.str() );
-            break;
-        }
-    }
-#endif
     // Return success
     return EXIT_SUCCESS;
 }

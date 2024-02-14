@@ -66,13 +66,14 @@ class CursesMouse
     const uint32_t LEFT_BORDER      = 1;
     const uint32_t WIDTH_ADJ_BORDER = 2;
     // Private variables ------------------------------------------------------
-    MEVENT   mouseEvent;       //!< Mouse event structure
-    bool     mouseEnabled;     //!< Mouse enabled flag
-    bool     mouseLeftPressed; //!< Mouse left button pressed flag
-    uint32_t mouseX;           //!< Mouse X position
-    uint32_t mouseY;           //!< Mouse Y position
-    uint32_t mouseOldX;        //!< MouseOldX position
-    uint32_t mouseOldY;        //!< MouseOldY position
+    MEVENT   mouseEvent;        //!< Mouse event structure
+    bool     mouseEnabled;      //!< Mouse enabled flag
+    bool     mouseLeftPressed;  //!< Mouse left button pressed flag
+    uint32_t mouseX;            //!< Mouse X position
+    uint32_t mouseY;            //!< Mouse Y position
+    uint32_t mouseOldX;         //!< MouseOldX position
+    uint32_t mouseOldY;         //!< MouseOldY position
+    uint32_t mouseButtonStates; //!< Mouse button states
     // Private functions ------------------------------------------------------
 };
 

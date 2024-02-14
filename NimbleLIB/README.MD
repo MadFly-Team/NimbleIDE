@@ -3,8 +3,7 @@
 
 This library has been created for the NimbleIDE
 
-<img title="NimbleLIB Image" alt="NimbleLIB image" src="../Content/NimbleLIB001.png">
-
+<img src="NimbleLIB001.png" width="1400">
 
 NimbleLIB is the library of modules used by NimbleIDE and TestNimbleIDE. It contains the following modules:
 

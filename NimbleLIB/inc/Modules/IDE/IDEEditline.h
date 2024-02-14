@@ -39,6 +39,10 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      IDEEditline class for the Nimble Library
+-----------------------------------------------------------------------------*/
 class IDEEditline : public StatusCtrl
 {
   public:

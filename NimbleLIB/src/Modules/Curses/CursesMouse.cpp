@@ -22,7 +22,8 @@ Notes:
 // Include files
 // ----------------------------------------------------------------------------
 
-#include "..\..\..\inc\Modules\Curses\CursesMouse.h"
+#include "../../../inc/Modules/Global/Globals.h"
+#include "../../../inc/Modules/Curses/CursesMouse.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -44,7 +45,6 @@ namespace Nimble
 CursesMouse::CursesMouse()
 {
     // initialise mouse
-    mousemask( ALL_MOUSE_EVENTS, NULL );
 
     // initial the class variables
     mouseEnabled     = false;
@@ -70,21 +70,18 @@ CursesMouse::~CursesMouse()
 ----------------------------------------------------------------------------*/
 bool CursesMouse::processMouse( void )
 {
-    bool bProcessMouse = false;
-
     if ( mouseEnabled == true )
     {
         // get mouse event
-        if ( nc_getmouse( &mouseEvent ) == OK )
         {
             // check if left button pressed
-            bProcessMouse    = true;
-            mouseLeftPressed = ( mouseEvent.bstate & BUTTON1_PRESSED ) ? true : false;
-            mouseX           = mouseEvent.x;
-            mouseY           = mouseEvent.y;
+            mouseLeftPressed  = ( GControl.getMouseButtonStates() & BUTTON1_CLICKED ) ? true : false;
+            mouseX            = GControl.getMouseX();
+            mouseY            = GControl.getMouseY();
+            mouseButtonStates = GControl.getMouseButtonStates();
         }
     }
-    return bProcessMouse;
+    return true;
 }
 
 /**----------------------------------------------------------------------------
@@ -164,7 +161,8 @@ uint32_t CursesMouse::getMouseY() const
 ----------------------------------------------------------------------------*/
 bool CursesMouse::getLeftButtonState() const
 {
-    return mouseEvent.bstate & BUTTON1_PRESSED;
+    return mouseButtonStates & BUTTON1_CLICKED;
+    
 }
 
 /**----------------------------------------------------------------------------
@@ -174,7 +172,8 @@ bool CursesMouse::getLeftButtonState() const
 ----------------------------------------------------------------------------*/
 bool CursesMouse::getRightButtonState() const
 {
-    return mouseEvent.bstate & BUTTON3_PRESSED;
+    return mouseButtonStates & BUTTON3_CLICKED;
+    
 }
 
 /**----------------------------------------------------------------------------
@@ -184,7 +183,8 @@ bool CursesMouse::getRightButtonState() const
 ----------------------------------------------------------------------------*/
 bool CursesMouse::getMiddleButtonState() const
 {
-    return mouseEvent.bstate & BUTTON2_PRESSED;
+    return mouseButtonStates & BUTTON2_CLICKED;
+    
 }
 
 /**----------------------------------------------------------------------------

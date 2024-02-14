@@ -33,8 +33,12 @@ namespace Nimble
 // Class definitions
 // ----------------------------------------------------------------------------
 
-using pButtonCallback = std::function<void( uint32_t, uint32_t )>; //!< Keymap Function pointer type
+using pButtonCallback = std::function<void()>; //!< Function pointer type
 
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief     IDEButton class
+-----------------------------------------------------------------------------*/
 class IDEButton : public StatusCtrl
 {
   public:
@@ -59,7 +63,7 @@ class IDEButton : public StatusCtrl
     void setFlag( ButtonFlags flag );
     void clearFlag( ButtonFlags flag );
     bool checkFlag( ButtonFlags flag );
-    void setCallback( pButtonCallback callback );
+    void setCallback( pButtonCallback callback ) noexcept;
     void setWindowHandle( WINDOW* windowHandle );
 
   private:

@@ -56,7 +56,7 @@ class EditorHexWin : public IDEWindow
     // setters ----------------------------------------------------------------
     void setIDEEditor( IDEEditor* editor );
     // display ----------------------------------------------------------------
-    void display();
+    void display( bool bRedraw = false );
     void redrawBackground();
 
   private:

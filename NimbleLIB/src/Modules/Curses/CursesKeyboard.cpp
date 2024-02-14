@@ -127,6 +127,14 @@ uint32_t CursesKeyboard::getKey() const noexcept
     return ( key );
 }
 
+// Setters ------------------------------------------------------------------
+
+void CursesKeyboard::setKey( uint32_t inKey ) noexcept
+{
+    lastKey = key;
+    key     = inKey;
+}
+
 // Others ------------------------------------------------------------------
 
 /**----------------------------------------------------------------------------
@@ -145,6 +153,17 @@ void CursesKeyboard::addKeyMap( const std::string& name, const std::vector<uint3
     keyMap.keys     = keys;
     keyMap.function = function;
 
+    keyMaps.push_back( keyMap );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBCurses Nimble Library Curses Module
+    @brief      Add a key map
+    @param      keyMap     Key map
+    @return     void
+-----------------------------------------------------------------------------*/
+void CursesKeyboard::addKeyMap( const KeyMap& keyMap )
+{
     keyMaps.push_back( keyMap );
 }
 
@@ -179,18 +198,22 @@ void CursesKeyboard::clearKeyMaps()
     --------------------------------------------------------------------------*/
 void CursesKeyboard::processKeyMaps()
 {
-    for ( auto& keyMap : keyMaps )
+    if ( key != 0 )
     {
-        for ( auto keyToTest : keyMap.keys )
+        for ( auto& keyMap : keyMaps )
         {
-            if ( key == keyToTest )
+            for ( auto keyToTest : keyMap.keys )
             {
-                if ( keyMap.function != nullptr )
+                if ( key == keyToTest )
                 {
-                    keyMap.function( key );
+                    if ( keyMap.function != nullptr )
+                    {
+                        keyMap.function( key );
+                    }
+                    lastKey = key;
+                    key     = 0;
+                    break;
                 }
-                lastKey = key;
-                break;
             }
         }
     }

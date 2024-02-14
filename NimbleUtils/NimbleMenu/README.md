@@ -2,7 +2,7 @@
 
 ##### Found in NimbleUtils directory
 
-<img title="NimbleMenu Image" alt="NimbleMenu image" src="../../Content/NimbleMenu1.png">
+<img src="../Content/NimbleMenu1.png">
 
 This utility allows quick selection of actions from a menu.
 Setup to allow for easy integration into other applications.

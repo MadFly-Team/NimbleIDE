@@ -29,6 +29,7 @@
 #include "Modules/IDE/IDEDialog.h"                // IDEDialog class
 #include "Modules/IDE/IDEFileDialog.h"            // IDEFileDialog class
 #include "Modules/IDE/IDEWindow.h"                // IDEWindow class
+#include "Modules/IDE/IDEManager.h"               // IDEManager class
 #include "Modules/Editor/EditorHexWin.h"          // EditorHexWin class
 #include "Modules/Editor/EditorStatusWin.h"       // EditorStatusWin class
 #include "Modules/Editor/EditorTitleWin.h"        // EditorTitleWin class

@@ -322,7 +322,7 @@ LibraryError CursesWin::clear()
 LibraryError CursesWin::refresh()
 {
     LibraryError error = LibraryError::No_Error;
-
+    wrefresh( win );
     return error;
 }
 
