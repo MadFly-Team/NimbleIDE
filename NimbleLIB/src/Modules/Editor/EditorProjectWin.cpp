@@ -65,10 +65,15 @@ EditorProjectWin::~EditorProjectWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorProjectWin::display()
+void EditorProjectWin::display( bool bRedraw /*= false*/ )
 {
     if ( m_editor != nullptr )
     {
+        if ( bRedraw == true )
+        {
+            colourWindow( COLOUR_INDEX( WIN_INK_COLOUR, WIN_PAPER_COLOUR ), true );
+            print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
+        }
         // display the window
         draw();
         m_button.drawButton();

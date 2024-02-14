@@ -56,10 +56,15 @@ EditorLineNumbersWin::~EditorLineNumbersWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorLineNumbersWin::display()
+void EditorLineNumbersWin::display( bool bRedraw /*= false*/ )
 {
     if ( m_editor != nullptr )
     {
+        if ( bRedraw )
+        {
+            redrawBackground();
+        }
+
         displayLineNumbers( m_editor->getCurrentLine() + 1, m_editor->getTotalLines() );
         // display the window
         draw();

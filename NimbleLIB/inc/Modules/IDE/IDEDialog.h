@@ -68,6 +68,11 @@ class IDEDialog : public CursesWin, public CursesKeyboard, public StatusCtrl
     LibraryError drawDialog();
     // setters -----------------------------------------------------------------
     void setVerticalScrollPos( uint32_t inPos );
+    void setKeytoProcess( uint32_t inKey );
+    // getters -----------------------------------------------------------------
+    uint32_t getKeytoProcess() const;
+    bool     isLeftButtonPressed() const;
+    bool     isRightButtonPressed() const;
 
   private:
     // private vairables --------------------------------------------------------
@@ -82,6 +87,7 @@ class IDEDialog : public CursesWin, public CursesKeyboard, public StatusCtrl
     IDEButton                          rightButton;        //!< button right
     bool                               leftButtonPressed;  //!< left button pressed
     bool                               rightButtonPressed; //!< right button pressed
+    uint32_t                           nKeyToProcess;      //!< key to process
     std::vector<std::function<void()>> callbacks;
     //  private functions --------------------------------------------------------
     void leftButtonCB() noexcept;

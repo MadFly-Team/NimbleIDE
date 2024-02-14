@@ -56,7 +56,7 @@ class EditorStatusWin : public IDEWindow
     // setters ----------------------------------------------------------------
     void setIDEEditor( IDEEditor* editor );
     // display ----------------------------------------------------------------
-    void display();
+    void display( bool bRedraw = false );
 
   private:
     // Private constants ------------------------------------------------------

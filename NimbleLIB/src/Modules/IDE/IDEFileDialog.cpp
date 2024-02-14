@@ -41,7 +41,10 @@ namespace Nimble
 ----------------------------------------------------------------------------*/
 IDEFileDialog::IDEFileDialog()
 {
-    m_cursorPos = 4;
+    m_cursorPos    = 4;
+    m_cancelled    = false;
+    m_completed    = false;
+    m_fileStartPos = 0;
 }
 
 /**----------------------------------------------------------------------------
@@ -154,6 +157,15 @@ LibraryError IDEFileDialog::processKeyPress( uint32_t ch )
     LibraryError error = LibraryError::No_Error;
 
     processDialog( ch );
+    // check the button presses by the mouse...
+    if ( isLeftButtonPressed() )
+    {
+        m_cancelled = true;
+    }
+    if ( isRightButtonPressed() )
+    {
+        m_completed = true;
+    }
 
     return error;
 }
@@ -333,7 +345,7 @@ LibraryError IDEFileDialog::readDirectory( const std::string& path )
         m_filesInDirectory.push_back( fileData );
     }
 
-    // Sort the filles and directories alphabetically (directories first)
+    // Sort the files and directories alphabetically (directories first)
     std::sort( m_filesInDirectory.begin(), m_filesInDirectory.end(),
                []( const FileData& a, const FileData& b ) -> bool
                {

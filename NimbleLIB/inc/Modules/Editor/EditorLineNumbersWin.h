@@ -53,7 +53,7 @@ class EditorLineNumbersWin : public IDEWindow
     // setters ----------------------------------------------------------------
     void setIDEEditor( IDEEditor* editor );
     // display ----------------------------------------------------------------
-    void         display();
+    void         display( bool bRedraw = false );
     LibraryError displayLineNumbers( uint32_t nLine, uint32_t nTotalLines );
     void         redrawBackground();
 

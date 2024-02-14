@@ -17,7 +17,7 @@ Notes:
 #include "../../../inc/Modules/IDE/IDEManager.h"
 #include "../../../inc/Modules/IDE/IDEDialog.h"
 #include "../../../inc/Modules/IDE/IDEFileDialog.h"
-#include <memory>
+#include "../../../inc/Modules/Global/Globals.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -42,6 +42,7 @@ IDEManager::IDEManager()
     // initial member variables
     activeControls.clear();
     activeControlIDs.clear();
+    m_bRedrawNeeded = false;
 }
 
 /**----------------------------------------------------------------------------
@@ -77,11 +78,15 @@ void IDEManager::addControl( ManagerControlID dialogID )
         case ManagerControlID::ID_LoadFile:
         {
             activeControls.push_back( std::make_unique<IDEFileDialog>() );
+            while ( getch() != ERR )
+                ;
             break;
         }
         case ManagerControlID::ID_SaveFile:
         {
             activeControls.push_back( std::make_unique<IDEFileDialog>() );
+            while ( getch() != ERR )
+                ;
             break;
         }
         default:
@@ -96,14 +101,15 @@ void IDEManager::addControl( ManagerControlID dialogID )
     @brief      Process the IDEManager
     @return     none
 -----------------------------------------------------------------------------*/
-void IDEManager::process()
+void IDEManager::process( uint32_t key )
 {
     if ( activeControls.size() > 0 )
     {
         uint32_t index = activeControls.size() - 1;
-        {
-            m_controls[ static_cast<int>( activeControlIDs[ index ] ) ].controlCB();
-        }
+        activeControls[ index ].get()->setKeytoProcess( key );
+        m_controls[ static_cast<int>( activeControlIDs[ index ] ) ].controlCB();
+ 
+        Screen::Globals::getInstance().setManagerComponents( activeControls.size() );
     }
 }
 
@@ -117,6 +123,36 @@ void IDEManager::process()
 const bool IDEManager::areControlsActive() const
 {
     return activeControls.size() > 0;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Checks to see if a redraw is needed
+    @return     bool - true if a redraw is needed
+-----------------------------------------------------------------------------*/
+const bool IDEManager::redrawNeeded() const
+{
+    return m_bRedrawNeeded;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Clears the redraw flag
+    @return     void
+-----------------------------------------------------------------------------*/
+void IDEManager::clearRedrawNeeded()
+{
+    m_bRedrawNeeded = false;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the number of active controls
+    @return     uint32_t - number of active controls/
+-----------------------------------------------------------------------------*/
+uint32_t IDEManager::getActiveControlCount() const
+{
+    return activeControls.size();
 }
 
 // Controller callbacks -------------------------------------------------------
@@ -151,48 +187,30 @@ void IDEManager::LoadFileCallback()
         }
         case ManagerControlState::Running:
         {
-            uint32_t key = getch();
-            if ( key != ERR )
+            uint32_t key = pDialog->getKeytoProcess();
+            pDialog->processKeyPress( key );
+            uint32_t colour = COLOUR_INDEX( activeControls[ index ]->getInkColour(), activeControls[ index ]->getPaperColour() );
+            pDialog->colourWindow( colour, true );
+            pDialog->setVerticalScroll();
+            pDialog->drawLoader();
+            if ( pDialog->isCancelled() )
             {
-                while ( getch() != ERR )
-                {
-                    delay_output( 10 );
-                }
-                pDialog->processKeyPress( key );
-                pDialog->drawLoader();
-                if ( pDialog->isCancelled() )
-                {
-                    pControl->eState = ManagerControlState::Cancel;
-                }
-                if ( pDialog->isCompleted() )
-                {
-                    pControl->eState = ManagerControlState::Confirm;
-                }
+                pControl->eState = ManagerControlState::Cancel;
+            }
+            if ( pDialog->isCompleted() )
+            {
+                pControl->eState = ManagerControlState::Confirm;
             }
             break;
         }
-        case ManagerControlState::Error:
-        {
-            break;
-        }
-        case ManagerControlState::Close:
-        {
-            break;
-        }
         case ManagerControlState::Cancel:
-        {
-            delwin( pDialog->getWindow() );
-            activeControls[ index ].reset();
-            activeControls.pop_back();
-            activeControlIDs.pop_back();
-            break;
-        }
         case ManagerControlState::Confirm:
         {
             delwin( pDialog->getWindow() );
             activeControls[ index ].reset();
             activeControls.pop_back();
             activeControlIDs.pop_back();
+            m_bRedrawNeeded = true;
             break;
         }
         default:

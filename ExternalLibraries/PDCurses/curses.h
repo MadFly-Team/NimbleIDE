@@ -31,15 +31,13 @@ Defined by this header:
 
 **man-end****************************************************************/
 
-#define P
-
-#define PDCURSES      1
-#define PDC_BUILD     3907
-#define PDC_VER_MAJOR 3
-#define PDC_VER_MINOR 9
-#define PDC_VERDOT    "3.9"
-
-#define CHTYPE_LONG   1 /* chtype >= 32 bits */
+#define PDCURSES              1
+#define PDC_BUILD             3907
+#define PDC_VER_MAJOR         3
+#define PDC_VER_MINOR         9
+#define PDC_VERDOT            "3.9"
+#define NCURSES_MOUSE_VERSION 1
+#define CHTYPE_LONG           1 /* chtype >= 32 bits */
 
 #if defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L
 #define PDC_99 1

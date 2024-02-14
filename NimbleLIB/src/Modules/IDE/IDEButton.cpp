@@ -112,7 +112,7 @@ LibraryError IDEButton::processClick( uint32_t mouseX, uint32_t mouseY )
         uint32_t w = ( mButtonWidth - 3 );
         uint32_t h = ( mButtonHeight - 3 );
 
-        if ( mouseX >= x && ( mouseX <= x + w ) && mouseY >= y && ( mouseY <= y + h ) )
+        if ( mouseX >= x && ( mouseX <= ( x + w ) ) && mouseY >= y && ( mouseY <= ( y + h ) ) )
         {
             // call button function
             if ( mButtonCallback != nullptr )

@@ -17,6 +17,7 @@ Notes:
 // ----------------------------------------------------------------------------
 
 #include "../../../inc/Modules/Editor/EditorStatusWin.h"
+#include "../../../inc/Modules/Global/Globals.h"
 
 //-----------------------------------------------------------------------------
 // Namespace
@@ -57,10 +58,15 @@ EditorStatusWin::~EditorStatusWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorStatusWin::display()
+void EditorStatusWin::display( bool bRedraw /*= false*/ )
 {
     if ( m_editor != nullptr )
     {
+        if ( bRedraw == true )
+        {
+            colourWindow( COLOUR_INDEX( WIN_INK_COLOUR, WIN_PAPER_COLOUR ), true );
+            print( WIN_TITLE_X, WIN_TITLE_Y, WIN_TITLE );
+        }
         // display the line position and total lines, also the mosue position
         std::stringstream strStream = std::stringstream();
         strStream << "Lines: " << m_editor->getTotalLines() << " Cursor: " << m_editor->getCursorX() << "," << m_editor->getCursorY();
@@ -69,8 +75,8 @@ void EditorStatusWin::display()
         mvwprintw( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORXOFFSET, linesString.c_str() );
         mvwchgat( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORCOLOFFSET1, STATUS_EDITORCOLOFFSET1SZ, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
         mvwchgat( getWindow(), STATUS_EDITORLINE, COLS - STATUS_EDITORCOLOFFSET2, STATUS_EDITORCOLOFFSET2SZ, A_NORMAL, COLOUR_INDEX( IDE_COL_FG_GREEN, IDE_COL_BG_WHITE ), nullptr );
-        mvwprintw( getWindow(), STATUS_EDITORMOUSE, COLS - STATUS_EDITORXOFFSET, "Mouse: %d, %d    ", m_editor->getMouseX(), m_editor->getMouseY() );
-
+        mvwprintw( getWindow(), STATUS_EDITORMOUSE, COLS - STATUS_EDITORXOFFSET, "Mouse: %d, %d    ", GControl.getMouseX(), GControl.getMouseY() );
+        mvwprintw( getWindow(), STATUS_EDITORMOUSE, 4, "Componets active - %d", GControl.getManagerComponents() );
         // display the window
         draw();
     }

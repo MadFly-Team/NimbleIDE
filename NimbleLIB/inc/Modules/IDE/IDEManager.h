@@ -93,9 +93,12 @@ class IDEManager : public IDEWindow
     // initialisation ----------------------------------------------------------
     // process and control -----------------------------------------------------
     void addControl( ManagerControlID diaalogID );
-    void process();
+    void process( uint32_t key );
     // general access ----------------------------------------------------------
     const bool areControlsActive() const;
+    const bool redrawNeeded() const;
+    void       clearRedrawNeeded();
+    uint32_t   getActiveControlCount() const;
 
   private:
     // variables ---------------------------------------------------------------
@@ -108,6 +111,7 @@ class IDEManager : public IDEWindow
     // clang-format on
     std::vector<std::unique_ptr<IDEDialog>> activeControls;
     std::vector<ManagerControlID>           activeControlIDs;
+    bool                                    m_bRedrawNeeded;
     // functions ---------------------------------------------------------------
     void LoadFileCallback(); //!< Load file callback
     void SaveFileCallback(); //!< Save file callback

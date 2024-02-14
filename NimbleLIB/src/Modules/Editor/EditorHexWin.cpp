@@ -59,7 +59,7 @@ EditorHexWin::~EditorHexWin()
     @ingroup    NimbleLIBIDE Nimble Library IDE Module
     @brief      Display the status window
 ----------------------------------------------------------------------------*/
-void EditorHexWin::display()
+void EditorHexWin::display( bool bRedraw /*= false*/ )
 {
     if ( m_editor != nullptr )
     {

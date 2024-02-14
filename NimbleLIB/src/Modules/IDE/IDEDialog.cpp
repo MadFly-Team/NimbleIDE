@@ -38,8 +38,10 @@ namespace Nimble
 IDEDialog::IDEDialog()
 {
     setInitialized();
-    nScrollPos    = 0;
-    nOldScrollPos = 0;
+    nScrollPos         = 0;
+    nOldScrollPos      = 0;
+    leftButtonPressed  = false;
+    rightButtonPressed = false;
 }
 
 /**----------------------------------------------------------------------------
@@ -205,6 +207,49 @@ LibraryError IDEDialog::setVerticalScroll()
 void IDEDialog::setVerticalScrollPos( uint32_t inPos )
 {
     nScrollPos = inPos;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Set the key to process
+    @param      inKey     Key to process
+    @return     void
+----------------------------------------------------------------------------*/
+void IDEDialog::setKeytoProcess( uint32_t inKey )
+{
+    nKeyToProcess = inKey;
+}
+
+// getters --------------------------------------------------------------------
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the vertical scroll position
+    @return     uint32_t vertical scroll position
+----------------------------------------------------------------------------*/
+uint32_t IDEDialog::getKeytoProcess() const
+{
+    return ( nKeyToProcess );
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the left button state
+    @return     bool left button state
+----------------------------------------------------------------------------*/
+bool IDEDialog::isLeftButtonPressed() const
+{
+    return leftButtonPressed;
+}
+
+/**----------------------------------------------------------------------------
+    @ingroup    NimbleLIBIDE Nimble Library IDE Module
+    @brief      Get the right button state
+    @return     bool right button state/
+----------------------------------------------------------------------------*/
+bool IDEDialog::isRightButtonPressed() const
+{
+    return rightButtonPressed;
 }
 
 // Drawing and Control --------------------------------------------------------
